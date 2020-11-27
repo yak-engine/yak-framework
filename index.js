@@ -1,90 +1,59 @@
+// Required references.
 const express = require("express");
 const path = require('path');
-const fs = require('fs');
-const yaml = require('js-yaml');
-
-const app = express();
-
-app.use(express.static('dist'));
-app.use(express.json())
-
-// const {series} = require('async');
+const {series} = require('async');
 const {exec} = require('child_process');
 
-// series([() => exec('npm run serve --prefix editor')]);
+const port = 9000;
 
-var devEditorProcess = exec('npm run serve --prefix editor');
+// Create express app.
+const app = express();
 
-devEditorProcess.stdout.on('data', function(data) {
-    console.log(data); 
-});
+global.appRoot = path.resolve(__dirname);
 
+// Configure express app.
+app.use(express.static('editor/dist'));
+app.use(express.static('preview'));
+app.use(express.json());
+
+// Configure default response headers.
 app.use(function(req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
     next();
 });
 
-app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname + '/editor/public/index.html'));
+// Require API endpoints.
+require('./server/api/scene.api')(app);
+require('./server/api/bundle.api')(app);
+
+var devEditorProcess = exec('npm run watch --prefix editor');
+
+devEditorProcess.stdout.on('data', function(data) {
+    console.log(data); 
 });
 
-app.get("/test", function (req, res) {
-    res.send('test');
+var devEngineProcess = exec('npm run watch --prefix engine');
+
+devEngineProcess.stdout.on('data', function(data) {
+    console.log(data); 
 });
 
-app.get("/bundle/generate", function (req, res) {
-    fs.appendFile('./dist/mynewfile1.txt', 'Hello content!', function (err) {
-        if (err) throw err;
-        console.log('Saved!');
-    });
+// Run the developement watch commands for the editor UI and the engine.
+series([
+    () => {
 
-    res.send("Bundle generate");
-});
+    },
+    () => {
 
-app.post('/api/scene/add', function(req, res) {
-    // Load default sceen and update name.
-    const scenePath = './dist/bundle/scenes/default-scene.yaml';
-
-    if (!fs.existsSync(scenePath)) {
-        const defaultScene = yaml.safeLoad(fs.readFileSync(scenePath, 'utf8'));
-        defaultScene.name = req.body.name;
-    
-        // Convert updated scene object back into yaml string.
-        const scene = yaml.safeDump(defaultScene);
-    
-        fs.writeFile(`./dist/bundle/scenes/${req.body.name}.yaml`, scene, function (err) {
-            if (err) throw err;
-            console.log(scene);
-        });
     }
+]);
+
+// The root url will serve the compiled editor project.
+app.get("/", function (req, res) {
+    res.sendFile(path.join(__dirname + '/editor/dist/index.html'));
 });
 
-// Get specific scene.
-app.get('/api/scene/get/:sceneName', function(req, res) {
-    const doc = yaml.safeLoad(fs.readFileSync(`./dist/bundle/scenes/${req.params.sceneName}.yaml`, 'utf8'));
-    res.json(doc);
+app.listen(port, () => {
+    console.log(`Running application at http://localhost:${port}`)
 });
-
-// Save
-app.post('/api/scene/save', function(req, res) {
-    // TODO: Actually implement this code.
-    const doc = yaml.safeLoad(fs.readFileSync(`./dist/bundle/scenes/${req.body.name}.yaml`, 'utf8'));
-    res.json(doc);
-});
-
-// Delete
-app.get('/api/scene/delete/:sceneName', function(req, res) {
-    fs.unlinkSync(`./dist/bundle/scenes/${req.params.sceneName}.yaml`)
-});
-
-// List all
-app.get('/api/scene/list', function(req, res) {
-    res.json(fs.readdirSync(`./dist/bundle/scenes/`));
-});
-
-app.get('/bundle/play', function (req, res) {
-    res.sendFile(path.join(__dirname + '/play.html'));
-});
-
-app.listen(9000);

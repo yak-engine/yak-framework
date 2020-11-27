@@ -21,6 +21,6 @@ module.exports = {
     },
     output: {
         filename: 'engine.js',
-        path: path.resolve(__dirname, 'dist'),
+        path: path.join(__dirname, '../preview/bundle'),
     }
 };

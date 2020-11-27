@@ -14,6 +14,7 @@ import EntityManager from "../components/EntityManager";
 import Entity from "../components/entity";
 import MaterialComponent from "../components/material/MaterialComponent";
 import TransformComponent from "../components/transform/TransformComponent";
+import TilemapComponent from "../components/tilemap/TilemapComponent";
 
 export default class Renderer {
     /**
@@ -65,7 +66,7 @@ export default class Renderer {
     /**
      * The current scene being rendered.
      */
-    public scene: Scene;
+    public scene: any;
 
     /**
      * The tilesets being used for the current scene. Get loaded on startup.
@@ -84,13 +85,13 @@ export default class Renderer {
 
     public playerEntity: Entity;
 
+    public tileMapEntity: Entity;
+
     /**
      * Default constructor. Queries the canvas together with the canvas context
      * and bootstraps the canvas events.
      */
     constructor() {
-
-
         // Ensure we resize the canvas here.
         this.resizeCanvas();
 
@@ -100,7 +101,17 @@ export default class Renderer {
     }
 
     init() {
-        this.playerEntity = EntityManager.getInstance().create();
+        // this.playerEntity = EntityManager.getInstance().create();
+
+        this.tileMapEntity = <Entity>this.scene.entities.find((entity) => {
+            if (entity.id === 2) {
+                return entity;
+            }
+        });
+
+        // Bootstrap components
+
+        console.log(this.tileMapEntity.getComponent<TilemapComponent>(TilemapComponent.name));
         
         this.mainCamera.viewport = new Transform(0, 0, this.getCanvasWidth(), this.getCanvasHeight());
         this.mainCamera.max = new Point((this.scene.columns * this.scene.spriteSize) - this.mainCamera.viewport.width, (this.scene.rows * this.scene.spriteSize) - this.mainCamera.viewport.height);
@@ -174,7 +185,9 @@ export default class Renderer {
     
                 for (let col = startCol; col <= endCol; col++) {
                     for (let row = startRow; row <= endRow; row++) {
-                        let sprite: number = layer.sprites[row * this.scene.columns + col];
+                        // let sprite: number = layer.sprites[row * this.scene.columns + col];
+                        let tilemapComponent: TilemapComponent = this.tileMapEntity.getComponent<TilemapComponent>(TilemapComponent.name);
+                        let sprite: number = tilemapComponent.tiles[row * this.scene.columns + col];
     
                         var x = (col - startCol) * this.scene.spriteSize + offsetX;
                         var y = (row - startRow) * this.scene.spriteSize + offsetY;

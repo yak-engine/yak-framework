@@ -37,10 +37,10 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class SceneHierarchy extends Vue {
-  previewUrl: string = 'http://localhost:9000/bundle/play';
+  previewUrl: string = 'http://localhost:9000/play.html';
 
   mounted() {
-    this.previewUrl = `${this.previewUrl}?rootPath=${encodeURIComponent('')}&sceneName=default-scene`;
+    this.previewUrl = `${this.previewUrl}?rootPath=${encodeURIComponent('')}&sceneName=scene1`;
     console.log(this.previewUrl);
   }
 }

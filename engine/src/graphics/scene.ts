@@ -6,5 +6,6 @@ export default class Scene {
     columns: number;
     spriteSize: number;
     tilesets: Array<string> = new Array();
+    entities: Array<any> = new Array();
     layers: Array<Layer> = new Array();
 }

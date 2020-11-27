@@ -1,8 +1,5 @@
 import Renderer from './graphics/renderer';
 import Time from './time';
-import SceneManager from './scene-manager';
-import { Logger } from './logging/logger';
-import Tileset from './graphics/tileset';
 import Input from './graphics/input';
 import ColliderComponent from './components/collider/ColliderComponent';
 import ManagerFactory from './components/ManagerFactory';
@@ -21,8 +18,11 @@ import TagComponentManager from './components/tag/TagComponentManager';
 import ImageComponent from './components/image/ImageComponent';
 import ImageComponentManager from './components/image/ImageComponentManager';
 import TilemapComponent from './components/tilemap/TilemapComponent';
+import SceneManager from './scene-manager';
+import Tileset from './graphics/tileset';
+import { Logger } from './logging/logger';
 
-export default abstract class Application {
+export default class Application {
     /**
      * Contains the rendering functionality from the main loop.
      */
@@ -48,7 +48,6 @@ export default abstract class Application {
         ManagerFactory.register(TileMapComponent.name, TileMapComponentManager);
         ManagerFactory.register(ColliderComponent.name, ColliderComponentManager);
         ManagerFactory.register(ImageComponent.name, ImageComponentManager);
-        ManagerFactory.register(TilemapComponent.name, TileMapComponentManager);
     }
 
     /**
@@ -61,34 +60,39 @@ export default abstract class Application {
         const urlParams = new URLSearchParams(window.location.search);
         const sceneName = urlParams.get('sceneName');
 
-        // './bundle/scaffold.json'
-        // fetch(`./api/scene/get/${sceneName}`).then((response) => response.json()).then(async (scaffold: Scaffold) => {
-        //     this.renderer.scene = await SceneManager.load(scaffold.scenes[0]);
+        fetch(`./api/scaffold/get`).then((response) => response.json()).then(async (scaffold: any) => {
+            console.log(scaffold);
+            this.renderer.scene = await SceneManager.load(scaffold.scenes[0]);
+            console.log(this.renderer.scene);
 
-        //     let loadedTilesets = 0;
+            let loadedTilesets = 0;
 
-        //     this.renderer.scene.tilesets.forEach((tilesetPath: string) => {
-        //        let image = new Image();
+            this.renderer.scene.tilesets.forEach((tilesetPath: string) => {
+               let image = new Image();
 
-        //        image.onload = () => {
-        //            this.renderer.tilesets.push(new Tileset(image));
+               image.onload = () => {
+                   this.renderer.tilesets.push(new Tileset(image));
                    
-        //            loadedTilesets++;
+                   loadedTilesets++;
 
-        //             if (loadedTilesets === this.renderer.scene.tilesets.length) {
-        //                 this.renderer.init();
-        //                 this.ready();
-        //                 window.requestAnimationFrame((time: number) => this.mainLoop(time));
-        //             }
-        //        }
+                    if (loadedTilesets === this.renderer.scene.tilesets.length) {
+                        console.log(this.renderer.tilesets);
+                        this.renderer.init();
+                        // this.ready();
+                        window.requestAnimationFrame((time: number) => this.mainLoop(time));
+                    }
+               }
 
-        //        image.onerror = () => {
-        //            Logger.data('failed to load tileset');
-        //        }
+               image.onerror = () => {
+                   Logger.data('failed to load tileset');
+               }
                
-        //        image.src = tilesetPath;
-        //     });
-        // })
+               image.src = `./tilesets/${tilesetPath}`;
+            });
+
+            // this.renderer.init();
+            // window.requestAnimationFrame((time: number) => this.mainLoop(time));
+        })
     }
 
     /**
@@ -106,7 +110,7 @@ export default abstract class Application {
         Time.calculateDeltaTime(time);
 
         // Call the update method. Implemented by the consuming class.
-        this.update(Time.deltaTime);
+        // this.update(Time.deltaTime);
 
         // Run the systems between the update and draw calls.
         this.collision.run();
@@ -115,6 +119,11 @@ export default abstract class Application {
         this.renderer.draw();
     }
 
-    abstract ready(): void;
-    abstract update(deltaTime: number): void;
+    // abstract ready(): void;
+    // abstract update(deltaTime: number): void;
 }
+
+window.addEventListener('DOMContentLoaded', (event) => {
+    let application = new Application();
+    application.start();
+})

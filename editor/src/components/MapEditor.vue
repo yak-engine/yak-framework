@@ -183,7 +183,7 @@ export default class MapEditor extends Vue {
   }
 
   async mounted() {
-    this.sceneService.getScene('default-scene').then((scene) => {
+    this.sceneService.getScene('scene1').then((scene) => {
       this.scene = scene;
       this.entity = this.scene.entities[1];
       console.log(this.scene);

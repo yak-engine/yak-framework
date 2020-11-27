@@ -1,0 +1,4 @@
+name: Game preview
+scenes:
+  - name: Main
+  - name: Secondary
