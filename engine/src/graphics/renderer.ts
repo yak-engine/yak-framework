@@ -103,16 +103,19 @@ export default class Renderer {
     init() {
         // this.playerEntity = EntityManager.getInstance().create();
 
-        this.tileMapEntity = <Entity>this.scene.entities.find((entity) => {
+        let entity = this.scene.entities.find((entity) => {
             if (entity.id === 2) {
                 return entity;
             }
         });
 
+        this.tileMapEntity = EntityManager.getInstance().create();
+        this.tileMapEntity.addComponent<TilemapComponent>(new TilemapComponent(entity.tilemapComponent.tiles));
+
+        console.log(this.tileMapEntity);
+
         // Bootstrap components
 
-        console.log(this.tileMapEntity.getComponent<TilemapComponent>(TilemapComponent.name));
-        
         this.mainCamera.viewport = new Transform(0, 0, this.getCanvasWidth(), this.getCanvasHeight());
         this.mainCamera.max = new Point((this.scene.columns * this.scene.spriteSize) - this.mainCamera.viewport.width, (this.scene.rows * this.scene.spriteSize) - this.mainCamera.viewport.height);
     }
@@ -145,7 +148,7 @@ export default class Renderer {
                     }
 
                     this.context.drawImage(
-                        this.tilesets[spriteRendererComponent.layer].image,
+                        this.tilesets[0].image,// this.tilesets[spriteRendererComponent.layer].image,
                         spriteRendererComponent.column * this.scene.spriteSize,
                         spriteRendererComponent.row * this.scene.spriteSize,
                         this.scene.spriteSize,
@@ -193,7 +196,7 @@ export default class Renderer {
                         var y = (row - startRow) * this.scene.spriteSize + offsetY;
     
                         this.context.drawImage(
-                            this.tilesets[layer.tileset].image,
+                            this.tilesets[0].image, //this.tilesets[layer.tileset].image,
                             sprite * this.scene.spriteSize,
                             0,
                             this.scene.spriteSize,
