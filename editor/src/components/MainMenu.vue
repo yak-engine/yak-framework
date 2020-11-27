@@ -1,6 +1,5 @@
 <template>
   <div class="default-component">
-    <play></play>
     <div class="mb-0 fill-dark text-light is-shadowed" style="z-index: 1000; border-bottom: 1px solid black;">
         <div class="">
             <ul class="nav nav-menu">
@@ -36,7 +35,7 @@
                 <div class="nav-right">
                     <ul class="nav-item">
                         <li class="menu-item">
-                            <div role="button" tabindex="0" class="btn-play">
+                            <div role="button" tabindex="0" class="btn-play" @click="isPlaying = true">
                                 <i class="fa fa-play text-green-darken-2 mr-default"></i>
                                 <span class="text-white">PLAY</span>
                             </div>
@@ -46,6 +45,8 @@
             </ul>
         </div>
     </div>
+
+    <play :is-visible="isPlaying"></play>
   </div>
 </template>
 
@@ -60,6 +61,8 @@ import Play from './Play.vue';
 })
 export default class MainMenu extends Vue {
   @Prop() private msg!: string;
+
+  public isPlaying: boolean = false;
 }
 </script>
 

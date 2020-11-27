@@ -17,7 +17,6 @@ import TagComponent from './components/tag/TagComponent';
 import TagComponentManager from './components/tag/TagComponentManager';
 import ImageComponent from './components/image/ImageComponent';
 import ImageComponentManager from './components/image/ImageComponentManager';
-import TilemapComponent from './components/tilemap/TilemapComponent';
 import SceneManager from './scene-manager';
 import Tileset from './graphics/tileset';
 import { Logger } from './logging/logger';

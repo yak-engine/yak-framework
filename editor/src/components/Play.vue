@@ -1,6 +1,6 @@
 
 <template>
-  <div class="play-component">
+  <div class="play-component" v-if="isVisible">
     <div
       class=""
       style="
@@ -37,7 +37,10 @@ import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
 export default class SceneHierarchy extends Vue {
-  previewUrl: string = 'http://localhost:9000/play.html';
+  @Prop() isVisible: boolean = false;
+
+  // previewUrl: string = 'http://localhost:9000/play.html';
+  previewUrl: string = 'http://localhost:9001';
 
   mounted() {
     this.previewUrl = `${this.previewUrl}?rootPath=${encodeURIComponent('')}&sceneName=scene1`;
@@ -47,6 +50,10 @@ export default class SceneHierarchy extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.play-overlay {
+  padding: 60px;
+}
+
 iframe {
     width: 100%;
     height: 100%;
