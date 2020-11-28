@@ -15,6 +15,6 @@ export default class BaseService<TModel> {
     }
 
     async post<TData>(url: string, data?: TData) {
-        return axios.post(url, { method: 'post' });
+        return axios.post(url, data, { method: 'post' });
     }
 }

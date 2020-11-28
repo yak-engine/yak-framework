@@ -1,10 +1,10 @@
 <template>
-  <div class="tag-component">
+  <div class="camera-component">
     <div class="text-default" style="padding-bottom: 5px; font-weight: bold; margin-bottom: 5px;">
-      <i class="fa fa-tag" style="margin-right: 10px;"></i>
-      <span>Tag</span>  
+      <i class="fa fa-map" style="margin-right: 10px;"></i>
+      <span>Tilemap</span>  
     </div>
-    <input class="tag-name" type="text" v-model="inspectorComponentData.name" />
+    Not yet implemented
   </div>
 </template>
 
@@ -12,13 +12,11 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
-export default class TagComponent extends Vue {
+export default class TilemapComponent extends Vue {
   @Prop() inspectorComponentData: string;
 }
 </script>
 
 <style>
-.tag-name {
-  width: 50%;
-}
+
 </style>

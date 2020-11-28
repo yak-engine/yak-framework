@@ -13,6 +13,7 @@ import CameraComponent from './Inspector/CameraComponent.vue';
 import ColliderComponent from './Inspector/ColliderComponent.vue';
 import MaterialComponent from './Inspector/MaterialComponent.vue';
 import SpriteComponent from './Inspector/SpriteComponent.vue';
+import TilemapComponent from './Inspector/TilemapComponent.vue';
 
 @Component({
   components: {
@@ -21,7 +22,8 @@ import SpriteComponent from './Inspector/SpriteComponent.vue';
     CameraComponent,
     ColliderComponent,
     MaterialComponent,
-    SpriteComponent
+    SpriteComponent,
+    TilemapComponent
   }
 })
 export default class Inspector extends Vue {

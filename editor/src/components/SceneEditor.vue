@@ -1,5 +1,5 @@
 <template>
-  <div class="component default-component">
+  <div class="component scene-editor-component">
       <div
         class="main"
         style="height: 100%; flex: 1; display: flex; flex-direction: row"
@@ -11,19 +11,32 @@
               </div>
               <scene-hierarchy :entities="scene.entities" v-on:on-entity-clicked="entity = $event"></scene-hierarchy>
             </div>
+            <!-- TODO: Refactor into it's own component. -->
             <div style="flex: 1;">
               <div style="padding: 8px 15px; background-color: #181818; border-bottom: 1px solid black;" class="is-shadowed">
-                <span style="font-weight: bold; color: #e7e7e7;">Manage Scene Layers</span>
+                <span style="font-weight: bold; color: #e7e7e7;">Scene Configuration</span>
+              </div>
+              <div style="padding: 15px; display: grid; grid-template-columns: repeat(3, 1fr)">
+                <div class="form-section">
+                  <div class="form-label text-small">Tile size</div>
+                  <input class="tag-name" type="text" v-model.number="scene.spriteSize" @change="updateScene()" />
+                </div>
+
+                <div class="form-section">
+                  <div class="form-label text-small">Rows</div>
+                  <input class="tag-name" type="text" v-model.number="scene.rows" @change="updateScene()" />
+                </div>
+
+                <div class="form-section">
+                  <div class="form-label text-small">Columns</div>
+                  <input class="tag-name" type="text" v-model.number="scene.columns" @change="updateScene()" />
+                </div>
               </div>
             </div>
         </div>
         <div style="flex: 1">
-          <scene-listing></scene-listing>
-
-          <ul
-            class="nav nav-menu mb-0 fill-dark text-white is-shadowed"
-            style="z-index: 500; border-bottom: 1px solid black;"
-          >
+          <scene-listing :selected-scene="scene.name" @on-scene-selected="loadEditorScene($event)"></scene-listing>
+          <ul class="nav nav-menu mb-0 fill-dark text-white is-shadowed" style="z-index: 500; border-bottom: 1px solid black;">
             <div class="">
               <div class="nav-left"></div>
               <div class="nav-right">
@@ -127,13 +140,20 @@
             </div>
             <inspector v-if="scene && scene.entities" :entity="entity"></inspector>
           </div>
+          <!-- TODO: Refactor to be under the inspector in the right side drawer. -->
+          <div style="flex: 1;">
+            <div style="padding: 8px 15px; background-color: #181818; border-bottom: 1px solid black;" class="is-shadowed">
+              <span style="font-weight: bold; color: #e7e7e7;">Manage Scene Layers</span>
+            </div>
+
+          </div>
         </div>
       </div>
   </div>
 </template>
 
 <script lang="ts">
-// import EditorRenderer from '@/editor-renderer';
+import EditorRenderer from '../editor-renderer';
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 import SceneHierarchy from './SceneHierarchy.vue';
@@ -149,20 +169,18 @@ import SceneService from '../services/scene.service';
     Inspector
   }
 })
-export default class MapEditor extends Vue {
-  @Prop() private msg!: string;
-
+export default class SceneEditor extends Vue {
   scene: any = {};
   sceneService: SceneService = new SceneService();
 
   entity: any = {};
 
-  // editorRenderer: EditorRenderer;
+  editorRenderer: EditorRenderer;
   isLoading: boolean = true;
   // scene: Scene;
 
   constructor() {
-      super();
+    super();
 
     // fetch("./bundle/scenes/scene1.json")
     //   .then((response) => response.json())
@@ -183,22 +201,35 @@ export default class MapEditor extends Vue {
   }
 
   async mounted() {
-    this.sceneService.getScene('scene1').then((scene) => {
+    this.loadEditorScene('scene1');
+
+    this.editorRenderer = new EditorRenderer();
+    window.requestAnimationFrame((time: number) => this.mainLoop(time));
+  }
+
+  loadEditorScene(sceneName: string): void {
+    this.sceneService.getScene(sceneName).then((scene) => {
       this.scene = scene;
       this.entity = this.scene.entities[1];
       console.log(this.scene);
     });
+  }
 
-    // this.editorRenderer = new EditorRenderer();
-    window.requestAnimationFrame((time: number) => this.mainLoop(time));
+  updateScene(): void {
+    this.sceneService.updateScene(this.scene).then((response) => {
+      console.log(response);
+    })
   }
 
   mainLoop(time: number) {
     window.requestAnimationFrame((time: number) => this.mainLoop(time));
-    // this.editorRenderer.run();
+    this.editorRenderer.run();
   }
 }
 </script>
 
 <style scoped lang="scss">
+input {
+  width: calc(100% - 15px);
+}
 </style>

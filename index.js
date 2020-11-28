@@ -1,6 +1,7 @@
 // Required references.
 const express = require("express");
 const path = require('path');
+const fs = require('fs');
 const {series} = require('async');
 const {exec} = require('child_process');
 
@@ -39,19 +40,26 @@ devEngineProcess.stdout.on('data', function(data) {
     console.log(data); 
 });
 
-// Run the developement watch commands for the editor UI and the engine.
-series([
-    () => {
+const Path = require("path");
+const FS   = require("fs");
 
-    },
-    () => {
+let Files  = [];
 
-    }
-]);
+function ThroughDirectory(Directory) {
+    FS.readdirSync(Directory).forEach(File => {
+        const Absolute = Path.join(Directory, File);
+        if (FS.statSync(Absolute).isDirectory()) return ThroughDirectory(Absolute);
+        else return Files.push(Absolute);
+    });
+}
 
-// The root url will serve the compiled editor project.
-app.get("/", function (req, res) {
-    res.sendFile(path.join(__dirname + '/editor/dist/index.html'));
+app.get("/hierarchy", function (req, res) {
+    // const directories = fs.readdirSync(path.join(__dirname, 'preview/bundle'), { withFileTypes: true }).filter(dirent => dirent.isDirectory()).map(dirent => dirent.name);
+    // res.json(directories);
+
+    
+    ThroughDirectory(path.join(__dirname, 'preview/bundle'));
+    res.json(Files);
 });
 
 app.listen(port, () => {

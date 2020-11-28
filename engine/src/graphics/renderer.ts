@@ -5,7 +5,6 @@ import UIFragmentsRenderer from "../ui/ui-fragments-renderer";
 import Layer from "./layer";
 import Tileset from "./tileset";
 import Configuration from "../configuration";
-import Scene from "./scene";
 import Camera from "./camera";
 import Input from "./input";
 import isTransformEmpty from "../helpers/is-transform-empty";
@@ -160,7 +159,9 @@ export default class Renderer {
                     );
                 }
                 else {
-                    this.context.fillRect(transform.x, transform.y, transform.width, transform.height);
+                    if (transform) {
+                        this.context.fillRect(transform.x, transform.y, transform.width, transform.height);
+                    }
                 }
             }
 

@@ -1,23 +1,20 @@
 <template>
-  <div class="default-component">
+  <div class="main-menu-component" ref="mainMenu">
     <div class="mb-0 fill-dark text-light is-shadowed" style="z-index: 1000; border-bottom: 1px solid black;">
         <div class="">
             <ul class="nav nav-menu">
                 <div class="nav-left">
                     <ul class="nav-item">
-                        <li class="menu-item">
-                            <div role="button" tabindex="0" class="dropdown-toggle" y-click="toggleDropdown($elem)">File</div>
+                        <li class="menu-item item-has-children">
+                            <div role="button" tabindex="0" class="dropdown-toggle" @click="toggleDropdown($event)">File</div>
                             <ul class="sub-menu">
                                 <li>
-                                    <div role="button" tabindex="0" class="modal-toggle" data-target="new-scene-modal">New scene</div>
-                                </li>
-                                <li>
-                                    <div role="button" tabindex="0" class="modal-toggle" data-target="accessible-demo-modal">New map</div>
+                                    <div role="button" tabindex="0" @click="isAddingScene = true">New scene</div>
                                 </li>
                             </ul>
                         </li>
-                        <li class="menu-item">
-                            <div role="button" tabindex="0" class="dropdown-toggle" y-click="toggleDropdown($elem)">View</div>
+                        <li class="menu-item item-has-children">
+                            <div role="button" tabindex="0" class="dropdown-toggle" @click="toggleDropdown($event)">View</div>
                             <ul class="sub-menu">
                                 <li>
                                     <div>
@@ -46,23 +43,52 @@
         </div>
     </div>
 
-    <play :is-visible="isPlaying"></play>
+    <play :is-visible="isPlaying" v-on:on-play-stopped="isPlaying = false"></play>
+    <new-scene :is-open="isAddingScene" @on-new-scene-saved="isAddingScene = false" @on-new-scene-cancelled="isAddingScene = false"></new-scene>
   </div>
 </template>
 
 <script lang="ts">
 import { Component, Prop, Vue } from 'vue-property-decorator';
+
 import Play from './Play.vue';
+import NewScene from './NewScene.vue';
 
 @Component({
     components: {
-        Play
+        Play,
+        NewScene
     }
 })
 export default class MainMenu extends Vue {
   @Prop() private msg!: string;
 
   public isPlaying: boolean = false;
+  public isAddingScene: boolean = false;
+
+  constructor() {
+      super();
+
+      document.addEventListener('click', (event: MouseEvent) => {
+          let mainMenu = <HTMLElement>this.$refs.mainMenu;
+
+          console.log(mainMenu.contains(<HTMLElement>event.target));
+
+          if (!mainMenu.contains(<HTMLElement>event.target)) {
+              mainMenu.querySelectorAll('.menu-item.item-has-children.expanded').forEach((expandedMenuItem) => {
+                  expandedMenuItem.classList.remove('expanded');
+              })
+          }
+      })
+  }
+
+  toggleDropdown(event: MouseEvent) {
+      let target = <HTMLElement>event.target;
+
+      if (target.parentElement.classList.contains('item-has-children')) {
+          target.parentElement.classList.add('expanded');
+      }
+  }
 }
 </script>
 

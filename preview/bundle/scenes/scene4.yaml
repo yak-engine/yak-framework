@@ -1,5 +1,6 @@
-name: Default
-tilesets: [BaseChip_pipo.png]
+name: scene4
+tilesets:
+  - BaseChip_pipo.png
 spriteSize: 32
 rows: 64
 columns: 64
@@ -13,7 +14,7 @@ entities:
       name: player
     transformComponent:
       x: 0
-      y: 0
+      'y': 0
       width: 32
       height: 32
     spriteComponent:
@@ -25,12 +26,12 @@ entities:
       fillStyle: white
     colliderComponent:
       isTrigger: false
-      transform: 
+      transform:
         x: 0
-        y: 0
+        'y': 0
         width: 32
         height: 32
-layers: 
+layers:
   - name: Background
     enabled: true
   - name: Default

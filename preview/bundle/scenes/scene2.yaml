@@ -1,19 +1,28 @@
-name: Default
-tilesets: [BaseChip_pipo.png]
-spriteSize: 32
-rows: 64
-columns: 64
+name: scene2
+tilesets:
+  - BaseChip_pipo.png
+spriteSize: 64
+rows: 128
+columns: 128
 entities:
   - id: 0
     cameraComponent:
-      viewport: 0
-      max: 0
+      viewport:
+        x: 0
+        'y': 0
+        width: 512
+        height: 512
+      max:
+        x: 0
+        'y': 0
+        width: 512
+        height: 512
   - id: 1
     tagComponent:
       name: player
     transformComponent:
       x: 0
-      y: 0
+      'y': 0
       width: 32
       height: 32
     spriteComponent:
@@ -23,14 +32,7 @@ entities:
       Column: 0
     materialComponent:
       fillStyle: white
-    colliderComponent:
-      isTrigger: false
-      transform: 
-        x: 0
-        y: 0
-        width: 32
-        height: 32
-layers: 
+layers:
   - name: Background
     enabled: true
   - name: Default

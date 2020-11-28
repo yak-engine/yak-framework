@@ -9,7 +9,7 @@
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(0, 0, 0, 0.6);
+        background-color: rgba(0, 0, 0, 0.8);
         z-index: 1000;
       "
     >
@@ -25,8 +25,15 @@
           border-radius: 8px;
         ">
 
-        <iframe :src="previewUrl" frameborder="0"></iframe>
-
+        <div class="play-header">
+          <span class="title">Preview</span>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background-color: transparent; cursor: pointer;" @click="$emit('on-play-stopped')">
+            <span aria-hidden="true" style="font-size: 42px;">&times;</span>
+          </button>
+        </div>
+        <div class="play-body">
+          <iframe :src="previewUrl" frameborder="0"></iframe>
+        </div>
         </div>
     </div>
   </div>
@@ -51,7 +58,26 @@ export default class SceneHierarchy extends Vue {
 
 <style lang="scss" scoped>
 .play-overlay {
-  padding: 60px;
+  display: flex;
+  flex-direction: column;
+}
+
+.play-header {
+  background: #DD5044;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  padding: 0 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.play-header .title {
+  font-size: 18px;
+}
+
+.play-body {
+  flex: 1;
 }
 
 iframe {

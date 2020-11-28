@@ -1,9 +1,7 @@
 <template>
   <div class="component default-component">
     <main-menu></main-menu>
-    <map-editor></map-editor>
-
-    <!-- <router-outlet></router-outlet> -->
+    <scene-editor></scene-editor>
 
     <div class="a11y-modal-layer a11y-hidden">
         <div class="a11y-modal-container">
@@ -27,13 +25,13 @@
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import MainMenu from './MainMenu.vue';
-import MapEditor from './MapEditor.vue';
+import SceneEditor from './SceneEditor.vue';
 import NewScene from './NewScene.vue';
 
 @Component({
   components: {
     MainMenu,
-    MapEditor,
+    SceneEditor,
     NewScene
   }
 })

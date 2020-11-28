@@ -1,6 +1,9 @@
 <template>
   <div class="collider-component" v-if="inspectorComponentData">
-    <div class="text-default" style="padding-bottom: 5px; font-weight: bold; margin-bottom: 5px;">Collider</div>
+    <div class="text-default" style="padding-bottom: 5px; font-weight: bold; margin-bottom: 5px;">
+      <i class="fa fa-object-ungroup" style="margin-right: 10px;"></i>
+      <span>Collider</span>  
+    </div>
     
     <div class="checkbox">
       <input type="checkbox" id="isTrigger" name="isTrigger" v-model="inspectorComponentData.isTrigger" />
