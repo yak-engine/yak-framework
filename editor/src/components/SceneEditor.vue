@@ -182,6 +182,8 @@ export default class SceneEditor extends Vue {
   constructor() {
     super();
 
+    console.log((window as any).appQuit);
+
     // fetch("./bundle/scenes/scene1.json")
     //   .then((response) => response.json())
     //   .then((scene: Scene) => {
