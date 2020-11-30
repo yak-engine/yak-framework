@@ -22,6 +22,7 @@
 </template>
 
 <script lang="ts">
+
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import MainMenu from './MainMenu.vue';
@@ -59,7 +60,8 @@ export default class Default extends Vue {
         // });
     }, 2000);
   }
-}
+};
+
 </script>
 
 <style scoped lang="scss">

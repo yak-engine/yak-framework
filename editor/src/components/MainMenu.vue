@@ -32,6 +32,21 @@
                 <div class="nav-right">
                     <ul class="nav-item">
                         <li class="menu-item">
+                            <div role="button" tabindex="0" @click="minimize()">
+                                <i class="fa fa-window-minimize"></i>
+                            </div>
+                        </li>
+                        <li class="menu-item">
+                            <div role="button" tabindex="0" @click="toggleWindowState()">
+                                <i class="fa fa-window-restore"></i>
+                            </div>
+                        </li>
+                        <li class="menu-item">
+                            <div role="button" tabindex="0" @click="close()">
+                                <i class="fa fa-close fa-lg text-red"></i>
+                            </div>
+                        </li>
+                        <li class="menu-item">
                             <div role="button" tabindex="0" class="btn-play" @click="isPlaying = true">
                                 <i class="fa fa-play text-green-darken-2 mr-default"></i>
                                 <span class="text-white">PLAY</span>
@@ -43,12 +58,12 @@
         </div>
     </div>
 
-    <play :is-visible="isPlaying" v-on:on-play-stopped="isPlaying = false"></play>
     <new-scene :is-open="isAddingScene" @on-new-scene-saved="isAddingScene = false" @on-new-scene-cancelled="isAddingScene = false"></new-scene>
   </div>
 </template>
 
 <script lang="ts">
+
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import Play from './Play.vue';
@@ -63,11 +78,13 @@ import NewScene from './NewScene.vue';
 export default class MainMenu extends Vue {
   @Prop() private msg!: string;
 
-  public isPlaying: boolean = false;
+
   public isAddingScene: boolean = false;
 
   constructor() {
       super();
+      
+      console.log((window as any).electron);
 
       document.addEventListener('click', (event: MouseEvent) => {
           let mainMenu = <HTMLElement>this.$refs.mainMenu;
@@ -82,6 +99,30 @@ export default class MainMenu extends Vue {
       })
   }
 
+  toggleWindowState(): void {
+      let browserWindow = (window as any).electron.getCurrentWindow();
+
+      if (browserWindow.isMaximized()) {
+          this.minimize();
+      }
+      else {
+          this.maximize();
+      }
+  }
+
+  maximize(): void {
+    (window as any).electron.getCurrentWindow().maximize();
+  }
+
+  minimize(): void {
+    console.log('minimize');
+    (window as any).electron.getCurrentWindow().minimize();
+  }
+
+  close(): void {
+    (window as any).electron.getCurrentWindow().close();
+  }
+
   toggleDropdown(event: MouseEvent) {
       let target = <HTMLElement>event.target;
 
@@ -89,9 +130,16 @@ export default class MainMenu extends Vue {
           target.parentElement.classList.add('expanded');
       }
   }
-}
+};
+
 </script>
 
 <style scoped lang="scss">
+// .main-menu-component {
+//     -webkit-app-region: drag
+// }
 
+.menu-item {
+    cursor: pointer;
+}
 </style>

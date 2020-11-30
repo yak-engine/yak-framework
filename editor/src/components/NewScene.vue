@@ -35,6 +35,7 @@
 </template>
 
 <script lang="ts">
+
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 import SceneService from "../services/scene.service";
@@ -50,7 +51,8 @@ export default class NewScene extends Vue {
       this.$emit('on-new-scene-saved');
     });
   }
-}
+};
+
 </script>
 
 <style scoped lang="scss">

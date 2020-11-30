@@ -26,13 +26,14 @@
 </template>
 
 <script lang="ts">
+
 import { Component, Prop, Vue } from "vue-property-decorator";
-// import Transform from '../../../../yak-engine/src/primitives/transform';
 
 @Component
 export default class TransformComponent extends Vue {
   @Prop() inspectorComponentData: any;
-}
+};
+
 </script>
 
 <style>

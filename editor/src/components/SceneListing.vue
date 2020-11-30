@@ -12,6 +12,7 @@
 </template>
 
 <script lang="ts">
+
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 import SceneService from "../services/scene.service";
@@ -36,7 +37,8 @@ export default class SceneListing extends Vue {
       this.$emit('on-scene-delete', sceneName);
     });
   }
-}
+};
+
 </script>
 
 <style scoped lang="scss">

@@ -40,6 +40,7 @@
 </template>
 
 <script lang="ts">
+
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
@@ -53,7 +54,8 @@ export default class SceneHierarchy extends Vue {
     this.previewUrl = `${this.previewUrl}?rootPath=${encodeURIComponent('')}&sceneName=scene1`;
     console.log(this.previewUrl);
   }
-}
+};
+
 </script>
 
 <style lang="scss" scoped>

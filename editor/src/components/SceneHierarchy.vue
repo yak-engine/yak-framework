@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts">
+
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
@@ -40,7 +41,8 @@ export default class SceneHierarchy extends Vue {
         return entity.tagComponent.name.charAt(0).toUpperCase() + entity.tagComponent.name.slice(1);
     }
   }
-}
+};
+
 </script>
 
 <style>

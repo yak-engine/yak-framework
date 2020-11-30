@@ -5,6 +5,7 @@
 </template>
 
 <script lang="ts">
+
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 import TagComponent from './Inspector/TagComponent.vue';
@@ -49,7 +50,8 @@ export default class Inspector extends Vue {
   onEntityChanged(newValue: any, oldValue: any): void {
     this.bootstrapAvailableComponents();
   }
-}
+};
+
 </script>
 
 <style>

@@ -37,9 +37,7 @@
         <div style="flex: 1">
           <scene-listing :selected-scene="scene.name" @on-scene-selected="loadEditorScene($event)"></scene-listing>
           <ul class="nav nav-menu mb-0 fill-dark text-white is-shadowed" style="z-index: 500; border-bottom: 1px solid black;">
-            <div class="">
-              <div class="nav-left"></div>
-              <div class="nav-right">
+              <div class="nav-left">
                 <ul class="nav-item">
                   <li>
                     <div
@@ -110,7 +108,16 @@
                   </li>
                 </ul>
               </div>
-            </div>
+              <div class="nav-right">
+                <ul class="nav-item">
+                  <li class="menu-item">
+                      <div role="button" tabindex="0" class="btn-play" @click="isPlaying = true">
+                          <i class="fa fa-play text-green-darken-2 mr-default"></i>
+                          <span class="text-white">PLAY</span>
+                      </div>
+                  </li>
+                </ul>
+              </div>
           </ul>
           <div
             class="canvas-container"
@@ -149,10 +156,13 @@
           </div>
         </div>
       </div>
+
+    <play :is-visible="isPlaying" v-on:on-play-stopped="isPlaying = false"></play>
   </div>
 </template>
 
 <script lang="ts">
+
 import EditorRenderer from '../editor-renderer';
 import { Component, Prop, Vue } from "vue-property-decorator";
 
@@ -162,11 +172,14 @@ import Inspector from './Inspector.vue';
 
 import SceneService from '../services/scene.service';
 
+import Play from './Play.vue';
+
 @Component({
   components: {
     SceneHierarchy,
     SceneListing,
-    Inspector
+    Inspector,
+    Play
   }
 })
 export default class SceneEditor extends Vue {
@@ -177,6 +190,9 @@ export default class SceneEditor extends Vue {
 
   editorRenderer: EditorRenderer;
   isLoading: boolean = true;
+
+  public isPlaying: boolean = false;
+
   // scene: Scene;
 
   constructor() {
@@ -227,7 +243,8 @@ export default class SceneEditor extends Vue {
     window.requestAnimationFrame((time: number) => this.mainLoop(time));
     this.editorRenderer.run();
   }
-}
+};
+
 </script>
 
 <style scoped lang="scss">
