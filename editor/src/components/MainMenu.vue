@@ -9,6 +9,9 @@
                             <div role="button" tabindex="0" class="dropdown-toggle" @click="toggleDropdown($event)">File</div>
                             <ul class="sub-menu">
                                 <li>
+                                    <div role="button" tabindex="0" @click="isAddingProject = true">New project</div>
+                                </li>
+                                <li>
                                     <div role="button" tabindex="0" @click="isAddingScene = true">New scene</div>
                                 </li>
                             </ul>
@@ -58,7 +61,9 @@
         </div>
     </div>
 
+    <new-project :is-open="isAddingProject" @on-new-project-saved="isAddingProject = false" @on-new-project-cancelled="isAddingProject = false"></new-project>
     <new-scene :is-open="isAddingScene" @on-new-scene-saved="isAddingScene = false" @on-new-scene-cancelled="isAddingScene = false"></new-scene>
+    <project-listing :is-open="isOpeningProject"></project-listing>
   </div>
 </template>
 
@@ -68,24 +73,27 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import Play from './Play.vue';
 import NewScene from './NewScene.vue';
+import NewProject from './NewProject.vue';
+import ProjectListing from './ProjectListing.vue';
 
 @Component({
     components: {
         Play,
-        NewScene
+        NewScene,
+        NewProject,
+        ProjectListing
     }
 })
 export default class MainMenu extends Vue {
   @Prop() private msg!: string;
 
-
+  public isOpeningProject: boolean = true;
+  public isAddingProject: boolean = false;
   public isAddingScene: boolean = false;
 
   constructor() {
       super();
       
-      console.log((window as any).electron);
-
       document.addEventListener('click', (event: MouseEvent) => {
           let mainMenu = <HTMLElement>this.$refs.mainMenu;
 
@@ -115,7 +123,6 @@ export default class MainMenu extends Vue {
   }
 
   minimize(): void {
-    console.log('minimize');
     (window as any).electron.getCurrentWindow().minimize();
   }
 

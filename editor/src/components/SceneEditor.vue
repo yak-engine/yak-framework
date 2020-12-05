@@ -198,8 +198,6 @@ export default class SceneEditor extends Vue {
   constructor() {
     super();
 
-    console.log((window as any).appQuit);
-
     // fetch("./bundle/scenes/scene1.json")
     //   .then((response) => response.json())
     //   .then((scene: Scene) => {
@@ -226,11 +224,11 @@ export default class SceneEditor extends Vue {
   }
 
   loadEditorScene(sceneName: string): void {
-    this.sceneService.getScene(sceneName).then((scene) => {
-      this.scene = scene;
-      this.entity = this.scene.entities[1];
-      console.log(this.scene);
-    });
+    // this.sceneService.getScene(sceneName).then((scene) => {
+    //   this.scene = scene;
+    //   this.entity = this.scene.entities[1];
+    //   console.log(this.scene);
+    // });
   }
 
   updateScene(): void {

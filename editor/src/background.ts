@@ -17,6 +17,7 @@ async function createWindow() {
   const win = new BrowserWindow({
     width: 1920,
     height: 1280,
+    transparent: false,
     frame: false,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone

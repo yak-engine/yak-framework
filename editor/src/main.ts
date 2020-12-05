@@ -4,6 +4,10 @@ import router from './router';
 
 Vue.config.productionTip = false;
 
+declare global {
+  interface Window { electron: typeof Electron; }
+}
+
 new Vue({
   router,
   render: (h) => h(App),

@@ -24,7 +24,7 @@ export default class SceneListing extends Vue {
   scenes: Array<any> = new Array();
 
   mounted() {
-    new SceneService().listScenes().then((scenes) => this.scenes = scenes);
+    // new SceneService().listScenes().then((scenes) => this.scenes = scenes);
   }
 
   selectScene(sceneName: string, index: number): void {
