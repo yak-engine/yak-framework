@@ -23,7 +23,6 @@ export default abstract class AppDataService {
             let fileData = fs.readFileSync(this.filePath);
 
             if (fileData) {
-                console.log(fileData);
                 return JSON.parse(fileData);
             }
         }

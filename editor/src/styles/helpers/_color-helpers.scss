@@ -33,10 +33,28 @@
 
 @each $color, $hex in $other-color-map {
   .fill-#{$color} {
-    background-color: $hex !important;
+    background-color: $hex;
   }
 
   .text-#{$color} {
-    color: $hex !important;
+    color: $hex;
+  }
+}
+
+.fill-transparent {
+  background-color: $color-transparent;
+}
+
+.fill-accent {
+  background-color: $color-accent;
+}
+
+.text-accent {
+  color: $color-accent;
+}
+
+.text-accent-hover {
+  &:hover {
+    color: $color-accent;
   }
 }

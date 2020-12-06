@@ -35,6 +35,7 @@
             </div>
         </div>
         <div style="flex: 1">
+          Engine config - {{engineConfig}}
           <scene-listing :selected-scene="scene.name" @on-scene-selected="loadEditorScene($event)"></scene-listing>
           <ul class="nav nav-menu mb-0 fill-dark text-white is-shadowed" style="z-index: 500; border-bottom: 1px solid black;">
               <div class="nav-left">
@@ -173,6 +174,9 @@ import Inspector from './Inspector.vue';
 import SceneService from '../services/scene.service';
 
 import Play from './Play.vue';
+import EngineConfig from '../../../engine/src/engine-config';
+import ProjectStorageService from '../services/project-storage.service';
+import Scene from '../../../engine/src/graphics/scene';
 
 @Component({
   components: {
@@ -193,7 +197,19 @@ export default class SceneEditor extends Vue {
 
   public isPlaying: boolean = false;
 
-  // scene: Scene;
+  private _engineConfig: EngineConfig = null;
+
+  get engineConfig(): EngineConfig {
+    // this._engineConfig = ProjectStorageService.engineConfig;
+    // return this._engineConfig;
+    return ProjectStorageService.engineConfig;
+  }
+
+  set engineConfig(value: EngineConfig) {
+    console.log(value);
+    this._engineConfig = value;
+    this.loadEditorScene(this._engineConfig.scenes[0]);
+  }
 
   constructor() {
     super();
@@ -211,19 +227,24 @@ export default class SceneEditor extends Vue {
     //   .finally(() => (this.isLoading = false));
   }
 
-  test(entity) {
-    this.entity = entity;
-    console.log(this.entity);
-  }
-
   async mounted() {
-    this.loadEditorScene('scene1');
-
     this.editorRenderer = new EditorRenderer();
     window.requestAnimationFrame((time: number) => this.mainLoop(time));
   }
 
   loadEditorScene(sceneName: string): void {
+    const path = window.require('path');
+    const fs = window.require('fs');
+    const yaml = window.require('js-yaml');
+
+    let scenePath: string = path.join(ProjectStorageService.currentProjectPath, `${sceneName}.yaml`);
+
+    if (!fs.existsSync(scenePath)){
+        throw "Scene does not exist.";
+    }
+
+    this.scene = yaml.safeLoad(fs.readFileSync(scenePath, 'utf8'));
+
     // this.sceneService.getScene(sceneName).then((scene) => {
     //   this.scene = scene;
     //   this.entity = this.scene.entities[1];

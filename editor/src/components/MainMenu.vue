@@ -12,6 +12,9 @@
                                     <div role="button" tabindex="0" @click="isAddingProject = true">New project</div>
                                 </li>
                                 <li>
+                                    <div role="button" tabindex="0" @click="$emit('on-open-project')">Open project</div>
+                                </li>
+                                <li>
                                     <div role="button" tabindex="0" @click="isAddingScene = true">New scene</div>
                                 </li>
                             </ul>
@@ -32,6 +35,9 @@
                         </li>
                     </ul>
                 </div>
+                <div class="nav-center" v-if="engineConfig">
+                    {{engineConfig.name}} &dot; Yak Engine
+                </div>
                 <div class="nav-right">
                     <ul class="nav-item">
                         <li class="menu-item">
@@ -49,12 +55,6 @@
                                 <i class="fa fa-close fa-lg text-red"></i>
                             </div>
                         </li>
-                        <li class="menu-item">
-                            <div role="button" tabindex="0" class="btn-play" @click="isPlaying = true">
-                                <i class="fa fa-play text-green-darken-2 mr-default"></i>
-                                <span class="text-white">PLAY</span>
-                            </div>
-                        </li>
                     </ul>
                 </div>
             </ul>
@@ -63,7 +63,6 @@
 
     <new-project :is-open="isAddingProject" @on-new-project-saved="isAddingProject = false" @on-new-project-cancelled="isAddingProject = false"></new-project>
     <new-scene :is-open="isAddingScene" @on-new-scene-saved="isAddingScene = false" @on-new-scene-cancelled="isAddingScene = false"></new-scene>
-    <project-listing :is-open="isOpeningProject"></project-listing>
   </div>
 </template>
 
@@ -74,20 +73,18 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import Play from './Play.vue';
 import NewScene from './NewScene.vue';
 import NewProject from './NewProject.vue';
-import ProjectListing from './ProjectListing.vue';
+import EngineConfig from '../../../engine/src/engine-config';
 
 @Component({
     components: {
         Play,
         NewScene,
-        NewProject,
-        ProjectListing
+        NewProject
     }
 })
 export default class MainMenu extends Vue {
-  @Prop() private msg!: string;
+  @Prop() private engineConfig: EngineConfig;
 
-  public isOpeningProject: boolean = true;
   public isAddingProject: boolean = false;
   public isAddingScene: boolean = false;
 

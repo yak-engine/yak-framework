@@ -13,6 +13,10 @@
     flex-direction: column;
 }
 
+div[role="button"] {
+    cursor: pointer;
+}
+
 input {
     width: 100%;
     background-color: #424242;

@@ -1,7 +1,13 @@
 <template>
   <div class="component default-component">
-    <main-menu></main-menu>
+    <main-menu @on-open-project="isOpeningProject = true" :engine-config="engineConfig"></main-menu>
     <scene-editor></scene-editor>
+    <project-selection 
+      :is-open="isOpeningProject" 
+      @on-project-opened="bootstrapProject($event)" 
+      @on-open-project-cancelled="isOpeningProject = false"
+      @on-project-open-closed="isOpeningProject = false">
+      </project-selection>
   </div>
 </template>
 
@@ -11,38 +17,25 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 
 import MainMenu from './MainMenu.vue';
 import SceneEditor from './SceneEditor.vue';
-import NewScene from './NewScene.vue';
+import ProjectSelection from './ProjectSelection.vue';
+import Project from '../models/project';
+import ProjectStorageService from '../services/project-storage.service';
+import EngineConfig from '../../../engine/src/engine-config';
 
 @Component({
   components: {
     MainMenu,
     SceneEditor,
-    NewScene
+    ProjectSelection
   }
 })
 export default class Default extends Vue {
+  isOpeningProject: boolean = false;
 
-  @Prop() private msg!: string;
+  engineConfig: EngineConfig = new EngineConfig();
 
-  mounted(): void {
-    // TODO: Fix this. This is an issue with the order in which components get added to the DOM. Add way to query template fragment.
-    setTimeout(() => {
-        // let modalToggleElems = document.querySelectorAll('.modal-toggle');
-
-        // console.log(modalToggleElems);
-
-        // (window as any).a11yModal.modalLayer = document.querySelector(`.${(window as any).a11yModal.options.modalLayerClass}`);
-
-        // console.log((window as any).a11yModal.modalLayer);
-
-        // modalToggleElems.forEach((modalToggleElem: HTMLElement) => {
-        //     let modalTarget = modalToggleElem.dataset.target;
-
-        //     modalToggleElem.addEventListener('click', () => {
-        //         (window as any).a11yModal.open(modalTarget);
-        //     });
-        // });
-    }, 2000);
+  bootstrapProject(project: Project): void {
+    this.engineConfig = new ProjectStorageService().open(project.path);
   }
 };
 

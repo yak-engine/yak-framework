@@ -29,12 +29,13 @@
 import { app, OpenDialogReturnValue } from "electron/main";
 import { Component, Prop, Vue } from "vue-property-decorator";
 import ProjectStorageService from "../services/project-storage.service";
+import Project from "../models/project";
 
 @Component
 export default class NewProject extends Vue {
   @Prop() isOpen: boolean;
 
-  project: any = {};
+  project: Project = new Project();
 
   async selectTargetPath(): Promise<void> {
     let results: OpenDialogReturnValue = await window.electron.dialog.showOpenDialog({
