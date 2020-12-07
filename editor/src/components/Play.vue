@@ -17,10 +17,7 @@
         class="play-overlay is-shadowed"
         style="
           position: absolute;
-          top: 60px;
-          left: 60px;
-          right: 60px;
-          bottom: 60px;
+          inset: 120px;
           background-color: #181818;
           border-radius: 8px;
         ">
@@ -65,7 +62,7 @@ export default class SceneHierarchy extends Vue {
 }
 
 .play-header {
-  background: #DD5044;
+  background: #007ACC;
   border-top-left-radius: 8px;
   border-top-right-radius: 8px;
   padding: 0 15px;

@@ -1,4 +1,6 @@
+import EngineConfig from '../../../engine/src/engine-config';
+
 export default class Project {
-    name: string;
     path: string;
+    engineConfig: EngineConfig;
 }

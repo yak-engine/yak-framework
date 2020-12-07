@@ -35,8 +35,8 @@
                         </li>
                     </ul>
                 </div>
-                <div class="nav-center" v-if="engineConfig">
-                    {{engineConfig.name}} &dot; Yak Engine
+                <div class="nav-center" v-if="project && project.engineConfig">
+                    {{project.engineConfig.name}} <span>/</span> Yak Engine
                 </div>
                 <div class="nav-right">
                     <ul class="nav-item">
@@ -74,6 +74,7 @@ import Play from './Play.vue';
 import NewScene from './NewScene.vue';
 import NewProject from './NewProject.vue';
 import EngineConfig from '../../../engine/src/engine-config';
+import Project from '../models/project';
 
 @Component({
     components: {
@@ -83,7 +84,7 @@ import EngineConfig from '../../../engine/src/engine-config';
     }
 })
 export default class MainMenu extends Vue {
-  @Prop() private engineConfig: EngineConfig;
+  @Prop() private project: Project;
 
   public isAddingProject: boolean = false;
   public isAddingScene: boolean = false;

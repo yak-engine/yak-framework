@@ -1,10 +1,12 @@
 <template>
   <div class="component default-component">
-    <main-menu @on-open-project="isOpeningProject = true" :engine-config="engineConfig"></main-menu>
-    <scene-editor></scene-editor>
+    <main-menu @on-open-project="isOpeningProject = true" :project="project"></main-menu>
+
+    <scene-editor :project="project"></scene-editor>
+
     <project-selection 
       :is-open="isOpeningProject" 
-      @on-project-opened="bootstrapProject($event)" 
+      @on-project-opened="project = $event; isOpeningProject = false;" 
       @on-open-project-cancelled="isOpeningProject = false"
       @on-project-open-closed="isOpeningProject = false">
       </project-selection>
@@ -31,12 +33,7 @@ import EngineConfig from '../../../engine/src/engine-config';
 })
 export default class Default extends Vue {
   isOpeningProject: boolean = false;
-
-  engineConfig: EngineConfig = new EngineConfig();
-
-  bootstrapProject(project: Project): void {
-    this.engineConfig = new ProjectStorageService().open(project.path);
-  }
+  project: Project = new Project();
 };
 
 </script>

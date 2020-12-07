@@ -17,6 +17,16 @@ div[role="button"] {
     cursor: pointer;
 }
 
+.tree-component ul li {
+    margin-bottom: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+  }
+  
+  .tree-component ul li.selected {
+    background-color: #007ACC;
+  }
+
 input {
     width: 100%;
     background-color: #424242;

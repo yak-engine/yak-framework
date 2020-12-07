@@ -12,13 +12,20 @@
 
 <script lang="ts">
 
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 import EngineConfig from "../../../engine/src/engine-config";
 import ProjectStorageService from "../services/project-storage.service";
 
 @Component
 export default class SceneHierarchy extends Vue {
   @Prop() entities: Array<any>;
+
+  @Watch('entities')
+  onPropertyChanged(newValue: Array<any>, oldValue: Array<any>) {
+    if (newValue) {
+      this.selectEntity(newValue[1]);
+    }
+  }
 
   selectedEntity: any = {};
   
@@ -47,14 +54,6 @@ export default class SceneHierarchy extends Vue {
 
 </script>
 
-<style>
-.tree-component ul li {
-  margin-bottom: 5px;
-  padding: 10px 15px;
-  cursor: pointer;
-}
+<style lang="scss" scoped>
 
-.tree-component ul li.selected {
-  background-color: #007ACC;
-}
 </style>

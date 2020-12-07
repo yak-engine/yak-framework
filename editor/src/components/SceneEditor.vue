@@ -35,7 +35,6 @@
             </div>
         </div>
         <div style="flex: 1">
-          Engine config - {{engineConfig}}
           <scene-listing :selected-scene="scene.name" @on-scene-selected="loadEditorScene($event)"></scene-listing>
           <ul class="nav nav-menu mb-0 fill-dark text-white is-shadowed" style="z-index: 500; border-bottom: 1px solid black;">
               <div class="nav-left">
@@ -153,7 +152,8 @@
             <div style="padding: 8px 15px; background-color: #181818; border-bottom: 1px solid black;" class="is-shadowed">
               <span style="font-weight: bold; color: #e7e7e7;">Manage Scene Layers</span>
             </div>
-
+            <!-- component goes here -->
+            <scene-layers :layers="scene.layers"></scene-layers>
           </div>
         </div>
       </div>
@@ -165,11 +165,12 @@
 <script lang="ts">
 
 import EditorRenderer from '../editor-renderer';
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
 
 import SceneHierarchy from './SceneHierarchy.vue';
 import SceneListing from './SceneListing.vue';
 import Inspector from './Inspector.vue';
+import SceneLayers from './SceneLayers.vue';
 
 import SceneService from '../services/scene.service';
 
@@ -177,59 +178,43 @@ import Play from './Play.vue';
 import EngineConfig from '../../../engine/src/engine-config';
 import ProjectStorageService from '../services/project-storage.service';
 import Scene from '../../../engine/src/graphics/scene';
+import Project from '../models/project';
+import Tileset from '../../../engine/src/graphics/tileset';
+import { Logger } from '../../../engine/src/logging/logger';
+import EntityManager from '../../../engine/src/components/EntityManager';
+import Entity from '../../../engine/src/components/entity';
 
 @Component({
   components: {
     SceneHierarchy,
     SceneListing,
     Inspector,
-    Play
+    Play,
+    SceneLayers
   }
 })
 export default class SceneEditor extends Vue {
-  scene: any = {};
+  @Prop() project: Project;
+
+  @Watch('project')
+  onPropertyChanged(newValue: Project, oldValue: Project) {
+    if (newValue && newValue.engineConfig) {
+      this.loadEditorScene(newValue.engineConfig.scenes[0]);
+    }
+  }
+
+  scene: Scene = new Scene();
   sceneService: SceneService = new SceneService();
 
   entity: any = {};
 
-  editorRenderer: EditorRenderer;
+  editorRenderer: EditorRenderer = null;
   isLoading: boolean = true;
 
   public isPlaying: boolean = false;
 
-  private _engineConfig: EngineConfig = null;
-
-  get engineConfig(): EngineConfig {
-    // this._engineConfig = ProjectStorageService.engineConfig;
-    // return this._engineConfig;
-    return ProjectStorageService.engineConfig;
-  }
-
-  set engineConfig(value: EngineConfig) {
-    console.log(value);
-    this._engineConfig = value;
-    this.loadEditorScene(this._engineConfig.scenes[0]);
-  }
-
-  constructor() {
-    super();
-
-    // fetch("./bundle/scenes/scene1.json")
-    //   .then((response) => response.json())
-    //   .then((scene: Scene) => {
-    //     this.scene = scene;
-
-    //     this.editorRenderer = new EditorRenderer();
-    //     this.editorRenderer.currentLayer = this.scene.layers[0];
-
-    //     window.requestAnimationFrame((time: number) => this.mainLoop(time));
-    //   })
-    //   .finally(() => (this.isLoading = false));
-  }
-
   async mounted() {
     this.editorRenderer = new EditorRenderer();
-    window.requestAnimationFrame((time: number) => this.mainLoop(time));
   }
 
   loadEditorScene(sceneName: string): void {
@@ -237,7 +222,7 @@ export default class SceneEditor extends Vue {
     const fs = window.require('fs');
     const yaml = window.require('js-yaml');
 
-    let scenePath: string = path.join(ProjectStorageService.currentProjectPath, `${sceneName}.yaml`);
+    let scenePath: string = path.join(this.project.path, `scenes/${sceneName}.yaml`);
 
     if (!fs.existsSync(scenePath)){
         throw "Scene does not exist.";
@@ -245,11 +230,41 @@ export default class SceneEditor extends Vue {
 
     this.scene = yaml.safeLoad(fs.readFileSync(scenePath, 'utf8'));
 
-    // this.sceneService.getScene(sceneName).then((scene) => {
-    //   this.scene = scene;
-    //   this.entity = this.scene.entities[1];
-    //   console.log(this.scene);
-    // });
+    // Load the tilesets
+    let loadedTilesets = 0;
+
+    this.scene.tilesets.forEach((tilesetPath: string) => {
+      console.log(tilesetPath);
+
+        let imageData = fs.readFileSync(path.join(this.project.path, `tilesets/${tilesetPath}`));
+        let base64 = btoa([].reduce.call(new Uint8Array(imageData),function(p,c){return p+String.fromCharCode(c)},''))
+        let dataUrl = `data:image/png;base64,${base64}`;
+
+        let image = new Image();
+
+        image.onload = () => {
+            this.editorRenderer.tilesets.push(new Tileset(image));
+            
+            loadedTilesets++;
+
+            if (loadedTilesets === this.scene.tilesets.length) {
+              EntityManager.getInstance().entities = (this.scene.entities as unknown) as Set<Entity>;
+
+              let tilemapComponent = this.scene.entities[2].tilemapComponent;
+              this.editorRenderer.scene = this.scene;
+              console.log(tilemapComponent);
+              this.editorRenderer.init(tilemapComponent);
+              window.requestAnimationFrame((time: number) => this.mainLoop(time));
+            }
+        }
+
+        image.onerror = () => {
+          Logger.data('failed to load tileset');
+        }
+        
+        // image.src = path.join(this.project.path, `tilesets/${tilesetPath}`);
+        image.src = dataUrl;
+    });
   }
 
   updateScene(): void {

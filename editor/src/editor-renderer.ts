@@ -1,8 +1,15 @@
 import Layer from "../../engine/src/graphics/layer";
 import Sprite from "../../engine/src/graphics/sprite";
 import Point from "../../engine/src/primitives/Point";
+import Tileset from "../../engine/src/graphics/tileset";
+import Scene from '../../engine/src/graphics/scene';
+import SpriteRendererComponent from "../../engine/src/components/sprite-renderer/SpriteRendererComponent";
+import MaterialComponent from "../../engine/src/components/material/MaterialComponent";
+import TransformComponent from "../../engine/src/components/transform/TransformComponent";
+import EntityManager from "../../engine/src/components/EntityManager"
 
 import { EditorMode } from "./enums/EditorMode";
+import Entity from '../../engine/src/components/entity';
 
 export default class EditorRenderer {
     /**
@@ -38,6 +45,13 @@ export default class EditorRenderer {
     
     public hoveredSprite: Sprite;
 
+    public scene: Scene = null;
+
+    /**
+     * The tilesets being used for the current scene. Get loaded on startup.
+     */
+    public tilesets: Tileset[] = [];
+
     constructor() {
         this.engineCanvas = <HTMLCanvasElement>document.querySelector('#editor-canvas');
         this.context = <CanvasRenderingContext2D>this.engineCanvas.getContext('2d');
@@ -59,11 +73,102 @@ export default class EditorRenderer {
         // this.canvas.engineCanvas.addEventListener('mouseup', (event) => this.onCanvasMouseUp(event));
     }
 
+    public init(tilemapComponent: any): void {
+        console.log(tilemapComponent);
+
+        for (let col = 0; col <= 64; col++) {
+            for (let row = 0; row <= 64; row++) {
+                // let sprite: number = layer.sprites[row * this.scene.columns + col];
+                // let tilemapComponent: any = this.tileMapEntity.getComponent<TilemapComponent>(TilemapComponent.name);
+                let sprite: number = tilemapComponent.tiles[row * this.scene.columns + col]; // [row * this.scene.columns + col]
+
+                console.log(sprite);
+
+                this.context.drawImage(
+                    this.tilesets[0].image,
+                    0,
+                    0,
+                    32,
+                    32,
+                    col * 32,
+                    row *32,
+                    32,
+                    32
+                )
+
+               if (sprite) {
+                    // var x = (col - startCol) * this.scene.spriteSize + offsetX;
+                // var y = (row - startRow) * this.scene.spriteSize + offsetY;
+
+                // this.context.drawImage(
+                //     this.tilesets[0].image, //this.tilesets[layer.tileset].image,
+                //     sprite * this.scene.spriteSize,
+                //     0,
+                //     this.scene.spriteSize,
+                //     this.scene.spriteSize,
+                //     col * this.scene.spriteSize,
+                //     row * this.scene.spriteSize,
+                //     this.scene.spriteSize,
+                //     this.scene.spriteSize
+                // );
+               }
+            }
+        }
+    }
+
     public run(): void {
-        this.context.fillStyle = '#787878';
-        this.context.fillRect(0, 0, this.getCanvasWidth(), this.getCanvasHeight());
+        // this.context.fillStyle = '#585858';
+        // this.context.fillRect(0, 0, this.getCanvasWidth(), this.getCanvasHeight());
 
         this.drawGridLines();
+
+        console.log(EntityManager.getInstance().entities);
+
+        // Run through renderer system.
+        EntityManager.getInstance().entities.forEach((entity: Entity) => {
+            let spriteRendererComponent = entity.getComponent<SpriteRendererComponent>(SpriteRendererComponent.name);
+
+            if (spriteRendererComponent) {
+                let materialComponent = entity.getComponent<MaterialComponent>(MaterialComponent.name);
+
+                if (materialComponent) {
+                    this.context.fillStyle = materialComponent.fillStyle;
+                    this.context.globalAlpha = materialComponent.alpha;
+                }
+
+                let transform = entity.getComponent<TransformComponent>(TransformComponent.name).transform;
+
+                if (spriteRendererComponent.row !== undefined) {
+                    // let cameraOffsetX = 0, cameraOffsetY = 0;
+
+                    // if (this.playerEntity.id !== entity.id) {
+                    //     cameraOffsetX = this.mainCamera.viewport.x;
+                    //     cameraOffsetY = this.mainCamera.viewport.y;
+                    // }
+
+                    this.context.drawImage(
+                        this.tilesets[0].image,// this.tilesets[spriteRendererComponent.layer].image,
+                        spriteRendererComponent.column * this.scene.spriteSize,
+                        spriteRendererComponent.row * this.scene.spriteSize,
+                        this.scene.spriteSize,
+                        this.scene.spriteSize,
+                        transform.x, // transform.x - cameraOffsetX,
+                        transform.y, // transform.y - cameraOffsetY
+                        this.scene.spriteSize,
+                        this.scene.spriteSize
+                    );
+                }
+                else {
+                    if (transform) {
+                        this.context.fillRect(transform.x, transform.y, transform.width, transform.height);
+                    }
+                }
+            }
+
+            // Reset renderer context to default values.
+            // this.context.fillStyle = Configuration.canvasFill;
+            // this.context.globalAlpha = 1;
+        });
 
         // this.drawSelectionTransform();
         // this.drawSpritePreview();

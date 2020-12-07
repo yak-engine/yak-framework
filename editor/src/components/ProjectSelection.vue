@@ -5,7 +5,7 @@
         <div class="modal-header flex flex-r justify-content-between">
           <span class="modal-title">My Projects</span>
           <div class="modal-actions">
-            <button type="button" class="button fill-transparent text-white text-accent-hover" @click="importProject()">
+            <button type="button" class="button fill-transparent text-white text-accent-hover" @click="importProject()" ref="btnImport">
               <i class="fa fa-upload"></i>&nbsp;Import
             </button>
             <div role="button" tabindex="0" @click="$emit('on-project-open-closed')">
@@ -61,9 +61,8 @@ export default class ProjectSelection extends Vue {
 
   openProject(project: Project): void {
     try {
-      ProjectStorageService.engineConfig = new ProjectStorageService().open(project.path, false);
-      console.log(ProjectStorageService.engineConfig);
-      ProjectStorageService.currentProjectPath = project.path;
+      let openedProject: Project = new ProjectStorageService().open(project.path, false);
+      this.$emit('on-project-opened', openedProject);
     }
     catch(ex) {
       (this as any).$sureToast.showError(ex);

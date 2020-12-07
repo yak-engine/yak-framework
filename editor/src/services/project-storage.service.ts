@@ -10,9 +10,6 @@ const yaml = window.require('js-yaml');
 export default class ProjectStorageService extends AppDataService {
     fileName: string = 'projects';
 
-    public static engineConfig: EngineConfig = new EngineConfig();
-    public static currentProjectPath: string = '';
-
     public create(project: Project, isImport: boolean = false): void {
         let projects = this.load<Project[]>() || [];
 
@@ -35,7 +32,7 @@ export default class ProjectStorageService extends AppDataService {
         }
     }
 
-    public open(path: string, isImport: boolean = false): EngineConfig {
+    public open(path: string, isImport: boolean = false): Project {
         let engineConfig: EngineConfig = this.loadEngineConfig(path);
 
         if (!engineConfig) {
@@ -51,14 +48,19 @@ export default class ProjectStorageService extends AppDataService {
             else {
                 let project = new Project();
     
-                project.name = engineConfig.name;
                 project.path = path;
+                project.engineConfig = engineConfig;
     
                 this.create(project, true);
+
+                existingProject = project;
             }
         }
+        else {
+            existingProject.engineConfig = engineConfig;
+        }
 
-        return engineConfig;
+        return existingProject;
     }
 
     private loadEngineConfig(projectPath: string): EngineConfig {
