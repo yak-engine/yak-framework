@@ -74,6 +74,9 @@ export default class EditorRenderer {
     }
 
     public init(tilemapComponent: any): void {
+        this.engineCanvas.width = this.scene.columns * this.scene.spriteSize;
+        this.engineCanvas.height = this.scene.rows * this.scene.spriteSize;
+
         console.log(tilemapComponent);
 
         for (let col = 0; col <= 64; col++) {
@@ -125,7 +128,12 @@ export default class EditorRenderer {
         console.log(EntityManager.getInstance().entities);
 
         // Run through renderer system.
-        EntityManager.getInstance().entities.forEach((entity: Entity) => {
+        EntityManager.getInstance().entities.forEach((tt: Entity) => {
+            let entity = new Entity();
+
+            entity.id = tt.id;
+            entity.isEnabled = tt.isEnabled;
+
             let spriteRendererComponent = entity.getComponent<SpriteRendererComponent>(SpriteRendererComponent.name);
 
             if (spriteRendererComponent) {

@@ -39,5 +39,8 @@ export default class Default extends Vue {
 </script>
 
 <style scoped lang="scss">
-
+.default-component {
+  height: 100%;
+  overflow: hidden;
+}
 </style>

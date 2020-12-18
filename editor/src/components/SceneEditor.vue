@@ -4,7 +4,7 @@
         class="main"
         style="height: 100%; flex: 1; display: flex; flex-direction: row"
       >
-        <div class="editor-left" style="width: 300px; background-color: #212121; display: flex; flex-direction: column;">
+        <div class="editor-left" style="background-color: #212121; display: flex; flex-direction: column; flex-shrink: 0; flex-basis: 300px;">
             <div style="flex: 1;">
               <div style="padding: 8px 15px; background-color: #181818; border-bottom: 1px solid black;" class="is-shadowed">
                 <span style="font-weight: bold; color: #e7e7e7;">Scene Hierarchy</span>
@@ -34,7 +34,7 @@
               </div>
             </div>
         </div>
-        <div style="flex: 1">
+        <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
           <scene-listing :selected-scene="scene.name" @on-scene-selected="loadEditorScene($event)"></scene-listing>
           <ul class="nav nav-menu mb-0 fill-dark text-white is-shadowed" style="z-index: 500; border-bottom: 1px solid black;">
               <div class="nav-left">
@@ -119,18 +119,7 @@
                 </ul>
               </div>
           </ul>
-          <div
-            class="canvas-container"
-            style="
-            background-color: #323232;
-              display: flex;
-              height: 100%;
-              flex: 1;
-              justify-content: center;
-              align-items: center;
-            "
-          >
-            <div style="min-width: 512px; overflow: auto">
+            <div class="canvas-container" style="min-width: 512px; overflow: auto">
               <canvas
                 id="editor-canvas"
                 tabindex="-1"
@@ -138,9 +127,8 @@
                 height="512"
               ></canvas>
             </div>
-          </div>
         </div>
-        <div class="editor-right" style="width: 400px; background-color: #212121; display: flex; flex-direction: column;">
+        <div class="editor-right" style="background-color: #212121; display: flex; flex-direction: column; flex-shrink: 0; flex-basis: 400px;">
           <div style="flex: 1;">
             <div style="padding: 8px 15px; background-color: #181818; border-bottom: 1px solid black;" class="is-shadowed">
               <span style="font-weight: bold; color: #e7e7e7;"><i class="fa fa-cube fa-lg"></i> Inspector</span>
@@ -284,5 +272,15 @@ export default class SceneEditor extends Vue {
 <style scoped lang="scss">
 input {
   width: calc(100% - 15px);
+}
+
+.scene-editor-component {
+  overflow: hidden;
+}
+
+.canvas-container {
+  padding: 120px;
+  background: #181818;
+  flex: 1;
 }
 </style>
