@@ -1,4 +1,4 @@
-import Point from "../../primitives/Point";
+import Point from "../../primitives/point";
 import Transform from "../../primitives/transform";
 import Component from "../Component";
 

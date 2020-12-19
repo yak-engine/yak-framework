@@ -20,6 +20,7 @@ import ImageComponentManager from './components/image/ImageComponentManager';
 import SceneManager from './scene-manager';
 import Tileset from './graphics/tileset';
 import { Logger } from './logging/logger';
+import Configuration from './configuration';
 
 export default class Application {
     /**
@@ -40,13 +41,9 @@ export default class Application {
     constructor() {
         // Register required component.
         // TODO: Only register the required components.
-        ManagerFactory.register(TagComponent.name, TagComponentManager);
-        ManagerFactory.register(TransformComponent.name, TransformComponentManager);
-        ManagerFactory.register(MaterialComponent.name, MaterialComponentManager);
-        ManagerFactory.register(SpriteRendererComponent.name, SpriteRendererComponentManager);
-        ManagerFactory.register(TileMapComponent.name, TileMapComponentManager);
-        ManagerFactory.register(ColliderComponent.name, ColliderComponentManager);
-        ManagerFactory.register(ImageComponent.name, ImageComponentManager);
+        Configuration.RegisterManagers();
+
+        console.log('[ENGINE APPLICATION STARTED');
     }
 
     /**

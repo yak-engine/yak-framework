@@ -11,6 +11,9 @@ import EntityManager from "../../engine/src/components/EntityManager"
 import { EditorMode } from "./enums/EditorMode";
 import Entity from '../../engine/src/components/entity';
 
+import Configuration from "../../engine/src/configuration";
+import Transform from "../../engine/src/primitives/transform";
+
 export default class EditorRenderer {
     /**
      * The canvas located within the default index.html document.
@@ -56,6 +59,8 @@ export default class EditorRenderer {
         this.engineCanvas = <HTMLCanvasElement>document.querySelector('#editor-canvas');
         this.context = <CanvasRenderingContext2D>this.engineCanvas.getContext('2d');
 
+        Configuration.RegisterManagers();
+
         // this.canvas = canvas;
         // document.addEventListener('keydown', (event: KeyboardEvent) => {
         //     if (event.key.toLowerCase() == 'escape') {
@@ -73,19 +78,40 @@ export default class EditorRenderer {
         // this.canvas.engineCanvas.addEventListener('mouseup', (event) => this.onCanvasMouseUp(event));
     }
 
+    entities: Entity[] = [];
+
     public init(tilemapComponent: any): void {
         this.engineCanvas.width = this.scene.columns * this.scene.spriteSize;
         this.engineCanvas.height = this.scene.rows * this.scene.spriteSize;
 
-        console.log(tilemapComponent);
+        // Bootstrap entities.
+        this.scene.entities.forEach((sourceEntity) => {
+            let parsedEntity = new Entity();
+
+            parsedEntity.id = sourceEntity.id;
+            parsedEntity.isEnabled = sourceEntity.isEnabled;
+
+            for(let sourceProperty in sourceEntity) {
+                let sourceComponent = sourceEntity[sourceProperty];
+
+                if (sourceComponent) {
+                    if (sourceProperty === 'spriteComponent') {
+                        parsedEntity.addComponent(new SpriteRendererComponent(sourceComponent.layer, sourceComponent.tileset, sourceComponent.row, sourceComponent.column));
+                    }
+                    else if (sourceProperty === 'transformComponent') {
+                        parsedEntity.addComponent(new TransformComponent(new Transform(sourceComponent.x, sourceComponent.y, sourceComponent.width, sourceComponent.height)));
+                    }
+                }
+            }
+
+            this.entities.push(parsedEntity);
+        })
 
         for (let col = 0; col <= 64; col++) {
             for (let row = 0; row <= 64; row++) {
                 // let sprite: number = layer.sprites[row * this.scene.columns + col];
                 // let tilemapComponent: any = this.tileMapEntity.getComponent<TilemapComponent>(TilemapComponent.name);
                 let sprite: number = tilemapComponent.tiles[row * this.scene.columns + col]; // [row * this.scene.columns + col]
-
-                console.log(sprite);
 
                 this.context.drawImage(
                     this.tilesets[0].image,
@@ -125,8 +151,6 @@ export default class EditorRenderer {
 
         this.drawGridLines();
 
-        console.log(EntityManager.getInstance().entities);
-
         // Run through renderer system.
         EntityManager.getInstance().entities.forEach((tt: Entity) => {
             let entity = new Entity();
@@ -135,6 +159,8 @@ export default class EditorRenderer {
             entity.isEnabled = tt.isEnabled;
 
             let spriteRendererComponent = entity.getComponent<SpriteRendererComponent>(SpriteRendererComponent.name);
+
+            console.log(spriteRendererComponent);
 
             if (spriteRendererComponent) {
                 let materialComponent = entity.getComponent<MaterialComponent>(MaterialComponent.name);
