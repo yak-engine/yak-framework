@@ -9,13 +9,16 @@
                             <div role="button" tabindex="0" class="dropdown-toggle" @click="toggleDropdown($event)">File</div>
                             <ul class="sub-menu">
                                 <li>
-                                    <div role="button" tabindex="0" @click="isAddingProject = true">New project</div>
+                                    <div role="button" tabindex="0" @click="$emit('on-new-project-clicked')">New project</div>
                                 </li>
                                 <li>
                                     <div role="button" tabindex="0" @click="$emit('on-open-project')">Open project</div>
                                 </li>
                                 <li>
-                                    <div role="button" tabindex="0" @click="isAddingScene = true">New scene</div>
+                                    <div role="button" tabindex="0" @click="$emit('on-new-scene-clicked')">New scene</div>
+                                </li>
+                                <li>
+                                    <div role="button" tabindex="0" @click="$emit('on-open-settings')">Settings</div>
                                 </li>
                             </ul>
                         </li>
@@ -60,9 +63,6 @@
             </ul>
         </div>
     </div>
-
-    <new-project :is-open="isAddingProject" @on-new-project-saved="isAddingProject = false" @on-new-project-cancelled="isAddingProject = false"></new-project>
-    <new-scene :is-open="isAddingScene" @on-new-scene-saved="isAddingScene = false" @on-new-scene-cancelled="isAddingScene = false"></new-scene>
   </div>
 </template>
 
@@ -70,24 +70,12 @@
 
 import { Component, Prop, Vue } from 'vue-property-decorator';
 
-import Play from './Play.vue';
-import NewScene from './NewScene.vue';
-import NewProject from './NewProject.vue';
 import EngineConfig from '../../../engine/src/engine-config';
 import Project from '../models/project';
 
-@Component({
-    components: {
-        Play,
-        NewScene,
-        NewProject
-    }
-})
+@Component
 export default class MainMenu extends Vue {
   @Prop() private project: Project;
-
-  public isAddingProject: boolean = false;
-  public isAddingScene: boolean = false;
 
   constructor() {
       super();
@@ -95,14 +83,12 @@ export default class MainMenu extends Vue {
       document.addEventListener('click', (event: MouseEvent) => {
           let mainMenu = <HTMLElement>this.$refs.mainMenu;
 
-          console.log(mainMenu.contains(<HTMLElement>event.target));
-
           if (!mainMenu.contains(<HTMLElement>event.target)) {
               mainMenu.querySelectorAll('.menu-item.item-has-children.expanded').forEach((expandedMenuItem) => {
                   expandedMenuItem.classList.remove('expanded');
               })
           }
-      })
+      });
   }
 
   toggleWindowState(): void {

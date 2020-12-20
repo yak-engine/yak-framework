@@ -33,4 +33,6 @@ export default class Entity {
 
         return null;
     }
+
+    public getComponentName
 }

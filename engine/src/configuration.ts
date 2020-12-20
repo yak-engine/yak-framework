@@ -1,3 +1,5 @@
+import CameraComponent from "./components/camera/CameraComponent";
+import CameraComponentManager from "./components/camera/CameraComponentManager";
 import ColliderComponent from "./components/collider/ColliderComponent";
 import ColliderComponentManager from "./components/collider/ColliderComponentManager";
 import ImageComponent from "./components/image/ImageComponent";
@@ -34,6 +36,7 @@ export default class Configuration {
     public static RegisterManagers(): void {
         ManagerFactory.register(TagComponent.name, TagComponentManager);
         ManagerFactory.register(TransformComponent.name, TransformComponentManager);
+        ManagerFactory.register(CameraComponent.name, CameraComponentManager);
         ManagerFactory.register(MaterialComponent.name, MaterialComponentManager);
         ManagerFactory.register(SpriteRendererComponent.name, SpriteRendererComponentManager);
         ManagerFactory.register(TilemapComponent.name, TilemapComponentManager);

@@ -1,6 +1,12 @@
 <template>
   <div class="inspector-component">
-    <component v-for="entityComponent in entityComponents" :key="entityComponent.component" :is="entityComponent.component" :inspector-component-data="entity[entityComponent.property]" style="margin-bottom: 30px;"></component>
+    <component 
+      v-for="entityComponent in entityComponents" 
+      :key="entityComponent.componentName" 
+      :is="entityComponent.componentName" 
+      :inspector-component-data="entityComponent.componentInstance" 
+      style="margin-bottom: 30px;">
+    </component>
   </div>
 </template>
 
@@ -13,8 +19,13 @@ import TransformComponent from './Inspector/TransformComponent.vue';
 import CameraComponent from './Inspector/CameraComponent.vue';
 import ColliderComponent from './Inspector/ColliderComponent.vue';
 import MaterialComponent from './Inspector/MaterialComponent.vue';
-import SpriteComponent from './Inspector/SpriteComponent.vue';
+import SpriteRendererComponent from './Inspector/SpriteRendererComponent.vue';
 import TilemapComponent from './Inspector/TilemapComponent.vue';
+import { component } from "vue/types/umd";
+
+import Entity from "../../../engine/src/components/entity";
+import Constants from "../../../engine/src/constants";
+import { constants } from "fs-extra";
 
 @Component({
   components: {
@@ -23,27 +34,28 @@ import TilemapComponent from './Inspector/TilemapComponent.vue';
     CameraComponent,
     ColliderComponent,
     MaterialComponent,
-    SpriteComponent,
+    SpriteRendererComponent,
     TilemapComponent
   }
 })
 export default class Inspector extends Vue {
-  @Prop() entity: Array<any>;
+  @Prop() entity: Entity;
 
-  availableComponents: Array<string> = ['tag', 'transform', 'sprite', 'material', 'collider', 'camera'];
   entityComponents: Array<any> = [];
 
-  created() {
-    this.bootstrapAvailableComponents();
-  }
-
   bootstrapAvailableComponents(): void {
-    this.entityComponents = Object.keys(this.entity).filter(x => x.toLowerCase().endsWith('component')).map((property) => {
+    this.entityComponents = Constants.componentNames.filter((componentName) => {
+       return this.entity.getComponent<any>(componentName) !== null;
+    }).map((componentName) => {
+      let componentInstance = this.entity.getComponent<any>(componentName);
+
       return {
-        component: property.charAt(0).toUpperCase() + property.slice(1),
-        property: property
+        componentInstance: componentInstance,
+        componentName: componentName
       };
     });
+
+    console.log(this.entityComponents);
   }
 
   @Watch('entity')

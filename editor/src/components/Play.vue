@@ -45,7 +45,7 @@ export default class SceneHierarchy extends Vue {
   @Prop() isVisible: boolean = false;
 
   // previewUrl: string = 'http://localhost:9000/play.html';
-  previewUrl: string = 'http://localhost:9001';
+  previewUrl: string = 'http://localhost:8080';
 
   mounted() {
     this.previewUrl = `${this.previewUrl}?rootPath=${encodeURIComponent('')}&sceneName=scene1`;

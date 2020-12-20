@@ -17,7 +17,7 @@ entities:
       'y': 0
       width: 32
       height: 32
-    spriteComponent:
+    spriteRendererComponent:
       Layer: 0
       Tileset: 0
       Row: 0

@@ -1,6 +1,12 @@
 <template>
   <div class="component default-component">
-    <main-menu @on-open-project="isOpeningProject = true" :project="project"></main-menu>
+    <main-menu 
+      @on-new-project-clicked="isAddingProject = true"
+      @on-new-scene-clicked="isAddingScene = true"
+      @on-open-project="isOpeningProject = true"
+      @on-open-settings="isOpeningSettings = true"
+      :project="project">
+    </main-menu>
 
     <scene-editor :project="project"></scene-editor>
 
@@ -8,8 +14,26 @@
       :is-open="isOpeningProject" 
       @on-project-opened="project = $event; isOpeningProject = false;" 
       @on-open-project-cancelled="isOpeningProject = false"
-      @on-project-open-closed="isOpeningProject = false">
-      </project-selection>
+      @on-project-open-closed="isOpeningProject = false"
+      @on-new-project-clicked="isOpeningProject = false; isAddingProject = true;">
+    </project-selection>
+
+    <settings 
+      :is-open="isOpeningSettings" 
+      @on-settings-closed="isOpeningSettings = false">
+    </settings>
+    
+    <new-project 
+      :is-open="isAddingProject" 
+      @on-new-project-saved="isAddingProject = false" 
+      @on-new-project-cancelled="isAddingProject = false">
+    </new-project>
+
+    <new-scene 
+      :is-open="isAddingScene" 
+      @on-new-scene-saved="isAddingScene = false" 
+      @on-new-scene-cancelled="isAddingScene = false">
+    </new-scene>
   </div>
 </template>
 
@@ -20,20 +44,47 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import MainMenu from './MainMenu.vue';
 import SceneEditor from './SceneEditor.vue';
 import ProjectSelection from './ProjectSelection.vue';
+import Settings from './Settings.vue';
 import Project from '../models/project';
 import ProjectStorageService from '../services/project-storage.service';
 import EngineConfig from '../../../engine/src/engine-config';
+import SettingsStorageService from '../services/settings-storage.service';
+import EditorSettings from '../models/editor-settings';
+import NewScene from './NewScene.vue';
+import NewProject from './NewProject.vue';
 
 @Component({
   components: {
     MainMenu,
     SceneEditor,
-    ProjectSelection
+    ProjectSelection,
+    Settings,
+    NewScene,
+    NewProject
   }
 })
 export default class Default extends Vue {
   isOpeningProject: boolean = false;
+  isOpeningSettings: boolean = false;
+  isAddingProject: boolean = false;
+  isAddingScene: boolean = false;
+
   project: Project = new Project();
+
+  mounted(): void {
+    let editorSettings: EditorSettings = new SettingsStorageService().load() || new EditorSettings();
+
+    if (editorSettings.defaultProjectPath) {
+      this.project = new ProjectStorageService().open(editorSettings.defaultProjectPath, false);
+    }
+    else if (editorSettings.lastProjectPath) {
+      this.project = new ProjectStorageService().open(editorSettings.lastProjectPath, false);
+    }
+    else {
+      // Open project selection.
+      this.isOpeningProject = true;
+    }
+  }
 };
 
 </script>

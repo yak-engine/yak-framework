@@ -7,19 +7,19 @@
     <div class="transform-values">
       <div class="transform-value flex flex-r align-items-center">
         <div class="form-label text-small">X</div>
-        <input type="text" v-model="inspectorComponentData.x" />
+        <input type="text" v-model="inspectorComponentData.transform.x" />
       </div>
       <div class="transform-value flex flex-r align-items-center">
         <div class="form-label text-small">Y</div>
-        <input type="text" v-model="inspectorComponentData.y" />
+        <input type="text" v-model="inspectorComponentData.transform.y" />
       </div>
       <div class="transform-value flex flex-r align-items-center">
         <div class="form-label text-small">W</div>
-        <input type="text" v-model="inspectorComponentData.width" />
+        <input type="text" v-model="inspectorComponentData.transform.width" />
       </div>
       <div class="transform-value flex flex-r align-items-center">
         <div class="form-label text-small">H</div>
-        <input type="text" v-model="inspectorComponentData.height" />
+        <input type="text" v-model="inspectorComponentData.transform.height" />
       </div>
     </div>
   </div>

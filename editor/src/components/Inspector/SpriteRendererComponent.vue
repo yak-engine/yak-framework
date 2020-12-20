@@ -13,7 +13,7 @@
 import { Component, Prop, Vue } from "vue-property-decorator";
 
 @Component
-export default class SpriteComponent extends Vue {
+export default class SpriteRendererComponent extends Vue {
   @Prop() inspectorComponentData: string;
 };
 

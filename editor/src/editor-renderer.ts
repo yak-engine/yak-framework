@@ -1,6 +1,6 @@
 import Layer from "../../engine/src/graphics/layer";
 import Sprite from "../../engine/src/graphics/sprite";
-import Point from "../../engine/src/primitives/Point";
+import Point from "../../engine/src/primitives/point";
 import Tileset from "../../engine/src/graphics/tileset";
 import Scene from '../../engine/src/graphics/scene';
 import SpriteRendererComponent from "../../engine/src/components/sprite-renderer/SpriteRendererComponent";
@@ -13,6 +13,9 @@ import Entity from '../../engine/src/components/entity';
 
 import Configuration from "../../engine/src/configuration";
 import Transform from "../../engine/src/primitives/transform";
+import TilemapComponent from "../../engine/src/components/tilemap/TilemapComponent";
+
+import isCoordinateContained from "../../engine/src/helpers/is-coordinate-contained";
 
 export default class EditorRenderer {
     /**
@@ -50,6 +53,12 @@ export default class EditorRenderer {
 
     public scene: Scene = null;
 
+    public selectedEntity: Entity = null;
+
+    public mousePosition: Point = new Point(0, 0);
+
+    public isMouseDown: boolean = false;
+
     /**
      * The tilesets being used for the current scene. Get loaded on startup.
      */
@@ -74,44 +83,34 @@ export default class EditorRenderer {
         //     }
         // })
         // this.canvas.engineCanvas.oncontextmenu = this.onCanvasContextMenu;
-        // this.canvas.engineCanvas.addEventListener('mousedown', (event) => this.onCanvasMouseDown(event));
-        // this.canvas.engineCanvas.addEventListener('mouseup', (event) => this.onCanvasMouseUp(event));
+
+        this.engineCanvas.addEventListener('mousedown', (event) => this.onCanvasMouseDown(event));
+        this.engineCanvas.addEventListener('mouseup', (event) => this.onCanvasMouseUp(event));
+        this.engineCanvas.addEventListener('mousemove', (event) => this.onCanvasMouseMove(event));
     }
 
     entities: Entity[] = [];
+
+    testTilemapComponent: TilemapComponent = null;
 
     public init(tilemapComponent: any): void {
         this.engineCanvas.width = this.scene.columns * this.scene.spriteSize;
         this.engineCanvas.height = this.scene.rows * this.scene.spriteSize;
 
-        // Bootstrap entities.
-        this.scene.entities.forEach((sourceEntity) => {
-            let parsedEntity = new Entity();
+        // TODO: DON'T DO THIS.
+        this.testTilemapComponent = tilemapComponent;
+    }
 
-            parsedEntity.id = sourceEntity.id;
-            parsedEntity.isEnabled = sourceEntity.isEnabled;
+    public run(): void {
+        this.clearCanvas();
 
-            for(let sourceProperty in sourceEntity) {
-                let sourceComponent = sourceEntity[sourceProperty];
-
-                if (sourceComponent) {
-                    if (sourceProperty === 'spriteComponent') {
-                        parsedEntity.addComponent(new SpriteRendererComponent(sourceComponent.layer, sourceComponent.tileset, sourceComponent.row, sourceComponent.column));
-                    }
-                    else if (sourceProperty === 'transformComponent') {
-                        parsedEntity.addComponent(new TransformComponent(new Transform(sourceComponent.x, sourceComponent.y, sourceComponent.width, sourceComponent.height)));
-                    }
-                }
-            }
-
-            this.entities.push(parsedEntity);
-        })
-
+        // Draw tilemap.
+        // TODO: Should this be done within the init function instead of the run function?
         for (let col = 0; col <= 64; col++) {
             for (let row = 0; row <= 64; row++) {
                 // let sprite: number = layer.sprites[row * this.scene.columns + col];
                 // let tilemapComponent: any = this.tileMapEntity.getComponent<TilemapComponent>(TilemapComponent.name);
-                let sprite: number = tilemapComponent.tiles[row * this.scene.columns + col]; // [row * this.scene.columns + col]
+                let sprite: number = this.testTilemapComponent.tiles[row * this.scene.columns + col]; // [row * this.scene.columns + col]
 
                 this.context.drawImage(
                     this.tilesets[0].image,
@@ -125,7 +124,7 @@ export default class EditorRenderer {
                     32
                 )
 
-               if (sprite) {
+                if (sprite) {
                     // var x = (col - startCol) * this.scene.spriteSize + offsetX;
                 // var y = (row - startRow) * this.scene.spriteSize + offsetY;
 
@@ -140,69 +139,76 @@ export default class EditorRenderer {
                 //     this.scene.spriteSize,
                 //     this.scene.spriteSize
                 // );
-               }
+                }
             }
         }
-    }
-
-    public run(): void {
-        // this.context.fillStyle = '#585858';
-        // this.context.fillRect(0, 0, this.getCanvasWidth(), this.getCanvasHeight());
-
-        this.drawGridLines();
 
         // Run through renderer system.
-        EntityManager.getInstance().entities.forEach((tt: Entity) => {
-            let entity = new Entity();
+        EntityManager.getInstance().entities.forEach((entity: Entity) => {
+            // let entity = new Entity();
 
-            entity.id = tt.id;
-            entity.isEnabled = tt.isEnabled;
+            // entity.id = tt.id;
+            // entity.isEnabled = tt.isEnabled;
 
-            let spriteRendererComponent = entity.getComponent<SpriteRendererComponent>(SpriteRendererComponent.name);
+            let transformComponent = entity.getComponent<TransformComponent>(TransformComponent.name);
 
-            console.log(spriteRendererComponent);
+            if (transformComponent) {
+                let transform = transformComponent.transform;
 
-            if (spriteRendererComponent) {
-                let materialComponent = entity.getComponent<MaterialComponent>(MaterialComponent.name);
+                let spriteRendererComponent = entity.getComponent<SpriteRendererComponent>(SpriteRendererComponent.name);
 
-                if (materialComponent) {
-                    this.context.fillStyle = materialComponent.fillStyle;
-                    this.context.globalAlpha = materialComponent.alpha;
-                }
-
-                let transform = entity.getComponent<TransformComponent>(TransformComponent.name).transform;
-
-                if (spriteRendererComponent.row !== undefined) {
-                    // let cameraOffsetX = 0, cameraOffsetY = 0;
-
-                    // if (this.playerEntity.id !== entity.id) {
-                    //     cameraOffsetX = this.mainCamera.viewport.x;
-                    //     cameraOffsetY = this.mainCamera.viewport.y;
+                if (spriteRendererComponent) {
+                    // let materialComponent = entity.getComponent<MaterialComponent>(MaterialComponent.name);
+    
+                    // if (materialComponent) {
+                    //     this.context.fillStyle = materialComponent.fillStyle;
+                    //     this.context.globalAlpha = materialComponent.alpha;
                     // }
-
-                    this.context.drawImage(
-                        this.tilesets[0].image,// this.tilesets[spriteRendererComponent.layer].image,
-                        spriteRendererComponent.column * this.scene.spriteSize,
-                        spriteRendererComponent.row * this.scene.spriteSize,
-                        this.scene.spriteSize,
-                        this.scene.spriteSize,
-                        transform.x, // transform.x - cameraOffsetX,
-                        transform.y, // transform.y - cameraOffsetY
-                        this.scene.spriteSize,
-                        this.scene.spriteSize
-                    );
+    
+                    if (spriteRendererComponent.row !== undefined) {
+                        // let cameraOffsetX = 0, cameraOffsetY = 0;
+    
+                        // if (this.playerEntity.id !== entity.id) {
+                        //     cameraOffsetX = this.mainCamera.viewport.x;
+                        //     cameraOffsetY = this.mainCamera.viewport.y;
+                        // }
+    
+                        this.context.drawImage(
+                            this.tilesets[0].image,// this.tilesets[spriteRendererComponent.layer].image,
+                            spriteRendererComponent.column * this.scene.spriteSize,
+                            spriteRendererComponent.row * this.scene.spriteSize,
+                            this.scene.spriteSize,
+                            this.scene.spriteSize,
+                            transform.x, // transform.x - cameraOffsetX,
+                            transform.y, // transform.y - cameraOffsetY
+                            this.scene.spriteSize,
+                            this.scene.spriteSize
+                        );
+                    }
+                    else {
+                        console.log('are we here?');
+                        if (transform) {
+                            this.context.fillRect(transform.x, transform.y, transform.width, transform.height);
+                        }
+                    }
                 }
-                else {
-                    if (transform) {
-                        this.context.fillRect(transform.x, transform.y, transform.width, transform.height);
+
+                // Reset renderer context to default values.
+                // this.context.fillStyle = Configuration.canvasFill;
+                // this.context.globalAlpha = 1;
+
+                if (this.isMouseDown) {
+                    if (isCoordinateContained(this.mousePosition, transform)) {
+                        this.selectedEntity = entity;
+                        // this.context.strokeStyle = 'lightskyblue';
+                        // this.context.lineWidth = 5;
+                        // this.context.strokeRect(transform.x, transform.y, transform.width, transform.height);
                     }
                 }
             }
-
-            // Reset renderer context to default values.
-            // this.context.fillStyle = Configuration.canvasFill;
-            // this.context.globalAlpha = 1;
         });
+
+        //
 
         // this.drawSelectionTransform();
         // this.drawSpritePreview();
@@ -230,6 +236,54 @@ export default class EditorRenderer {
         //     }
         // }
         // this.highlightSelectedSprites();
+
+        if (this.selectedEntity) {
+            let transform = this.selectedEntity.getComponent<TransformComponent>(TransformComponent.name).transform;
+            this.context.strokeStyle = 'lightskyblue';
+            this.context.lineWidth = 5;
+            this.context.strokeRect(transform.x, transform.y, transform.width, transform.height);
+        }
+
+        this.drawGridLines();
+        this.drawTransformGizmos();
+    }
+
+    drawTransformGizmos(): void {
+        if (this.selectedEntity) {
+            let transform: Transform = (this.selectedEntity.getComponent<TransformComponent>(TransformComponent.name)).transform;
+
+            // y-axis
+            this.context.beginPath(); 
+            this.context.lineWidth = 2;
+            this.context.strokeStyle = 'black';
+            this.context.moveTo(transform.x + (transform.width / 2), transform.y + (transform.height / 2));
+            this.context.lineTo(transform.x + (transform.width / 2), (transform.y + (transform.height / 2)) - 32);
+            this.context.stroke();
+            this.context.closePath();
+
+            // x-axis
+            this.context.beginPath(); 
+            this.context.lineWidth = 2;
+            this.context.strokeStyle = 'black';
+            this.context.moveTo(transform.x + (transform.width / 2), transform.y + (transform.height / 2));
+            this.context.lineTo((transform.x + (transform.width / 2)) + 32, (transform.y + (transform.height / 2)));
+            this.context.stroke();
+            this.context.closePath();
+
+            // scale
+            this.context.fillStyle = 'black';
+            this.context.fillRect(transform.x + 10.16, transform.y + 10.16, 10.16, 10.16);
+        }
+    }
+
+    /**
+     * Clears the canvas for the next draw call.
+     * 
+     * @author NSSure
+     * @since 11/8/2020
+     */
+    clearCanvas(): void {
+        this.context.clearRect(0, 0, this.getCanvasWidth(), this.getCanvasHeight());
     }
 
     public getCanvasHeight(): number {
@@ -356,7 +410,23 @@ export default class EditorRenderer {
         // });
     }
 
+    onCanvasMouseMove(event: MouseEvent): void {
+        this.mousePosition = new Point(event.offsetX, event.offsetY);
+        // this.gridCoordinates = pointWorldPosition(this.mousePosition);
+
+        // if (isTransformEmpty(this.selectionTransform)) {
+        //     this.selectionTransform = new Transform(this.gridCoordinates.x * Configuration.gridSquareSize, this.gridCoordinates.y * Configuration.gridSquareSize, 0, 0);
+        // }
+        // else {
+        //     this.selectionTransform.width = ((this.gridCoordinates.x * Configuration.gridSquareSize) - this.selectionTransform.x) + Configuration.gridSquareSize;
+        //     this.selectionTransform.height = ((this.gridCoordinates.y * Configuration.gridSquareSize) - this.selectionTransform.y) + Configuration.gridSquareSize;
+        // }
+    }
+
     private onCanvasMouseDown(event: MouseEvent): void {
+        console.log(event);
+        this.isMouseDown = true;
+
         // if (this.isContextMenuOpen) {
         //     this.isContextMenuOpen = false;
         //     document.body.removeChild(this.currentContextMenu);
@@ -382,6 +452,8 @@ export default class EditorRenderer {
     }
 
     private onCanvasMouseUp(event: MouseEvent): void {
+        this.isMouseDown = false;
+
         // // On right click.
         // if (event.button === 2) {
         //     this.openContextMenu(this.canvas.mousePosition);

@@ -1,7 +1,7 @@
 <template>
-  <div class="tree-component">
+  <div class="tree-component" v-if="entities">
       <ul>
-          <li v-for="entity in entitiesArray" :key="entity.id" @click="selectEntity(entity)" v-bind:class="{ 'selected': selectedEntity.id === entity.id }">
+          <li v-for="entity in entities" :key="entity.id" @click="selectEntity(entity)" v-bind:class="{ 'selected': selectedEntity.id === entity.id }">
               <i class="fa fa-cube"></i>&nbsp;
               <span>{{getName(entity)}}</span>
               <tree v-if="entity.children" :entities="entity.children"></tree>
@@ -13,12 +13,15 @@
 <script lang="ts">
 
 import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import CameraComponent from "../../../engine/src/components/camera/CameraComponent";
+import Entity from "../../../engine/src/components/entity";
+import TagComponent from "../../../engine/src/components/tag/TagComponent";
 import EngineConfig from "../../../engine/src/engine-config";
 import ProjectStorageService from "../services/project-storage.service";
 
 @Component
 export default class SceneHierarchy extends Vue {
-  @Prop() entities: Array<any>;
+  @Prop() entities: Entity[];
 
   @Watch('entities')
   onPropertyChanged(newValue: Array<any>, oldValue: Array<any>) {
@@ -29,25 +32,27 @@ export default class SceneHierarchy extends Vue {
 
   selectedEntity: any = {};
   
-  get entitiesArray(): Array<any> {
+  get entitiesArray(): Entity[] {
       if (this.entities) {
         return this.entities;
       }
 
-      return new Array();
+      return [];
   }
 
-  selectEntity(entity: any): void {
+  selectEntity(entity: Entity): void {
     this.selectedEntity = entity;
-    this.$emit('on-entity-clicked', this.selectedEntity);
+    this.$emit('on-entity-selected', this.selectedEntity);
   }
 
-  getName(entity: any): string {
-    if (entity.cameraComponent) {
+  getName(entity: Entity): string {
+    if (entity.getComponent<CameraComponent>(CameraComponent.name)) {
         return 'Camera';
     }
     else {
-        return entity.tagComponent.name.charAt(0).toUpperCase() + entity.tagComponent.name.slice(1);
+      let tagComponent: TagComponent = entity.getComponent<TagComponent>(TagComponent.name);
+      console.log(tagComponent);
+      return tagComponent.name.charAt(0).toUpperCase() + tagComponent.name.slice(1);
     }
   }
 };

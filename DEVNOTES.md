@@ -1,0 +1,6 @@
+- [ ] When loading the scene config properly parse the entities to typescript objects
+- [x] Set default project when editor is opened. If not set open last project.
+- [-] Add transform gizmo within scene editor
+    - [ ] Move the tilemap toolbar to a separate panel/custom toolbar thing
+        - [ ]
+    - [ ] Create pallete editor for tilemap component opened from inspector?

@@ -1,6 +1,8 @@
 import Project from '@/models/project';
 import AppDataService from './app-data.service';
 import EngineConfig from '../../../engine/src/engine-config';
+import SettingsStorageService from './settings-storage.service';
+import EditorSettings from '@/models/editor-settings';
 
 const fs = window.require('fs');
 const fs_extra = window.require('fs-extra');
@@ -59,6 +61,11 @@ export default class ProjectStorageService extends AppDataService {
         else {
             existingProject.engineConfig = engineConfig;
         }
+
+        let settingsStorageService: SettingsStorageService = new SettingsStorageService();
+        let editorSettings: EditorSettings = settingsStorageService.load() || new EditorSettings();
+        editorSettings.lastProjectPath = existingProject.path;
+        settingsStorageService.save(editorSettings);
 
         return existingProject;
     }

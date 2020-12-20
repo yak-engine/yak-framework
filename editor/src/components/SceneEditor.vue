@@ -9,7 +9,7 @@
               <div style="padding: 8px 15px; background-color: #181818; border-bottom: 1px solid black;" class="is-shadowed">
                 <span style="font-weight: bold; color: #e7e7e7;">Scene Hierarchy</span>
               </div>
-              <scene-hierarchy :entities="scene.entities" v-on:on-entity-clicked="entity = $event"></scene-hierarchy>
+              <scene-hierarchy v-if="scene && testEntities" :entities="testEntities" v-on:on-entity-selected="onEntitySelected($event)"></scene-hierarchy>
             </div>
             <!-- TODO: Refactor into it's own component. -->
             <div style="flex: 1;">
@@ -133,7 +133,7 @@
             <div style="padding: 8px 15px; background-color: #181818; border-bottom: 1px solid black;" class="is-shadowed">
               <span style="font-weight: bold; color: #e7e7e7;"><i class="fa fa-cube fa-lg"></i> Inspector</span>
             </div>
-            <inspector v-if="scene && scene.entities" :entity="entity"></inspector>
+            <inspector v-if="scene && testEntities" :entity="entity"></inspector>
           </div>
           <!-- TODO: Refactor to be under the inspector in the right side drawer. -->
           <div style="flex: 1;">
@@ -171,6 +171,12 @@ import Tileset from '../../../engine/src/graphics/tileset';
 import { Logger } from '../../../engine/src/logging/logger';
 import EntityManager from '../../../engine/src/components/EntityManager';
 import Entity from '../../../engine/src/components/entity';
+import SpriteRendererComponent from '../../../engine/src/components/sprite-renderer/SpriteRendererComponent';
+import TransformComponent from '../../../engine/src/components/transform/TransformComponent';
+import Transform from '../../../engine/src/primitives/transform';
+import CameraComponent from '../../../engine/src/components/camera/CameraComponent';
+import TagComponent from '../../../engine/src/components/tag/TagComponent';
+import TilemapComponent from '../../../engine/src/components/tilemap/TilemapComponent';
 
 @Component({
   components: {
@@ -192,9 +198,10 @@ export default class SceneEditor extends Vue {
   }
 
   scene: Scene = new Scene();
+  testEntities: Entity[] = [];
   sceneService: SceneService = new SceneService();
 
-  entity: any = {};
+  entity: Entity = null;
 
   editorRenderer: EditorRenderer = null;
   isLoading: boolean = true;
@@ -236,11 +243,47 @@ export default class SceneEditor extends Vue {
             loadedTilesets++;
 
             if (loadedTilesets === this.scene.tilesets.length) {
-              EntityManager.getInstance().entities = (this.scene.entities as unknown) as Set<Entity>;
+              EntityManager.getInstance().entities = (this.scene.entities as unknown) as Entity[];
 
-              let tilemapComponent = this.scene.entities[2].tilemapComponent;
+              console.log(EntityManager.getInstance().entities);
+
+              // Bootstrap entities.
+              EntityManager.getInstance().entities.forEach((sourceEntity) => {
+                  let parsedEntity = new Entity();
+
+                  parsedEntity.id = sourceEntity.id;
+                  parsedEntity.isEnabled = sourceEntity.isEnabled;
+
+                  for(let sourceProperty in sourceEntity) {
+                      let sourceComponent = sourceEntity[sourceProperty];
+
+                      if (sourceComponent) {
+                          if (sourceProperty === 'spriteRendererComponent') {
+                              parsedEntity.addComponent(new SpriteRendererComponent(sourceComponent.layer, sourceComponent.tileset, sourceComponent.row, sourceComponent.column));
+                          }
+                          else if (sourceProperty === 'transformComponent') {
+                              parsedEntity.addComponent(new TransformComponent(new Transform(sourceComponent.x, sourceComponent.y, sourceComponent.width, sourceComponent.height)));
+                          }
+                          else if (sourceProperty === 'cameraComponent') {
+                              parsedEntity.addComponent(new CameraComponent());
+                          }
+                          else if (sourceProperty === 'tagComponent') {
+                              parsedEntity.addComponent(new TagComponent(sourceComponent.name));
+                          }
+                          else if (sourceProperty === 'tilemapComponent') {
+                              parsedEntity.addComponent(new TilemapComponent(sourceComponent.name));
+                          }
+                      }
+                  }
+
+                  this.testEntities.push(parsedEntity);
+                });
+
+              EntityManager.getInstance().entities = this.testEntities;
+              console.log(this.testEntities);
+
+              let tilemapComponent = this.scene.entities[3].tilemapComponent;
               this.editorRenderer.scene = this.scene;
-              console.log(tilemapComponent);
               this.editorRenderer.init(tilemapComponent);
               window.requestAnimationFrame((time: number) => this.mainLoop(time));
             }
@@ -261,9 +304,20 @@ export default class SceneEditor extends Vue {
     })
   }
 
+  onEntitySelected(entity: Entity): void {
+    this.entity = entity;
+    console.log(this.entity);
+    this.editorRenderer.selectedEntity = this.entity;
+  }
+
   mainLoop(time: number) {
     window.requestAnimationFrame((time: number) => this.mainLoop(time));
     this.editorRenderer.run();
+  }
+
+  @Watch('editorRenderer.selectedEntity')
+  onEntityChanged(newValue: any, oldValue: any): void {
+    this.entity = newValue;
   }
 };
 

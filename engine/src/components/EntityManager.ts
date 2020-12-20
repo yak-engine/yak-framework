@@ -14,12 +14,12 @@ export default class EntityManager {
         return EntityManager.instance;
     }
 
-    public entities: Set<Entity> = new Set();
+    public entities: Entity[] = [];
 
     public create(): Entity {
         let entity: Entity = new Entity();
-        entity.id = this.entities.size;
-        this.entities.add(entity);
+        entity.id = this.entities.length;
+        this.entities.push(entity);
 
         this.addRequiredComponents(entity);
 
@@ -27,7 +27,11 @@ export default class EntityManager {
     }
 
     public destroy(entity: Entity): void {
-        this.entities.delete(entity);
+        let index = this.entities.findIndex(x => x.id === entity.id);
+
+        if (index !== -1) {
+            this.entities.splice(index, 1);
+        }
     }
 
     private addRequiredComponents(entity: Entity): void {

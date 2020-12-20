@@ -5,7 +5,10 @@
         <div class="modal-header flex flex-r justify-content-between">
           <span class="modal-title">My Projects</span>
           <div class="modal-actions">
-            <button type="button" class="button fill-transparent text-white text-accent-hover" @click="importProject()" ref="btnImport">
+            <button type="button" class="button fill-transparent text-white text-accent-hover" @click="$emit('on-new-project-clicked')">
+              <i class="fa fa-plus"></i>&nbsp;New project
+            </button>
+            <button type="button" class="button fill-transparent text-white text-accent-hover" @click="importProject()">
               <i class="fa fa-upload"></i>&nbsp;Import
             </button>
             <div role="button" tabindex="0" @click="$emit('on-project-open-closed')">
@@ -14,12 +17,15 @@
           </div>
         </div>
         <div class="modal-content">
-          <ul>
-              <li v-for="(project, index) in projects" :key="index" @click="openProject(project)">
+          <ul v-if="projects && projects.length > 0">
+              <li v-for="(project, index) in projects" :key="index" @click="openProject(project.path)">
                   <div class="project-name">{{project.name}}</div>
                   <div class="project-path">{{project.path}}</div>
               </li>
           </ul>
+          <div v-else style="padding: 15px;">
+            <span>You have no projects</span>
+          </div>
         </div>
       </div>
     </div>
@@ -45,7 +51,7 @@ export default class ProjectSelection extends Vue {
   }
 
   async importProject(): Promise<void> {
-    let results: string[] = await window.electron.dialog.showOpenDialogSync({
+    let results: string[] = await (window as any).electron.dialog.showOpenDialogSync({
         properties: ['openDirectory']
     });
 
@@ -59,12 +65,13 @@ export default class ProjectSelection extends Vue {
     }
   }
 
-  openProject(project: Project): void {
+  openProject(projectPath: string): void {
     try {
-      let openedProject: Project = new ProjectStorageService().open(project.path, false);
+      let openedProject: Project = new ProjectStorageService().open(projectPath, false);
       this.$emit('on-project-opened', openedProject);
     }
     catch(ex) {
+      console.log(ex);
       (this as any).$sureToast.showError(ex);
     }
   }

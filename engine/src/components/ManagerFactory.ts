@@ -20,7 +20,7 @@ export default class ManagerFactory {
             return ManagerFactory.managers.get(componentName);
         }
 
-        throw "Manager has not been registered";
+        throw `Manager has not been registered: ${componentName}`;
     }
     
     public static log(): void {
