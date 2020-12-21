@@ -1,5 +1,8 @@
 import Time from "../time";
 
+/**
+ * Tracks keyboard input only. For mouse input use Mouse.
+ */
 export default class Input {
     public static keys: Map<string, boolean> = new Map();
 

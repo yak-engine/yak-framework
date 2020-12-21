@@ -1,6 +1,11 @@
 - [ ] When loading the scene config properly parse the entities to typescript objects
+- [ ] Ensure every default entity has a transform object
+    - [ ] Camera entity needs a proper transform component
+        - [ ] Will be locked to the player entity
+    - [ ] In the editor when the entity with a camera component is selected add a gizmo to highlight
+          the viewport
 - [x] Set default project when editor is opened. If not set open last project.
 - [-] Add transform gizmo within scene editor
     - [ ] Move the tilemap toolbar to a separate panel/custom toolbar thing
-        - [ ]
     - [ ] Create pallete editor for tilemap component opened from inspector?
+- [ ] Add a class called Mouse.ts to the engine to handle tracking mouse movement.

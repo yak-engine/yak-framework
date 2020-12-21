@@ -16,6 +16,8 @@ import Transform from "../../engine/src/primitives/transform";
 import TilemapComponent from "../../engine/src/components/tilemap/TilemapComponent";
 
 import isCoordinateContained from "../../engine/src/helpers/is-coordinate-contained";
+import TransformGizmo from "./models/transform-gizmo";
+import Mouse from "../../engine/src/graphics/mouse";
 
 export default class EditorRenderer {
     /**
@@ -55,6 +57,8 @@ export default class EditorRenderer {
 
     public selectedEntity: Entity = null;
 
+    public transformGizmo: TransformGizmo = null;
+
     public mousePosition: Point = new Point(0, 0);
 
     public isMouseDown: boolean = false;
@@ -63,6 +67,8 @@ export default class EditorRenderer {
      * The tilesets being used for the current scene. Get loaded on startup.
      */
     public tilesets: Tileset[] = [];
+
+    mouse: Mouse = new Mouse();
 
     constructor() {
         this.engineCanvas = <HTMLCanvasElement>document.querySelector('#editor-canvas');
@@ -101,7 +107,11 @@ export default class EditorRenderer {
         this.testTilemapComponent = tilemapComponent;
     }
 
-    public run(): void {
+    public update(): void {
+        this.transformGizmo?.update(this.mousePosition, this.isMouseDown);
+    }
+
+    public draw(): void {
         this.clearCanvas();
 
         // Draw tilemap.
@@ -181,8 +191,8 @@ export default class EditorRenderer {
                             this.scene.spriteSize,
                             transform.x, // transform.x - cameraOffsetX,
                             transform.y, // transform.y - cameraOffsetY
-                            this.scene.spriteSize,
-                            this.scene.spriteSize
+                            transform.width,
+                            transform.height
                         );
                     }
                     else {
@@ -194,21 +204,17 @@ export default class EditorRenderer {
                 }
 
                 // Reset renderer context to default values.
-                // this.context.fillStyle = Configuration.canvasFill;
-                // this.context.globalAlpha = 1;
+                this.context.fillStyle = Configuration.canvasFill;
+                this.context.globalAlpha = 1;
 
-                if (this.isMouseDown) {
+                if ((this.selectedEntity.id !== entity.id) || this.transformGizmo == null) {
                     if (isCoordinateContained(this.mousePosition, transform)) {
                         this.selectedEntity = entity;
-                        // this.context.strokeStyle = 'lightskyblue';
-                        // this.context.lineWidth = 5;
-                        // this.context.strokeRect(transform.x, transform.y, transform.width, transform.height);
+                        this.transformGizmo = new TransformGizmo(transform, this.context);
                     }
                 }
             }
         });
-
-        //
 
         // this.drawSelectionTransform();
         // this.drawSpritePreview();
@@ -237,43 +243,12 @@ export default class EditorRenderer {
         // }
         // this.highlightSelectedSprites();
 
-        if (this.selectedEntity) {
-            let transform = this.selectedEntity.getComponent<TransformComponent>(TransformComponent.name).transform;
-            this.context.strokeStyle = 'lightskyblue';
-            this.context.lineWidth = 5;
-            this.context.strokeRect(transform.x, transform.y, transform.width, transform.height);
-        }
-
         this.drawGridLines();
         this.drawTransformGizmos();
     }
 
     drawTransformGizmos(): void {
-        if (this.selectedEntity) {
-            let transform: Transform = (this.selectedEntity.getComponent<TransformComponent>(TransformComponent.name)).transform;
-
-            // y-axis
-            this.context.beginPath(); 
-            this.context.lineWidth = 2;
-            this.context.strokeStyle = 'black';
-            this.context.moveTo(transform.x + (transform.width / 2), transform.y + (transform.height / 2));
-            this.context.lineTo(transform.x + (transform.width / 2), (transform.y + (transform.height / 2)) - 32);
-            this.context.stroke();
-            this.context.closePath();
-
-            // x-axis
-            this.context.beginPath(); 
-            this.context.lineWidth = 2;
-            this.context.strokeStyle = 'black';
-            this.context.moveTo(transform.x + (transform.width / 2), transform.y + (transform.height / 2));
-            this.context.lineTo((transform.x + (transform.width / 2)) + 32, (transform.y + (transform.height / 2)));
-            this.context.stroke();
-            this.context.closePath();
-
-            // scale
-            this.context.fillStyle = 'black';
-            this.context.fillRect(transform.x + 10.16, transform.y + 10.16, 10.16, 10.16);
-        }
+        this.transformGizmo?.draw();
     }
 
     /**
@@ -410,21 +385,7 @@ export default class EditorRenderer {
         // });
     }
 
-    onCanvasMouseMove(event: MouseEvent): void {
-        this.mousePosition = new Point(event.offsetX, event.offsetY);
-        // this.gridCoordinates = pointWorldPosition(this.mousePosition);
-
-        // if (isTransformEmpty(this.selectionTransform)) {
-        //     this.selectionTransform = new Transform(this.gridCoordinates.x * Configuration.gridSquareSize, this.gridCoordinates.y * Configuration.gridSquareSize, 0, 0);
-        // }
-        // else {
-        //     this.selectionTransform.width = ((this.gridCoordinates.x * Configuration.gridSquareSize) - this.selectionTransform.x) + Configuration.gridSquareSize;
-        //     this.selectionTransform.height = ((this.gridCoordinates.y * Configuration.gridSquareSize) - this.selectionTransform.y) + Configuration.gridSquareSize;
-        // }
-    }
-
     private onCanvasMouseDown(event: MouseEvent): void {
-        console.log(event);
         this.isMouseDown = true;
 
         // if (this.isContextMenuOpen) {
@@ -452,6 +413,7 @@ export default class EditorRenderer {
     }
 
     private onCanvasMouseUp(event: MouseEvent): void {
+        console.log('on mouse up');
         this.isMouseDown = false;
 
         // // On right click.
@@ -477,6 +439,19 @@ export default class EditorRenderer {
         //         }
         //     }
         //     this.canvas.selectionTransform = Transform.empty;
+        // }
+    }
+
+    private onCanvasMouseMove(event: MouseEvent): void {
+        this.mousePosition = new Point(event.offsetX, event.offsetY);
+        // this.gridCoordinates = pointWorldPosition(this.mousePosition);
+
+        // if (isTransformEmpty(this.selectionTransform)) {
+        //     this.selectionTransform = new Transform(this.gridCoordinates.x * Configuration.gridSquareSize, this.gridCoordinates.y * Configuration.gridSquareSize, 0, 0);
+        // }
+        // else {
+        //     this.selectionTransform.width = ((this.gridCoordinates.x * Configuration.gridSquareSize) - this.selectionTransform.x) + Configuration.gridSquareSize;
+        //     this.selectionTransform.height = ((this.gridCoordinates.y * Configuration.gridSquareSize) - this.selectionTransform.y) + Configuration.gridSquareSize;
         // }
     }
 }

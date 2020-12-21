@@ -26,4 +26,29 @@ export default class App extends Vue {
 .selected {
   background-color: #007ACC;
 }
+
+.scene-editor-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 15px; 
+  background-color: #181818; 
+  border-bottom: 1px solid black;
+  height: 30px;
+
+  .title {
+    font-weight: bold; 
+    color: #e7e7e7;
+  }
+
+  .actions {
+    display: flex;
+
+    button {
+      background-color: transparent;
+      color: #ffffff;
+      cursor: pointer;
+    }
+  }
+}
 </style>

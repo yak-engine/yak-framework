@@ -36,6 +36,51 @@
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
           <scene-listing :selected-scene="scene.name" @on-scene-selected="loadEditorScene($event)"></scene-listing>
+                    <ul class="nav nav-menu mb-0 fill-dark text-white is-shadowed" style="z-index: 500; border-bottom: 1px solid black;">
+              <div class="nav-left">
+                <ul class="nav-item">
+                  <li>
+                    <div
+                      role="button"
+                      class="btn-toolbar-item"
+                      tabindex="0"
+                      data-editor-mode="1"
+                      title="Position"
+                    >
+                      <i
+                        class="fa fa-arrows"
+                      ></i>
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      role="button"
+                      class="btn-toolbar-item"
+                      tabindex="0"
+                      data-editor-mode="1"
+                      title="Scale"
+                    >
+                      <i
+                        class="fa fa-sliders"
+                      ></i>
+                    </div>
+                  </li>
+                  <li>
+                    <div
+                      role="button"
+                      class="btn-toolbar-item"
+                      tabindex="0"
+                      data-editor-mode="1"
+                      title="Rotate"
+                    >
+                      <i
+                        class="fa fa-refresh"
+                      ></i>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+          </ul>
           <ul class="nav nav-menu mb-0 fill-dark text-white is-shadowed" style="z-index: 500; border-bottom: 1px solid black;">
               <div class="nav-left">
                 <ul class="nav-item">
@@ -137,9 +182,6 @@
           </div>
           <!-- TODO: Refactor to be under the inspector in the right side drawer. -->
           <div style="flex: 1;">
-            <div style="padding: 8px 15px; background-color: #181818; border-bottom: 1px solid black;" class="is-shadowed">
-              <span style="font-weight: bold; color: #e7e7e7;">Manage Scene Layers</span>
-            </div>
             <!-- component goes here -->
             <scene-layers :layers="scene.layers"></scene-layers>
           </div>
@@ -164,6 +206,8 @@ import SceneService from '../services/scene.service';
 
 import Play from './Play.vue';
 import EngineConfig from '../../../engine/src/engine-config';
+import Time from '../../../engine/src/time';
+import Mouse from '../../../engine/src/graphics/mouse';
 import ProjectStorageService from '../services/project-storage.service';
 import Scene from '../../../engine/src/graphics/scene';
 import Project from '../models/project';
@@ -282,7 +326,7 @@ export default class SceneEditor extends Vue {
               EntityManager.getInstance().entities = this.testEntities;
               console.log(this.testEntities);
 
-              let tilemapComponent = this.scene.entities[3].tilemapComponent;
+              let tilemapComponent = this.scene.entities[4].tilemapComponent;
               this.editorRenderer.scene = this.scene;
               this.editorRenderer.init(tilemapComponent);
               window.requestAnimationFrame((time: number) => this.mainLoop(time));
@@ -312,7 +356,14 @@ export default class SceneEditor extends Vue {
 
   mainLoop(time: number) {
     window.requestAnimationFrame((time: number) => this.mainLoop(time));
-    this.editorRenderer.run();
+
+    Time.calculateDeltaTime(time);
+    Mouse.update(this.editorRenderer.mousePosition);
+
+    console.log(Mouse.xDiff);
+
+    this.editorRenderer.update();
+    this.editorRenderer.draw();
   }
 
   @Watch('editorRenderer.selectedEntity')

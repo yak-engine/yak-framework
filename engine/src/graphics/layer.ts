@@ -14,7 +14,7 @@ export default class Layer extends Entity {
      */
     sprites: Array<number> = new Array();
 
-    constructor(name: string) {
+    constructor() {
         super();
     }
 }

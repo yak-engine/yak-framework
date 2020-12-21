@@ -6,6 +6,7 @@ import SceneManager from './scene-manager';
 import Tileset from './graphics/tileset';
 import { Logger } from './logging/logger';
 import Configuration from './configuration';
+import Mouse from './graphics/mouse';
 
 export default class Application {
     /**
@@ -22,6 +23,8 @@ export default class Application {
      * The main input system.
      */
     input: Input;
+
+    mouse: Mouse;
 
     constructor() {
         // Register required component.
@@ -89,6 +92,8 @@ export default class Application {
 
         // Calculate delta time for update method.
         Time.calculateDeltaTime(time);
+
+        Mouse.update(this.renderer.mousePosition);
 
         // Call the update method. Implemented by the consuming class.
         // this.update(Time.deltaTime);
