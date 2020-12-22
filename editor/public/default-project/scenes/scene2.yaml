@@ -35,7 +35,13 @@ entities:
 layers:
   - name: Background
     enabled: true
+    locked: false
+    order: 0
   - name: Default
     enabled: true
+    locked: false
+    order: 1
   - name: Foreground
     enabled: true
+    locked: false
+    order: 2

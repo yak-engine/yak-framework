@@ -4,6 +4,7 @@ import router from './router';
 
 import SureToast from './common/toast/vue-sure-toast';
 import ToastManager from './common/toast/toast-manager';
+import EditorGlobal from './editor-global';
 
 Vue.use(SureToast, {
   position: 'top-right',

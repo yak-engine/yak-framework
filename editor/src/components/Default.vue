@@ -1,39 +1,41 @@
 <template>
   <div class="component default-component">
-    <main-menu 
-      @on-new-project-clicked="isAddingProject = true"
-      @on-new-scene-clicked="isAddingScene = true"
-      @on-open-project="isOpeningProject = true"
-      @on-open-settings="isOpeningSettings = true"
-      :project="project">
-    </main-menu>
+    <div style="height: 100%; display: flex; flex-direction: column;">
+      <main-menu 
+        @on-new-project-clicked="isAddingProject = true"
+        @on-new-scene-clicked="isAddingScene = true"
+        @on-open-project="isOpeningProject = true"
+        @on-open-settings="isOpeningSettings = true"
+        :project="project">
+      </main-menu>
 
-    <scene-editor :project="project"></scene-editor>
+      <scene-editor :project="project"></scene-editor>
 
-    <project-selection 
-      :is-open="isOpeningProject" 
-      @on-project-opened="project = $event; isOpeningProject = false;" 
-      @on-open-project-cancelled="isOpeningProject = false"
-      @on-project-open-closed="isOpeningProject = false"
-      @on-new-project-clicked="isOpeningProject = false; isAddingProject = true;">
-    </project-selection>
+      <project-selection 
+        :is-open="isOpeningProject" 
+        @on-project-opened="project = $event; isOpeningProject = false;" 
+        @on-open-project-cancelled="isOpeningProject = false"
+        @on-project-open-closed="isOpeningProject = false"
+        @on-new-project-clicked="isOpeningProject = false; isAddingProject = true;">
+      </project-selection>
 
-    <settings 
-      :is-open="isOpeningSettings" 
-      @on-settings-closed="isOpeningSettings = false">
-    </settings>
-    
-    <new-project 
-      :is-open="isAddingProject" 
-      @on-new-project-saved="isAddingProject = false" 
-      @on-new-project-cancelled="isAddingProject = false">
-    </new-project>
+      <settings 
+        :is-open="isOpeningSettings" 
+        @on-settings-closed="isOpeningSettings = false">
+      </settings>
+      
+      <new-project 
+        :is-open="isAddingProject" 
+        @on-new-project-saved="isAddingProject = false" 
+        @on-new-project-cancelled="isAddingProject = false">
+      </new-project>
 
-    <new-scene 
-      :is-open="isAddingScene" 
-      @on-new-scene-saved="isAddingScene = false" 
-      @on-new-scene-cancelled="isAddingScene = false">
-    </new-scene>
+      <new-scene 
+        :is-open="isAddingScene" 
+        @on-new-scene-saved="isAddingScene = false" 
+        @on-new-scene-cancelled="isAddingScene = false">
+      </new-scene>
+    </div>
   </div>
 </template>
 
@@ -52,6 +54,7 @@ import SettingsStorageService from '../services/settings-storage.service';
 import EditorSettings from '../models/editor-settings';
 import NewScene from './NewScene.vue';
 import NewProject from './NewProject.vue';
+import EditorGlobal from '../editor-global';
 
 @Component({
   components: {
@@ -69,7 +72,7 @@ export default class Default extends Vue {
   isAddingProject: boolean = false;
   isAddingScene: boolean = false;
 
-  project: Project = new Project();
+  project: Project = null;
 
   mounted(): void {
     let editorSettings: EditorSettings = new SettingsStorageService().load() || new EditorSettings();
@@ -84,6 +87,8 @@ export default class Default extends Vue {
       // Open project selection.
       this.isOpeningProject = true;
     }
+
+    EditorGlobal.project = this.project;
   }
 };
 

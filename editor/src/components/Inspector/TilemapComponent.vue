@@ -4,17 +4,41 @@
       <i class="fa fa-map" style="margin-right: 10px;"></i>
       <span>Tilemap</span>  
     </div>
-    Not yet implemented
+    <div class="form-section">
+      <div class="form-label">Tilemap</div>
+      <select>
+        <option v-for="(tilesetPath, index) in tilesetPaths" :key="index">{{tilesetPath}}</option>
+      </select>
+      <button type="button">Palette</button>
+    </div>
   </div>
 </template>
 
 <script lang="ts">
 
 import { Component, Prop, Vue } from "vue-property-decorator";
+import EditorGlobal from "../../editor-global";
 
 @Component
 export default class TilemapComponent extends Vue {
   @Prop() inspectorComponentData: string;
+
+  tilesetPaths: string[] = [];
+
+  mounted(): void {
+    const path = window.require('path');
+    const fs = window.require('fs');
+
+    let tilesetsPath: string = path.join(EditorGlobal.project.path, 'tilesets');
+
+    console.log(tilesetsPath);
+
+    if (!fs.existsSync(tilesetsPath)){
+      throw "Required folder does not exist.";
+    }
+    
+    fs.readdirSync(tilesetsPath).forEach(tilesetPath => this.tilesetPaths.push(tilesetPath));
+  }
 };
 
 </script>

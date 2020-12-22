@@ -1,8 +1,9 @@
-import Entity from "../components/entity";
-
-export default class Layer extends Entity {
+export default class Layer {
     name: string;
+
     enabled: boolean = true;
+
+    locked: boolean = false;
 
     /**
      * TODO: Remove this property there is going to be a dedicated tilemap component.
@@ -14,7 +15,5 @@ export default class Layer extends Entity {
      */
     sprites: Array<number> = new Array();
 
-    constructor() {
-        super();
-    }
+    order: number;
 }

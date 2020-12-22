@@ -33,6 +33,11 @@ export default class Configuration {
      */
     public static canvasFill: string = '#181818';
 
+    /**
+     * When in selection mode this is the fill color of the selected area.
+     */
+    public static selectionTransformFill: string = 'rgba(252,248,227, 0.7)';
+
     public static RegisterManagers(): void {
         ManagerFactory.register(TagComponent.name, TagComponentManager);
         ManagerFactory.register(TransformComponent.name, TransformComponentManager);

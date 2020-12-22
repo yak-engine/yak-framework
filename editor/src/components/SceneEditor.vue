@@ -36,142 +36,60 @@
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
           <scene-listing :selected-scene="scene.name" @on-scene-selected="loadEditorScene($event)"></scene-listing>
-                    <ul class="nav nav-menu mb-0 fill-dark text-white is-shadowed" style="z-index: 500; border-bottom: 1px solid black;">
-              <div class="nav-left">
-                <ul class="nav-item">
-                  <li>
-                    <div
-                      role="button"
-                      class="btn-toolbar-item"
-                      tabindex="0"
-                      data-editor-mode="1"
-                      title="Position"
-                    >
-                      <i
-                        class="fa fa-arrows"
-                      ></i>
-                    </div>
-                  </li>
-                  <li>
-                    <div
-                      role="button"
-                      class="btn-toolbar-item"
-                      tabindex="0"
-                      data-editor-mode="1"
-                      title="Scale"
-                    >
-                      <i
-                        class="fa fa-sliders"
-                      ></i>
-                    </div>
-                  </li>
-                  <li>
-                    <div
-                      role="button"
-                      class="btn-toolbar-item"
-                      tabindex="0"
-                      data-editor-mode="1"
-                      title="Rotate"
-                    >
-                      <i
-                        class="fa fa-refresh"
-                      ></i>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-          </ul>
           <ul class="nav nav-menu mb-0 fill-dark text-white is-shadowed" style="z-index: 500; border-bottom: 1px solid black;">
-              <div class="nav-left">
-                <ul class="nav-item">
-                  <li>
-                    <div
-                      role="button"
-                      class="btn-toolbar-item"
-                      tabindex="0"
-                      data-editor-mode="1"
-                      title="Select"
-                    >
-                      <i
-                        class="fa fa-mouse-pointer text-blue-lighten-5"
-                      ></i>
-                    </div>
-                  </li>
-                  <li>
-                    <div
-                      role="button"
-                      class="btn-toolbar-item"
-                      tabindex="0"
-                      data-editor-mode="2"
-                      title="Stamp"
-                    >
-                      <i class="fa fa-cube text-white"></i>
-                    </div>
-                  </li>
-                  <li>
-                    <div
-                      role="button"
-                      class="btn-toolbar-item"
-                      tabindex="0"
-                      data-editor-mode="3"
-                      title="Shape fill"
-                    >
-                      <i class="fa fa-object-group text-white"></i>
-                    </div>
-                  </li>
-                  <li>
-                    <div
-                      role="button"
-                      class="btn-toolbar-item"
-                      tabindex="0"
-                      data-editor-mode="4"
-                      title="Bucket fill"
-                    >
-                      <i class="fa fa-flask text-white"></i>
-                    </div>
-                  </li>
-                  <li>
-                    <div
-                      role="button"
-                      class="btn-toolbar-item"
-                      tabindex="0"
-                      data-editor-mode="5"
-                    >
-                      <i class="fa fa-object-group text-white"></i>
-                    </div>
-                  </li>
-                  <li>
-                    <div
-                      role="button"
-                      class="btn-toolbar-item"
-                      tabindex="0"
-                      data-editor-mode="6"
-                      title="Eraser"
-                    >
-                      <i class="fa fa-eraser text-red-lighten-2"></i>
-                    </div>
-                  </li>
-                </ul>
-              </div>
-              <div class="nav-right">
-                <ul class="nav-item">
-                  <li class="menu-item">
-                      <div role="button" tabindex="0" class="btn-play" @click="isPlaying = true">
-                          <i class="fa fa-play text-green-darken-2 mr-default"></i>
-                          <span class="text-white">PLAY</span>
-                      </div>
-                  </li>
-                </ul>
-              </div>
-          </ul>
-            <div class="canvas-container" style="min-width: 512px; overflow: auto">
-              <canvas
-                id="editor-canvas"
-                tabindex="-1"
-                width="512"
-                height="512"
-              ></canvas>
+            <div class="nav-left">
+              <ul class="nav-item">
+                <li>
+                  <div
+                    role="button"
+                    class="btn-toolbar-item"
+                    tabindex="0"
+                    data-editor-mode="1"
+                    title="Position"
+                  >
+                    <i
+                      class="fa fa-arrows"
+                    ></i>
+                  </div>
+                </li>
+                <li>
+                  <div
+                    role="button"
+                    class="btn-toolbar-item"
+                    tabindex="0"
+                    data-editor-mode="1"
+                    title="Scale"
+                  >
+                    <i
+                      class="fa fa-sliders"
+                    ></i>
+                  </div>
+                </li>
+                <li>
+                  <div
+                    role="button"
+                    class="btn-toolbar-item"
+                    tabindex="0"
+                    data-editor-mode="1"
+                    title="Rotate"
+                  >
+                    <i
+                      class="fa fa-refresh"
+                    ></i>
+                  </div>
+                </li>
+              </ul>
             </div>
+          </ul>
+          <div class="canvas-container" style="min-width: 512px; overflow: auto">
+            <canvas
+              id="editor-canvas"
+              tabindex="-1"
+              width="512"
+              height="512"
+            ></canvas>
+          </div>
+          <tilemap-palette></tilemap-palette>
         </div>
         <div class="editor-right" style="background-color: #212121; display: flex; flex-direction: column; flex-shrink: 0; flex-basis: 400px;">
           <div style="flex: 1;">
@@ -183,7 +101,10 @@
           <!-- TODO: Refactor to be under the inspector in the right side drawer. -->
           <div style="flex: 1;">
             <!-- component goes here -->
-            <scene-layers :layers="scene.layers"></scene-layers>
+            <scene-layers 
+              :layers="scene.layers" 
+              @on-layer-modified="processLayerSave">
+              </scene-layers>
           </div>
         </div>
       </div>
@@ -221,6 +142,8 @@ import Transform from '../../../engine/src/primitives/transform';
 import CameraComponent from '../../../engine/src/components/camera/CameraComponent';
 import TagComponent from '../../../engine/src/components/tag/TagComponent';
 import TilemapComponent from '../../../engine/src/components/tilemap/TilemapComponent';
+import TilemapPalette from './TilemapPalette.vue';
+import Layer from '../../../engine/src/graphics/layer';
 
 @Component({
   components: {
@@ -228,7 +151,8 @@ import TilemapComponent from '../../../engine/src/components/tilemap/TilemapComp
     SceneListing,
     Inspector,
     Play,
-    SceneLayers
+    SceneLayers,
+    TilemapPalette
   }
 })
 export default class SceneEditor extends Vue {
@@ -369,6 +293,48 @@ export default class SceneEditor extends Vue {
   @Watch('editorRenderer.selectedEntity')
   onEntityChanged(newValue: any, oldValue: any): void {
     this.entity = newValue;
+  }
+
+  processLayerSave(originalLayer: Layer, updatedLayer: Layer, isDeletion: boolean = false): void {
+    let index: number = this.scene.layers.findIndex(x => x.name === originalLayer?.name);
+
+    console.log(index);
+
+    if (index !== -1) {
+      if (isDeletion) {
+        this.scene.layers.splice(index, 1);
+      }
+      else {
+        this.scene.layers[index] = updatedLayer;
+      }
+    }
+    else {
+      this.scene.layers.push(updatedLayer);
+    }
+
+    this.scene.layers.sort((a, b) => {
+      return a.order - b.order;
+    })
+
+    const path = window.require('path');
+    const fs = window.require('fs');
+    const yaml = window.require('js-yaml');
+
+    let scenePath: string = path.join(this.project.path, `scenes/${this.scene.name}.yaml`);
+
+    if (!fs.existsSync(scenePath)){
+        throw "Scene does not exist.";
+    }
+
+    const scene = yaml.safeDump(this.scene);
+
+    console.log(this.scene);
+    console.log(scene);
+    
+    fs.writeFile(scenePath, scene, function (err) {
+        if (err) throw err;
+        console.log('Scene updated successfully.');
+    });
   }
 };
 

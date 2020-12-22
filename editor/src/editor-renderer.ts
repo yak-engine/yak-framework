@@ -16,8 +16,12 @@ import Transform from "../../engine/src/primitives/transform";
 import TilemapComponent from "../../engine/src/components/tilemap/TilemapComponent";
 
 import isCoordinateContained from "../../engine/src/helpers/is-coordinate-contained";
+import isTransformEmpty from "../../engine/src/helpers/is-transform-empty";
+import pointWorldPosition from "../../engine/src/helpers/current-viewport-grid-square";
+
 import TransformGizmo from "./models/transform-gizmo";
 import Mouse from "../../engine/src/graphics/mouse";
+import EditorGlobal from "./editor-global";
 
 export default class EditorRenderer {
     /**
@@ -62,6 +66,10 @@ export default class EditorRenderer {
     public mousePosition: Point = new Point(0, 0);
 
     public isMouseDown: boolean = false;
+
+    public selectionTransform = Transform.empty;
+
+    public gridCoordinates: Point = new Point(0, 0);
 
     /**
      * The tilesets being used for the current scene. Get loaded on startup.
@@ -243,6 +251,11 @@ export default class EditorRenderer {
         // }
         // this.highlightSelectedSprites();
 
+        if (EditorGlobal.editorMode == EditorMode.SELECTION) {
+            console.log('cool');
+        }
+
+        this.drawSelectionTransform();
         this.drawGridLines();
         this.drawTransformGizmos();
     }
@@ -339,9 +352,11 @@ export default class EditorRenderer {
      * 
      */
     private drawSelectionTransform(): void {
-        // if (this.editorMode === EditorMode.SELECTION || this.editorMode === EditorMode.SHAPE_FILL) {
-        //     fillTransform(this.canvas.context, this.canvas.selectionTransform);
-        // }
+        // this.editorMode === EditorMode.SELECTION || this.editorMode === EditorMode.SHAPE_FILL
+        if (true) {
+            this.context.fillStyle = Configuration.selectionTransformFill;
+            this.context.fillRect(this.selectionTransform.x, this.selectionTransform.y, this.selectionTransform.width, this.selectionTransform.height);
+        }
     }
 
     /**
@@ -444,14 +459,14 @@ export default class EditorRenderer {
 
     private onCanvasMouseMove(event: MouseEvent): void {
         this.mousePosition = new Point(event.offsetX, event.offsetY);
-        // this.gridCoordinates = pointWorldPosition(this.mousePosition);
+        this.gridCoordinates = pointWorldPosition(this.mousePosition);
 
-        // if (isTransformEmpty(this.selectionTransform)) {
-        //     this.selectionTransform = new Transform(this.gridCoordinates.x * Configuration.gridSquareSize, this.gridCoordinates.y * Configuration.gridSquareSize, 0, 0);
-        // }
-        // else {
-        //     this.selectionTransform.width = ((this.gridCoordinates.x * Configuration.gridSquareSize) - this.selectionTransform.x) + Configuration.gridSquareSize;
-        //     this.selectionTransform.height = ((this.gridCoordinates.y * Configuration.gridSquareSize) - this.selectionTransform.y) + Configuration.gridSquareSize;
-        // }
+        if (isTransformEmpty(this.selectionTransform)) {
+            this.selectionTransform = new Transform(this.gridCoordinates.x * Configuration.gridSquareSize, this.gridCoordinates.y * Configuration.gridSquareSize, 0, 0);
+        }
+        else {
+            this.selectionTransform.width = ((this.gridCoordinates.x * Configuration.gridSquareSize) - this.selectionTransform.x) + Configuration.gridSquareSize;
+            this.selectionTransform.height = ((this.gridCoordinates.y * Configuration.gridSquareSize) - this.selectionTransform.y) + Configuration.gridSquareSize;
+        }
     }
 }

@@ -58,6 +58,12 @@
         .modal-footer {
             border-top: 1px solid $color-divider;
             padding: $padding-default;
+
+            .dangerous-action {
+                &:hover {
+                    outline: 1px solid $color-red;
+                }
+            }
         }
 
         &.modal-fullscreen {

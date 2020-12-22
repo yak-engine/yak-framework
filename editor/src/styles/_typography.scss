@@ -16,7 +16,7 @@ label {
   text-transform: uppercase;
   color: #a0aec0;
   font-weight: bold;
-  font-size: .75rem;
+  font-size: 0.75rem;
 }
 
 @for $i from 1 through 5 {
@@ -56,4 +56,10 @@ p {
 
 .text-center {
   text-align: center;
+}
+
+a {
+  &:hover {
+    text-decoration: underline;
+  }
 }
