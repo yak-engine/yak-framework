@@ -11,7 +11,7 @@
 
           <div class="form-section">
             <div class="form-label">Tile size</div>
-            <input type="number" v-model.number="scene.spriteSize" placeholder="Enter a tile size" />
+            <input type="number" v-model.number="scene.tileSize" placeholder="Enter a tile size" />
           </div>
 
           <div class="form-section">

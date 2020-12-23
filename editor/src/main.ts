@@ -1,4 +1,6 @@
 import Vue from 'vue';
+import Vuex from 'vuex'
+
 import App from './App.vue';
 import router from './router';
 
@@ -21,6 +23,8 @@ declare global {
 declare global {
   interface Vue { $sureToast: ToastManager; }
 }
+
+Vue.use(Vuex);
 
 new Vue({
   router,

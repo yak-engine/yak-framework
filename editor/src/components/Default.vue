@@ -88,8 +88,6 @@ export default class Default extends Vue {
       this.isOpeningProject = true;
     }
 
-    EditorGlobal.project = this.project;
-
     console.log(EditorGlobal.project);
 
     // Load default scene.

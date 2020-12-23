@@ -107,12 +107,9 @@ export default class EditorRenderer {
 
     testTilemapComponent: TilemapComponent = null;
 
-    public init(tilemapComponent: any): void {
+    public init(): void {
         this.engineCanvas.width = this.scene.columns * this.scene.tileSize;
         this.engineCanvas.height = this.scene.rows * this.scene.tileSize;
-
-        // TODO: DON'T DO THIS.
-        this.testTilemapComponent = tilemapComponent;
     }
 
     public update(): void {
