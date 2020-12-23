@@ -14,6 +14,7 @@ import Entity from "../components/entity";
 import MaterialComponent from "../components/material/MaterialComponent";
 import TransformComponent from "../components/transform/TransformComponent";
 import TilemapComponent from "../components/tilemap/TilemapComponent";
+import Scene from "./scene";
 
 export default class Renderer {
     /**
@@ -65,7 +66,7 @@ export default class Renderer {
     /**
      * The current scene being rendered.
      */
-    public scene: any;
+    public scene: Scene;
 
     /**
      * The tilesets being used for the current scene. Get loaded on startup.
@@ -101,7 +102,6 @@ export default class Renderer {
 
     init() {
         // this.playerEntity = EntityManager.getInstance().create();
-
         let entity = this.scene.entities.find((entity) => {
             if (entity.id === 2) {
                 return entity;

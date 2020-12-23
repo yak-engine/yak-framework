@@ -16,6 +16,10 @@
     color: $color-white;
 }
 
+::placeholder {
+    color: $color-grey;
+}
+
 .checkbox {
     display: flex;
     align-items: center;
@@ -27,6 +31,11 @@
         margin: 0;
         padding: 0;
         margin-right: $margin-small;
+        cursor: pointer;
+    }
+
+    > label {
+        cursor: pointer;
     }
 }
 

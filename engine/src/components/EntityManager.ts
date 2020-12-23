@@ -2,6 +2,10 @@ import Entity from "./entity";
 import Transform from "../primitives/transform";
 import TagComponent from "./tag/TagComponent";
 import TransformComponent from "./transform/TransformComponent";
+import SpriteRendererComponent from "./sprite-renderer/SpriteRendererComponent";
+import CameraComponent from "./camera/CameraComponent";
+import TilemapComponent from "./tilemap/TilemapComponent";
+import SceneConfig from "../models/scene-config";
 
 export default class EntityManager {
     private static instance: EntityManager;
@@ -32,6 +36,44 @@ export default class EntityManager {
         if (index !== -1) {
             this.entities.splice(index, 1);
         }
+    }
+
+    public parseEntities(sceneConfig: SceneConfig): void {
+        let parsedEntities: Entity[] = [];
+
+        // Bootstrap entities.
+        ((sceneConfig.entities as unknown) as Entity[]).forEach((sourceEntity) => {
+            let parsedEntity = new Entity();
+
+            parsedEntity.id = sourceEntity.id;
+            parsedEntity.enabled = sourceEntity.enabled;
+
+            for(let sourceProperty in sourceEntity) {
+                let sourceComponent = sourceEntity[sourceProperty];
+
+                if (sourceComponent) {
+                    if (sourceProperty === 'spriteRendererComponent') {
+                        parsedEntity.addComponent(new SpriteRendererComponent(sourceComponent.layer, sourceComponent.tileset, sourceComponent.row, sourceComponent.column));
+                    }
+                    else if (sourceProperty === 'transformComponent') {
+                        parsedEntity.addComponent(new TransformComponent(new Transform(sourceComponent.x, sourceComponent.y, sourceComponent.width, sourceComponent.height)));
+                    }
+                    else if (sourceProperty === 'cameraComponent') {
+                        parsedEntity.addComponent(new CameraComponent());
+                    }
+                    else if (sourceProperty === 'tagComponent') {
+                        parsedEntity.addComponent(new TagComponent(sourceComponent.name));
+                    }
+                    else if (sourceProperty === 'tilemapComponent') {
+                        parsedEntity.addComponent(new TilemapComponent(sourceComponent.tiles, sourceComponent.tilesetIndex));
+                    }
+                }
+            }
+
+            parsedEntities.push(parsedEntity);
+        });
+
+        EntityManager.getInstance().entities = parsedEntities;
     }
 
     private addRequiredComponents(entity: Entity): void {

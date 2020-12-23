@@ -74,27 +74,12 @@
               </li>
             </ul>
           </div>
-          <div class="nav-right">
-            <ul class="nav-item">
-              <li class="menu-item">
-                <div
-                  role="button"
-                  tabindex="0"
-                  class="btn-play"
-                  @click="isPlaying = true"
-                >
-                  <i class="fa fa-play text-green-darken-2 mr-default"></i>
-                  <span class="text-white">PLAY</span>
-                </div>
-              </li>
-            </ul>
-          </div>
         </ul>
       </div>
     </div>
     <div style="padding: 15px">
       <ul>
-        <li v-for="(preview, index) in spritePreviews" :key="index" @click="">
+        <li v-for="(preview, index) in spritePreviews" :key="index">
           <img :src="preview.dataUrl" />
         </li>
       </ul>

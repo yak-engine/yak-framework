@@ -2,7 +2,6 @@ import Layer from "../../engine/src/graphics/layer";
 import Sprite from "../../engine/src/graphics/sprite";
 import Point from "../../engine/src/primitives/point";
 import Tileset from "../../engine/src/graphics/tileset";
-import Scene from '../../engine/src/graphics/scene';
 import SpriteRendererComponent from "../../engine/src/components/sprite-renderer/SpriteRendererComponent";
 import MaterialComponent from "../../engine/src/components/material/MaterialComponent";
 import TransformComponent from "../../engine/src/components/transform/TransformComponent";
@@ -22,6 +21,7 @@ import pointWorldPosition from "../../engine/src/helpers/current-viewport-grid-s
 import TransformGizmo from "./models/transform-gizmo";
 import Mouse from "../../engine/src/graphics/mouse";
 import EditorGlobal from "./editor-global";
+import Scene from "../../engine/src/models/scene";
 
 export default class EditorRenderer {
     /**
@@ -108,8 +108,8 @@ export default class EditorRenderer {
     testTilemapComponent: TilemapComponent = null;
 
     public init(tilemapComponent: any): void {
-        this.engineCanvas.width = this.scene.columns * this.scene.spriteSize;
-        this.engineCanvas.height = this.scene.rows * this.scene.spriteSize;
+        this.engineCanvas.width = this.scene.columns * this.scene.tileSize;
+        this.engineCanvas.height = this.scene.rows * this.scene.tileSize;
 
         // TODO: DON'T DO THIS.
         this.testTilemapComponent = tilemapComponent;
@@ -193,10 +193,10 @@ export default class EditorRenderer {
     
                         this.context.drawImage(
                             this.tilesets[0].image,// this.tilesets[spriteRendererComponent.layer].image,
-                            spriteRendererComponent.column * this.scene.spriteSize,
-                            spriteRendererComponent.row * this.scene.spriteSize,
-                            this.scene.spriteSize,
-                            this.scene.spriteSize,
+                            spriteRendererComponent.column * this.scene.tileSize,
+                            spriteRendererComponent.row * this.scene.tileSize,
+                            this.scene.tileSize,
+                            this.scene.tileSize,
                             transform.x, // transform.x - cameraOffsetX,
                             transform.y, // transform.y - cameraOffsetY
                             transform.width,

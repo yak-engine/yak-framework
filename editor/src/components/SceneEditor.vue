@@ -1,37 +1,13 @@
 <template>
   <div class="component scene-editor-component">
-      <div
-        class="main"
-        style="height: 100%; flex: 1; display: flex; flex-direction: row"
-      >
+      <div class="main">
         <div class="editor-left" style="background-color: #212121; display: flex; flex-direction: column; flex-shrink: 0; flex-basis: 300px;">
             <div style="flex: 1;">
-              <div style="padding: 8px 15px; background-color: #181818; border-bottom: 1px solid black;" class="is-shadowed">
-                <span style="font-weight: bold; color: #e7e7e7;">Scene Hierarchy</span>
-              </div>
               <scene-hierarchy v-if="scene && testEntities" :entities="testEntities" v-on:on-entity-selected="onEntitySelected($event)"></scene-hierarchy>
             </div>
             <!-- TODO: Refactor into it's own component. -->
             <div style="flex: 1;">
-              <div style="padding: 8px 15px; background-color: #181818; border-bottom: 1px solid black;" class="is-shadowed">
-                <span style="font-weight: bold; color: #e7e7e7;">Scene Configuration</span>
-              </div>
-              <div style="padding: 15px; display: grid; grid-template-columns: repeat(3, 1fr)">
-                <div class="form-section">
-                  <div class="form-label text-small">Tile size</div>
-                  <input class="tag-name" type="text" v-model.number="scene.spriteSize" @change="updateScene()" />
-                </div>
-
-                <div class="form-section">
-                  <div class="form-label text-small">Rows</div>
-                  <input class="tag-name" type="text" v-model.number="scene.rows" @change="updateScene()" />
-                </div>
-
-                <div class="form-section">
-                  <div class="form-label text-small">Columns</div>
-                  <input class="tag-name" type="text" v-model.number="scene.columns" @change="updateScene()" />
-                </div>
-              </div>
+              <scene-information></scene-information>
             </div>
         </div>
         <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden;">
@@ -80,6 +56,21 @@
                 </li>
               </ul>
             </div>
+            <div class="nav-right">
+              <ul class="nav-item">
+                <li class="menu-item">
+                  <div
+                    role="button"
+                    tabindex="0"
+                    class="btn-play"
+                    @click="isPlaying = true"
+                  >
+                    <i class="fa fa-play text-green-darken-2 mr-default"></i>
+                    <span class="text-white">PLAY</span>
+                  </div>
+                </li>
+              </ul>
+            </div>
           </ul>
           <div class="canvas-container" style="min-width: 512px; overflow: auto">
             <canvas
@@ -101,10 +92,10 @@
           <!-- TODO: Refactor to be under the inspector in the right side drawer. -->
           <div style="flex: 1;">
             <!-- component goes here -->
-            <scene-layers 
-              :layers="scene.layers" 
-              @on-layer-modified="processLayerSave">
-              </scene-layers>
+            <!-- <scene-layers 
+              :layers="editorGlobal.scene.layers" 
+              @on-layer-modified="sceneStorageService.updateLayer">
+            </scene-layers> -->
           </div>
         </div>
       </div>
@@ -122,6 +113,7 @@ import SceneHierarchy from './SceneHierarchy.vue';
 import SceneListing from './SceneListing.vue';
 import Inspector from './Inspector.vue';
 import SceneLayers from './SceneLayers.vue';
+import SceneInformation from './SceneInformation.vue';
 
 import SceneService from '../services/scene.service';
 
@@ -130,7 +122,6 @@ import EngineConfig from '../../../engine/src/engine-config';
 import Time from '../../../engine/src/time';
 import Mouse from '../../../engine/src/graphics/mouse';
 import ProjectStorageService from '../services/project-storage.service';
-import Scene from '../../../engine/src/graphics/scene';
 import Project from '../models/project';
 import Tileset from '../../../engine/src/graphics/tileset';
 import { Logger } from '../../../engine/src/logging/logger';
@@ -144,6 +135,14 @@ import TagComponent from '../../../engine/src/components/tag/TagComponent';
 import TilemapComponent from '../../../engine/src/components/tilemap/TilemapComponent';
 import TilemapPalette from './TilemapPalette.vue';
 import Layer from '../../../engine/src/graphics/layer';
+import EditorGlobal from '../editor-global';
+
+import SceneStorageService from '../services/scene-storage.service';
+import Scene from '../../../engine/src/models/scene';
+
+import SceneManager from '../../../engine/src/scene-manager';
+import TilemapComponentManager from '../../../engine/src/components/tilemap/TilemapComponentManager';
+import ManagerFactory from '../../../engine/src/components/ManagerFactory';
 
 @Component({
   components: {
@@ -152,14 +151,14 @@ import Layer from '../../../engine/src/graphics/layer';
     Inspector,
     Play,
     SceneLayers,
-    TilemapPalette
+    TilemapPalette,
+    SceneInformation
   }
 })
 export default class SceneEditor extends Vue {
-  @Prop() project: Project;
-
-  @Watch('project')
+  @Watch('editorGlobal.project')
   onPropertyChanged(newValue: Project, oldValue: Project) {
+    alert('fired');
     if (newValue && newValue.engineConfig) {
       this.loadEditorScene(newValue.engineConfig.scenes[0]);
     }
@@ -169,6 +168,9 @@ export default class SceneEditor extends Vue {
   testEntities: Entity[] = [];
   sceneService: SceneService = new SceneService();
 
+  editorGlobal: EditorGlobal = EditorGlobal;
+  sceneStorageService: SceneStorageService = new SceneStorageService();
+
   entity: Entity = null;
 
   editorRenderer: EditorRenderer = null;
@@ -177,99 +179,37 @@ export default class SceneEditor extends Vue {
   public isPlaying: boolean = false;
 
   async mounted() {
-    this.editorRenderer = new EditorRenderer();
+    // this.editorRenderer = new EditorRenderer();
+    // this.loadEditorScene(EditorGlobal.project.engineConfig.scenes[0]);
   }
 
   loadEditorScene(sceneName: string): void {
-    const path = window.require('path');
-    const fs = window.require('fs');
-    const yaml = window.require('js-yaml');
+    new SceneStorageService().load(sceneName);
 
-    let scenePath: string = path.join(this.project.path, `scenes/${sceneName}.yaml`);
-
-    if (!fs.existsSync(scenePath)){
-        throw "Scene does not exist.";
-    }
-
-    this.scene = yaml.safeLoad(fs.readFileSync(scenePath, 'utf8'));
-
-    // Load the tilesets
-    let loadedTilesets = 0;
-
-    this.scene.tilesets.forEach((tilesetPath: string) => {
-      console.log(tilesetPath);
-
-        let imageData = fs.readFileSync(path.join(this.project.path, `tilesets/${tilesetPath}`));
-        let base64 = btoa([].reduce.call(new Uint8Array(imageData),function(p,c){return p+String.fromCharCode(c)},''))
-        let dataUrl = `data:image/png;base64,${base64}`;
-
-        let image = new Image();
-
-        image.onload = () => {
-            this.editorRenderer.tilesets.push(new Tileset(image));
-            
-            loadedTilesets++;
-
-            if (loadedTilesets === this.scene.tilesets.length) {
-              EntityManager.getInstance().entities = (this.scene.entities as unknown) as Entity[];
-
-              console.log(EntityManager.getInstance().entities);
-
-              // Bootstrap entities.
-              EntityManager.getInstance().entities.forEach((sourceEntity) => {
-                  let parsedEntity = new Entity();
-
-                  parsedEntity.id = sourceEntity.id;
-                  parsedEntity.isEnabled = sourceEntity.isEnabled;
-
-                  for(let sourceProperty in sourceEntity) {
-                      let sourceComponent = sourceEntity[sourceProperty];
-
-                      if (sourceComponent) {
-                          if (sourceProperty === 'spriteRendererComponent') {
-                              parsedEntity.addComponent(new SpriteRendererComponent(sourceComponent.layer, sourceComponent.tileset, sourceComponent.row, sourceComponent.column));
-                          }
-                          else if (sourceProperty === 'transformComponent') {
-                              parsedEntity.addComponent(new TransformComponent(new Transform(sourceComponent.x, sourceComponent.y, sourceComponent.width, sourceComponent.height)));
-                          }
-                          else if (sourceProperty === 'cameraComponent') {
-                              parsedEntity.addComponent(new CameraComponent());
-                          }
-                          else if (sourceProperty === 'tagComponent') {
-                              parsedEntity.addComponent(new TagComponent(sourceComponent.name));
-                          }
-                          else if (sourceProperty === 'tilemapComponent') {
-                              parsedEntity.addComponent(new TilemapComponent(sourceComponent.name));
-                          }
-                      }
-                  }
-
-                  this.testEntities.push(parsedEntity);
-                });
-
-              EntityManager.getInstance().entities = this.testEntities;
-              console.log(this.testEntities);
-
-              let tilemapComponent = this.scene.entities[4].tilemapComponent;
-              this.editorRenderer.scene = this.scene;
-              this.editorRenderer.init(tilemapComponent);
-              window.requestAnimationFrame((time: number) => this.mainLoop(time));
-            }
-        }
-
-        image.onerror = () => {
-          Logger.data('failed to load tileset');
-        }
-        
-        // image.src = path.join(this.project.path, `tilesets/${tilesetPath}`);
-        image.src = dataUrl;
+    let tilemapEntity = EntityManager.getInstance().entities.find((entity) => {
+      return entity.getComponent<TilemapComponent>(TilemapComponent.name);
     });
+
+    console.log(tilemapEntity);
+
+    let tilemapComponent: TilemapComponent = tilemapEntity.getComponent<TilemapComponent>(TilemapComponent.name);
+
+    console.log(tilemapComponent);
+    console.log(EntityManager.getInstance().entities);
+    console.log(ManagerFactory.get(TilemapComponent.name));
+
+    return;
+
+    this.editorRenderer.scene = EditorGlobal.scene;
+    this.editorRenderer.init(tilemapComponent);
+
+    window.requestAnimationFrame((time: number) => this.mainLoop(time));
   }
 
   updateScene(): void {
-    this.sceneService.updateScene(this.scene).then((response) => {
-      console.log(response);
-    })
+    // EditorGlobal.sceneService.updateScene(EditorGlobal.scene).then((response) => {
+    //   console.log(response);
+    // })
   }
 
   onEntitySelected(entity: Entity): void {
@@ -294,53 +234,18 @@ export default class SceneEditor extends Vue {
   onEntityChanged(newValue: any, oldValue: any): void {
     this.entity = newValue;
   }
-
-  processLayerSave(originalLayer: Layer, updatedLayer: Layer, isDeletion: boolean = false): void {
-    let index: number = this.scene.layers.findIndex(x => x.name === originalLayer?.name);
-
-    console.log(index);
-
-    if (index !== -1) {
-      if (isDeletion) {
-        this.scene.layers.splice(index, 1);
-      }
-      else {
-        this.scene.layers[index] = updatedLayer;
-      }
-    }
-    else {
-      this.scene.layers.push(updatedLayer);
-    }
-
-    this.scene.layers.sort((a, b) => {
-      return a.order - b.order;
-    })
-
-    const path = window.require('path');
-    const fs = window.require('fs');
-    const yaml = window.require('js-yaml');
-
-    let scenePath: string = path.join(this.project.path, `scenes/${this.scene.name}.yaml`);
-
-    if (!fs.existsSync(scenePath)){
-        throw "Scene does not exist.";
-    }
-
-    const scene = yaml.safeDump(this.scene);
-
-    console.log(this.scene);
-    console.log(scene);
-    
-    fs.writeFile(scenePath, scene, function (err) {
-        if (err) throw err;
-        console.log('Scene updated successfully.');
-    });
-  }
 };
 
 </script>
 
 <style scoped lang="scss">
+.main {
+  height: 100%; 
+  flex: 1; 
+  display: flex; 
+  flex-direction: row;
+}
+
 input {
   width: calc(100% - 15px);
 }

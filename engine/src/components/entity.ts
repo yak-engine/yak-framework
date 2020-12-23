@@ -14,10 +14,12 @@ export default class Entity {
     // id: string = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 12);
     id: number = 0; // Refactored to number for ECS.
 
+    name: string;
+
     /**
      * Determines if the entity should be rendered.
      */
-    isEnabled: boolean = true;
+    enabled: boolean = true;
 
     public addComponent<TComponent>(component: TComponent): void {
         let manager = ManagerFactory.get(component.constructor.name);

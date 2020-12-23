@@ -9,7 +9,7 @@
         :project="project">
       </main-menu>
 
-      <scene-editor :project="project"></scene-editor>
+      <scene-editor></scene-editor>
 
       <project-selection 
         :is-open="isOpeningProject" 
@@ -89,6 +89,10 @@ export default class Default extends Vue {
     }
 
     EditorGlobal.project = this.project;
+
+    console.log(EditorGlobal.project);
+
+    // Load default scene.
   }
 };
 
