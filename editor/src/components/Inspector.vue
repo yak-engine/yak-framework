@@ -26,6 +26,7 @@ import { component } from "vue/types/umd";
 import Entity from "../../../engine/src/components/entity";
 import Constants from "../../../engine/src/constants";
 import { constants } from "fs-extra";
+import { State } from "vuex-class";
 
 @Component({
   components: {
@@ -39,7 +40,7 @@ import { constants } from "fs-extra";
   }
 })
 export default class Inspector extends Vue {
-  @Prop() entity: Entity;
+  @State entity: Entity;
 
   entityComponents: Array<any> = [];
 
@@ -54,8 +55,6 @@ export default class Inspector extends Vue {
         componentName: componentName
       };
     });
-
-    console.log(this.entityComponents);
   }
 
   @Watch('entity')

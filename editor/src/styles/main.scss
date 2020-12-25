@@ -27,14 +27,24 @@ div[role="button"] {
     background-color: #007ACC;
   }
 
-input {
+input, select {
     width: 100%;
-    background-color: #424242;
     color: white;
     outline: none;
     border: 1px solid #181818;
-    padding: 3px 5px;
+    padding: 5px;
     border-radius: 5px;
+    height: 25px;
+    background-color: #484848;
+}
+
+select {
+    height: 37px;
+    padding: 0;
+}
+
+div[role="button"] {
+    outline: none;
 }
 
 input:focus {

@@ -1,4 +1,4 @@
-export enum EditorMode {
+export enum PaletteMode {
     NONE = 0,
     SELECTION = 1,
     STAMP = 2,

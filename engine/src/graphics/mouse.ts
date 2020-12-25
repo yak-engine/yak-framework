@@ -19,7 +19,6 @@ export default class Mouse {
 
     onMouseDown(event: MouseEvent): void {
         Mouse.buttons.set(event.button, true);
-        console.log(Mouse.buttons);
     }
 
     onMouseUp(event: MouseEvent): void {

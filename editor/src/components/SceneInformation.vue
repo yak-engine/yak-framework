@@ -1,5 +1,5 @@
 <template>
-  <div class="scene-information-component" v-if="scene">
+  <div class="scene-information-component">
     <div style="padding: 8px 15px; background-color: #181818; border-bottom: 1px solid black;" class="is-shadowed">
       <span style="font-weight: bold; color: #e7e7e7;">Scene Configuration</span>
     </div>
@@ -25,18 +25,17 @@
 <script lang="ts">
 
 import { Component, Prop, Vue } from 'vue-property-decorator';
-import Scene from '../../../engine/src/models/scene';
+import { State } from 'vuex-class';
 
 @Component
 export default class SceneInformation extends Vue {
-  scene: Scene = null;
+  @State scene;
 };
 
 </script>
 
 <style scoped lang="scss">
-.default-component {
-  height: 100%;
-  overflow: hidden;
+.scene-information-component {
+  flex: 1;
 }
 </style>

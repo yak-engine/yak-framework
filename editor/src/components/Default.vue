@@ -1,6 +1,6 @@
 <template>
   <div class="component default-component">
-    <div style="height: 100%; display: flex; flex-direction: column;">
+    <div style="height: 100%; display: flex; flex-direction: column;" v-if="project">
       <main-menu 
         @on-new-project-clicked="isAddingProject = true"
         @on-new-scene-clicked="isAddingScene = true"
@@ -56,6 +56,16 @@ import NewScene from './NewScene.vue';
 import NewProject from './NewProject.vue';
 import EditorGlobal from '../editor-global';
 
+import { mapActions } from 'vuex';
+
+import {
+  State,
+  Getter,
+  Action,
+  Mutation,
+  namespace
+} from 'vuex-class'
+
 @Component({
   components: {
     MainMenu,
@@ -74,6 +84,8 @@ export default class Default extends Vue {
 
   project: Project = null;
 
+  @Action setProject;
+
   mounted(): void {
     let editorSettings: EditorSettings = new SettingsStorageService().load() || new EditorSettings();
 
@@ -88,9 +100,7 @@ export default class Default extends Vue {
       this.isOpeningProject = true;
     }
 
-    console.log(EditorGlobal.project);
-
-    // Load default scene.
+    this.setProject(this.project);
   }
 };
 

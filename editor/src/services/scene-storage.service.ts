@@ -1,4 +1,5 @@
 import EditorGlobal from '@/editor-global';
+import Project from '@/models/project';
 import EntityManager from '../../../engine/src/components/EntityManager';
 import Layer from '../../../engine/src/graphics/layer';
 import Tileset from '../../../engine/src/graphics/tileset';
@@ -49,20 +50,18 @@ export default class SceneStorageService {
         });
     }
 
-    public load(sceneName: string): void {
+    public load(project: Project, sceneName: string): Scene {
         const path = window.require('path');
         const fs = window.require('fs');
         const yaml = window.require('js-yaml');
     
-        let scenePath: string = path.join(EditorGlobal.project.path, `scenes/${sceneName}.yaml`);
+        let scenePath: string = path.join(project.path, `scenes/${sceneName}.yaml`);
     
         if (!fs.existsSync(scenePath)){
             throw "Scene does not exist.";
         }
     
         let sceneConfig: SceneConfig = yaml.safeLoad(fs.readFileSync(scenePath, 'utf8'));
-
-        console.log(sceneConfig);
 
         // Parsed entities to typescript objects.
         EntityManager.getInstance().parseEntities(sceneConfig);
@@ -71,7 +70,7 @@ export default class SceneStorageService {
         let tilesets: Tileset[] = [];
 
         sceneConfig.tilesets.forEach((tilesetPath: string) => {
-            let imageData = fs.readFileSync(path.join(EditorGlobal.project.path, `tilesets/${tilesetPath}`));
+            let imageData = fs.readFileSync(path.join(project.path, `tilesets/${tilesetPath}`));
             let base64 = btoa([].reduce.call(new Uint8Array(imageData),function(p,c){return p+String.fromCharCode(c)},''))
             let dataUrl = `data:image/png;base64,${base64}`;
             let image = new Image();
@@ -90,10 +89,8 @@ export default class SceneStorageService {
         scene.columns = sceneConfig.columns;
         scene.tileSize = sceneConfig.tileSize;
         scene.tilesets = tilesets;
+        scene.layers = sceneConfig.layers;
 
-        // Everything is ready set the scene to the global variable.
-        EditorGlobal.scene = scene;
-
-        console.log(EditorGlobal.scene);
+        return scene;
     }
 }

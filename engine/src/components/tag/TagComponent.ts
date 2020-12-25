@@ -1,10 +1,7 @@
 import Component from "../Component";
 
 export default class TagComponent extends Component {
-    name: string;
-
-    constructor(name?: string) {
+    constructor(public name?: string) {
         super();
-        this.name = name;
     }
 }

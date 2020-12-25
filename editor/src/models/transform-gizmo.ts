@@ -1,12 +1,7 @@
 import isCoordinateContained from "../../../engine/src/helpers/is-coordinate-contained";
 import Transform from "../../../engine/src/primitives/transform";
 import Point from "../../../engine/src/primitives/point";
-import Time from "../../../engine/src/time";
 import Mouse from "../../../engine/src/graphics/mouse";
-
-enum TransformMode {
-    
-}
 
 export default class TransformGizmo {
     transform: Transform;
@@ -26,7 +21,7 @@ export default class TransformGizmo {
         this.context = context;
     }
 
-    update(mousePosition: Point, isMouseDown: boolean): void {
+    update(mousePosition: Point): void {
         this.yAxis = new Transform(
             this.transform.x + (this.transform.width / 2) - 1, 
             this.transform.y - 10, 
@@ -90,6 +85,8 @@ export default class TransformGizmo {
         // this.context.lineTo(this.yAxis.x, this.transform.y - 20);
         // this.context.stroke();
         // this.context.closePath();
+
+        console.log(this.yAxis.x);
 
         this.context.fillStyle = '#DD5246';
         this.context.fillRect(this.yAxis.x, this.yAxis.y, this.yAxis.width, this.yAxis.height);

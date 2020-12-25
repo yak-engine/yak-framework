@@ -1,5 +1,5 @@
 <template>
-  <div class="tree-component" v-if="layers">
+  <div class="scene-layers-component tree-component" v-if="layers">
       <div class="scene-editor-panel-header is-shadowed">
         <span class="title">Manage Scene Layers</span>
         <div class="actions">
@@ -125,6 +125,10 @@ export default class SceneLayers extends Vue {
 </script>
 
 <style lang="scss" scoped>
+.scene-layers-component {
+  flex: 1;
+}
+
 .btn-layer-action {
   margin-right: 10px;
 }

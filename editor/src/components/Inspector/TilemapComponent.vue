@@ -9,18 +9,21 @@
       <select>
         <option v-for="(tilesetPath, index) in tilesetPaths" :key="index">{{tilesetPath}}</option>
       </select>
-      <button type="button">Palette</button>
     </div>
+    <button type="button" class="button fill-link text-white">Palette</button>
   </div>
 </template>
 
 <script lang="ts">
 
 import { Component, Prop, Vue } from "vue-property-decorator";
+import { State } from "vuex-class";
 import EditorGlobal from "../../editor-global";
 
 @Component
 export default class TilemapComponent extends Vue {
+  @State project;
+
   @Prop() inspectorComponentData: string;
 
   tilesetPaths: string[] = [];
@@ -29,7 +32,7 @@ export default class TilemapComponent extends Vue {
     const path = window.require('path');
     const fs = window.require('fs');
 
-    let tilesetsPath: string = path.join(EditorGlobal.project.path, 'tilesets');
+    let tilesetsPath: string = path.join(this.project.path, 'tilesets');
 
     console.log(tilesetsPath);
 

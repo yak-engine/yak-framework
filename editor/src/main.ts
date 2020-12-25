@@ -24,9 +24,10 @@ declare global {
   interface Vue { $sureToast: ToastManager; }
 }
 
-Vue.use(Vuex);
+import store from './store/store';
 
 new Vue({
   router,
-  render: (h) => h(App),
+  store,
+  render: (h) => h(App)
 }).$mount('#app');
