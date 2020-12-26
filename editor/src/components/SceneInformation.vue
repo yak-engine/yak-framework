@@ -1,41 +1,45 @@
 <template>
-  <div class="scene-information-component">
-    <div style="padding: 8px 15px; background-color: #181818; border-bottom: 1px solid black;" class="is-shadowed">
-      <span style="font-weight: bold; color: #e7e7e7;">Scene Configuration</span>
-    </div>
-    <div style="padding: 15px; display: grid; grid-template-columns: repeat(3, 1fr)">
-      <div class="form-section">
-        <div class="form-label text-small">Tile size</div>
-        <input class="tag-name" type="text" v-model.number="scene.tileSize" @change="updateScene()" />
-      </div>
+	<div class="scene-information-component" v-if="scene">
+		<div class="form-section">
+			<div class="form-label text-small">Tile size</div>
+			<input class="tag-name" type="text" v-model.number="sceneCopy.tileSize" />
+		</div>
 
-      <div class="form-section">
-        <div class="form-label text-small">Rows</div>
-        <input class="tag-name" type="text" v-model.number="scene.rows" @change="updateScene()" />
-      </div>
+		<div class="form-section">
+			<div class="form-label text-small">Rows</div>
+			<input class="tag-name" type="text" v-model.number="sceneCopy.rows" />
+		</div>
 
-      <div class="form-section">
-        <div class="form-label text-small">Columns</div>
-        <input class="tag-name" type="text" v-model.number="scene.columns" @change="updateScene()" />
-      </div>
-    </div>
-  </div>
+		<div class="form-section">
+			<div class="form-label text-small">Columns</div>
+			<input class="tag-name" type="text" v-model.number="sceneCopy.columns" />
+		</div>
+	</div>
 </template>
 
 <script lang="ts">
-
-import { Component, Prop, Vue } from 'vue-property-decorator';
-import { State } from 'vuex-class';
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Action, State } from 'vuex-class';
+import Scene from '../../../engine/src/models/scene';
 
 @Component
 export default class SceneInformation extends Vue {
   @State scene;
-};
+  @Action public setScene;
 
+  sceneCopy: Scene = null;
+
+  @Watch('scene')
+  onSceneChanged(newValue: Scene, oldValue: Scene): void {
+    if(newValue) {
+      this.sceneCopy = Object.assign({}, this.scene);
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">
 .scene-information-component {
-  flex: 1;
+	flex: 1;
 }
 </style>

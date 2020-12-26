@@ -1,3 +1,4 @@
+import EditorGlobal from '@/editor-global';
 import { PaletteMode } from '@/enums/PaletteMode';
 import { TransformMode } from '@/enums/TransformMode';
 import Project from '@/models/project';
@@ -6,6 +7,7 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import Entity from '../../../engine/src/components/entity';
 import Scene from '../../../engine/src/models/scene';
+import SceneConfig from '../../../engine/src/models/scene-config';
 
 Vue.use(Vuex);
 
@@ -28,7 +30,6 @@ export default new Vuex.Store({
 
     setScene(state, scene: Scene) {
       state.scene = scene;
-      // new SceneStorageService().save(scene, state.project.path);
     },
 
     setEntity(state, entity: Entity) {

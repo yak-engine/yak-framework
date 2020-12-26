@@ -68,7 +68,7 @@ export default class SceneHierarchy extends Vue {
 	}
 
 	save(): void {
-		console.log(EditorGlobal.scene);
+		// console.log(EditorGlobal.scene);
 	}
 
 	selectEntity(entity: Entity): void {

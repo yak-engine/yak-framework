@@ -10,42 +10,41 @@ export default class SceneStorageService {
     fileName: string = 'projects';
 
     updateLayer(originalLayer: Layer, updatedLayer: Layer, isDeletion: boolean = false): void {
-        let index: number = EditorGlobal.scene.layers.findIndex(x => x.name === originalLayer?.name);
+        // let index: number = EditorGlobal.scene.layers.findIndex(x => x.name === originalLayer?.name);
     
-        if (index !== -1) {
-            if (isDeletion) {
-                EditorGlobal.scene.layers.splice(index, 1);
-            }
-            else {
-                EditorGlobal.scene.layers[index] = updatedLayer;
-            }
-        }
-        else {
-          EditorGlobal.scene.layers.push(updatedLayer);
-        }
+        // if (index !== -1) {
+        //     if (isDeletion) {
+        //         EditorGlobal.scene.layers.splice(index, 1);
+        //     }
+        //     else {
+        //         EditorGlobal.scene.layers[index] = updatedLayer;
+        //     }
+        // }
+        // else {
+        //   EditorGlobal.scene.layers.push(updatedLayer);
+        // }
     
         // this.save();
     }
 
-    public save(scene: Scene, projectPath: string): void {
-        alert('are we here.');
-
-        scene.layers.sort((a, b) => {
+    public save(sceneConfig: SceneConfig, projectPath: string): void {
+        sceneConfig.layers.sort((a, b) => {
             return a.order - b.order;
         });
       
         const path = window.require('path');
         const fs = window.require('fs');
     
-        let scenePath: string = path.join(projectPath, `scenes/${scene.name}.json`);
+        let scenePath: string = path.join(projectPath, `scenes/${sceneConfig.name}.json`);
 
         console.log(scenePath);
     
         if (!fs.existsSync(scenePath)){
+            console.log(scenePath);
             throw "Scene does not exist.";
         }
     
-        fs.writeFile(scenePath, JSON.stringify(scene), function (err) {
+        fs.writeFile(scenePath, JSON.stringify(sceneConfig), function (err) {
             if (err) throw err;
             console.log('Scene updated successfully.');
         });
@@ -90,6 +89,8 @@ export default class SceneStorageService {
         scene.tileSize = sceneConfig.tileSize;
         scene.tilesets = tilesets;
         scene.layers = sceneConfig.layers;
+
+        EditorGlobal.sceneConfig = sceneConfig;
 
         return scene;
     }

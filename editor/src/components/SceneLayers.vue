@@ -16,25 +16,16 @@
 				<span @click="toggleLayerProperty('enabled', index)" role="button" class="btn-layer-action btn-toggle-layer" aria-label="Toggle layer visibility">
 					<i class="fa" :class="{ 'fa-eye': layer.enabled, 'fa-eye-slash': !layer.enabled }"></i>
 				</span>
-				<span @click="toggleLayerProperty('locked', index)" role="button" class="btn-layer-action btn-lock-layer" aria-label="Lock layer for editing">
-					<i class="fa" :class="{ 'fa-lock': layer.locked, 'fa-unlock': !layer.locked }"></i> </span
-				>&nbsp;
+				<span @click="toggleLayerProperty('locked', index)" role="button" class="btn-layer-action btn-lock-layer" aria-label="Lock layer for editing"> <i class="fa" :class="{ 'fa-lock': layer.locked, 'fa-unlock': !layer.locked }"></i> </span>&nbsp;
 				<span>{{ layer.name }}</span>
 			</li>
 		</ul>
-		<div class="modal-overlay" :class="{ open: isAddingLayer || isUpdatingLayer }" style="z-index: 999" v-if="layer">
+		<div class="modal-overlay" :class="{ open: layer }" style="z-index: 999" v-if="layer && isManagingLayer">
 			<div class="modal">
 				<div class="modal-header flex flex-r justify-content-between">
 					<span class="modal-title">Layer Configuration</span>
 					<div class="modal-actions">
-						<div
-							role="button"
-							tabindex="0"
-							@click="
-								isAddingLayer = false;
-								isUpdatingLayer = false;
-							"
-						>
+						<div role="button" tabindex="0" @click="layer = null">
 							<i class="fa fa-close fa-lg text-red"></i>
 						</div>
 					</div>
@@ -70,21 +61,17 @@ export default class SceneLayers extends Vue {
 	@Action setScene;
 
 	layer: Layer = null;
-
-	isAddingLayer: boolean = false;
-	isUpdatingLayer: boolean = false;
-
-	selectedIndex: number = 0;
+  selectedIndex: number = 0;
+  isManagingLayer: boolean = false;
 
 	selectLayer(index: number): void {
 		this.selectedIndex = index;
-		this.layer = this.scene.layers[this.selectedIndex];
-		this.$emit('on-layer-selected', this.selectedIndex);
 	}
 
 	save(isDeletion: false): void {
-		if (this.isAddingLayer || this.isUpdatingLayer) {
-			if (this.isAddingLayer) {
+      let index: number = this.scene.layers.findIndex(x => x.name === this.layer.name);
+
+			if (index === -1) {
 				this.scene.layers.push(this.layer);
 			} else {
 				this.scene.layers[this.selectedIndex] = this.layer;
@@ -93,28 +80,20 @@ export default class SceneLayers extends Vue {
 			this.setScene(this.scene);
 
 			this.layer = null;
-
-			this.isAddingLayer = false;
-			this.isUpdatingLayer = false;
-		}
 	}
 
 	remove(): void {
 		this.scene.layers.splice(this.selectedIndex, 1);
 		this.setScene(this.scene);
-		this.layer = null;
-		this.isAddingLayer = false;
-		this.isUpdatingLayer = false;
-  }
-  
-  toggleEditMode(): void {
-    this.isUpdatingLayer = true;
-    this.layer = Object.assign({}, this.scene.layers[this.selectedIndex]);
-  }
+	}
+
+	toggleEditMode(mouseEven): void {
+    this.isManagingLayer = true;
+		this.layer = Object.assign({}, this.scene.layers[this.selectedIndex]);
+	}
 
 	toggleAddMode(): void {
-		this.isAddingLayer = true;
-		this.isUpdatingLayer = false;
+    this.isManagingLayer = true;
 		this.layer = new Layer();
 	}
 
@@ -125,8 +104,8 @@ export default class SceneLayers extends Vue {
 		}
 
 		this.layer[property] = !this.layer[property];
-
-		this.$emit('on-layer-modified', this.scene.layers[this.selectedIndex], this.layer);
+    this.setScene(this.scene);
+    this.layer = null;
 	}
 
 	@Watch('layers')

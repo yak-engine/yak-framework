@@ -4,7 +4,7 @@
 		<div class="main">
 			<div class="editor-panel left">
 				<scene-hierarchy v-if="scene"></scene-hierarchy>
-				<scene-information v-if="scene"></scene-information>
+				project hierarchy
 			</div>
 			<div style="flex: 1; display: flex; flex-direction: column; overflow: hidden">
 				<scene-listing v-if="scene" :selected-scene="scene.name" @on-scene-selected="loadEditorScene($event)"></scene-listing>
@@ -24,7 +24,7 @@
 					</div>
 					<inspector v-if="scene"></inspector>
 				</div>
-				<scene-layers v-if="scene"></scene-layers>
+				<scene-layers v-if="scene" :layers="scene.layers" @on-layer-modified="sceneStorageService.updateLayer"></scene-layers>
 			</div>
 		</div>
 

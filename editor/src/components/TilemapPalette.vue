@@ -86,7 +86,7 @@ export default class TilemapPalette extends Vue {
 			// spriteList.style.gridTemplateColumns = `repeat(auto-fit, minmax(${pixelSizeX * pixelScaler}px, 1fr)`
 
 			// if (pixelSizeX && pixelSizeY) {
-			if (true) {
+			if (false) {
 				let spriteCountX = tileset.width / 32; // pixelSizeX;
 				let spriteCountY = tileset.height / 32; // pixelSizeY;
 

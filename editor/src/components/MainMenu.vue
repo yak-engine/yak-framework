@@ -1,128 +1,123 @@
 <template>
-  <div class="main-menu-component" ref="mainMenu">
-    <div class="mb-0 fill-dark text-light is-shadowed" style="z-index: 1000; border-bottom: 1px solid black;">
-        <div class="">
-            <ul class="nav nav-menu">
-                <div class="nav-left">
-                    <ul class="nav-item">
-                        <li class="menu-item item-has-children">
-                            <div role="button" tabindex="0" class="dropdown-toggle" @click="toggleDropdown($event)">File</div>
-                            <ul class="sub-menu">
-                                <li>
-                                    <div role="button" tabindex="0" @click="$emit('on-new-project-clicked')">New project</div>
-                                </li>
-                                <li>
-                                    <div role="button" tabindex="0" @click="$emit('on-open-project')">Open project</div>
-                                </li>
-                                <li>
-                                    <div role="button" tabindex="0" @click="$emit('on-new-scene-clicked')">New scene</div>
-                                </li>
-                                <li>
-                                    <div role="button" tabindex="0" @click="$emit('on-open-settings')">Settings</div>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="menu-item item-has-children">
-                            <div role="button" tabindex="0" class="dropdown-toggle" @click="toggleDropdown($event)">View</div>
-                            <ul class="sub-menu">
-                                <li>
-                                    <div>
-                                        <input type="checkbox" id="toggle-layer-highlighting" name="toggle-layer-highlighting" class="chk-highlight-current-layer" />
-                                        <label for="toggle-layer-highlighting">Toggle layer highlighting</label>
-                                    </div>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="menu-item">
-                            <div role="button" tabindex="0" y-ref="/options">Options</div>
-                        </li>
-                    </ul>
-                </div>
-                <div class="nav-center" v-if="project && project.engineConfig">
-                    {{project.engineConfig.name}} <span>/</span> Yak Engine
-                </div>
-                <div class="nav-right">
-                    <ul class="nav-item">
-                        <li class="menu-item">
-                            <div role="button" tabindex="0" @click="minimize()">
-                                <i class="fa fa-window-minimize"></i>
-                            </div>
-                        </li>
-                        <li class="menu-item">
-                            <div role="button" tabindex="0" @click="toggleWindowState()">
-                                <i class="fa fa-window-restore"></i>
-                            </div>
-                        </li>
-                        <li class="menu-item">
-                            <div role="button" tabindex="0" @click="close()">
-                                <i class="fa fa-close fa-lg text-red"></i>
-                            </div>
-                        </li>
-                    </ul>
-                </div>
-            </ul>
-        </div>
-    </div>
-  </div>
+	<div class="main-menu-component" ref="mainMenu">
+		<div class="mb-0 fill-dark text-light is-shadowed" style="z-index: 1000; border-bottom: 1px solid black;">
+			<div class="">
+				<ul class="nav nav-menu">
+					<div class="nav-left">
+						<ul class="nav-item">
+							<li class="menu-item item-has-children">
+								<div role="button" tabindex="0" class="dropdown-toggle" @click="toggleDropdown($event)">File</div>
+								<ul class="sub-menu">
+									<li>
+										<div role="button" tabindex="0" @click="$emit('on-new-project-clicked')">New project</div>
+									</li>
+									<li>
+										<div role="button" tabindex="0" @click="$emit('on-open-project')">Open project</div>
+									</li>
+									<li>
+										<div role="button" tabindex="0" @click="$emit('on-new-scene-clicked')">New scene</div>
+									</li>
+									<li>
+										<div role="button" tabindex="0" @click="$emit('on-open-scene-config')">Scene configuration</div>
+									</li>
+									<li>
+										<div role="button" tabindex="0" @click="$emit('on-open-settings')">Settings</div>
+									</li>
+								</ul>
+							</li>
+							<li class="menu-item item-has-children">
+								<div role="button" tabindex="0" class="dropdown-toggle" @click="toggleDropdown($event)">View</div>
+								<ul class="sub-menu">
+									<li>
+										<div>
+											<input type="checkbox" id="toggle-layer-highlighting" name="toggle-layer-highlighting" class="chk-highlight-current-layer" />
+											<label for="toggle-layer-highlighting">Toggle layer highlighting</label>
+										</div>
+									</li>
+								</ul>
+							</li>
+							<li class="menu-item">
+								<div role="button" tabindex="0" y-ref="/options">Options</div>
+							</li>
+						</ul>
+					</div>
+					<!-- <div class="nav-center" v-if="project && project.engineConfig">{{ project.engineConfig.name }} <span>/</span> Yak Engine</div> -->
+					<div class="nav-right">
+						<ul class="nav-item">
+							<li class="menu-item">
+								<div role="button" tabindex="0" @click="minimize()">
+									<i class="fa fa-window-minimize"></i>
+								</div>
+							</li>
+							<li class="menu-item">
+								<div role="button" tabindex="0" @click="toggleWindowState()">
+									<i class="fa fa-window-restore"></i>
+								</div>
+							</li>
+							<li class="menu-item">
+								<div role="button" tabindex="0" @click="close()">
+									<i class="fa fa-close fa-lg text-red"></i>
+								</div>
+							</li>
+						</ul>
+					</div>
+				</ul>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script lang="ts">
-
-import { Component, Prop, Vue } from 'vue-property-decorator';
+import { Component, Emit, Prop, Vue, Watch } from 'vue-property-decorator';
 
 import EngineConfig from '../../../engine/src/engine-config';
-import Project from '../models/project';
 
-@Component
+@Component({})
 export default class MainMenu extends Vue {
-  @Prop() private project: Project;
+	constructor() {
+		super();
 
-  constructor() {
-      super();
-      
-      document.addEventListener('click', (event: MouseEvent) => {
-          let mainMenu = <HTMLElement>this.$refs.mainMenu;
+		document.addEventListener('click', (event: MouseEvent) => {
+			let mainMenu = <HTMLElement>this.$refs.mainMenu;
 
-          if (!mainMenu.contains(<HTMLElement>event.target)) {
-              mainMenu.querySelectorAll('.menu-item.item-has-children.expanded').forEach((expandedMenuItem) => {
-                  expandedMenuItem.classList.remove('expanded');
-              })
-          }
-      });
-  }
+			if (!mainMenu.contains(<HTMLElement>event.target)) {
+				mainMenu.querySelectorAll('.menu-item.item-has-children.expanded').forEach((expandedMenuItem) => {
+					expandedMenuItem.classList.remove('expanded');
+				});
+			}
+		});
+	}
 
-  toggleWindowState(): void {
-      let browserWindow = (window as any).electron.getCurrentWindow();
+	toggleWindowState(): void {
+		let browserWindow = (window as any).electron.getCurrentWindow();
 
-      if (browserWindow.isMaximized()) {
-          this.minimize();
-      }
-      else {
-          this.maximize();
-      }
-  }
+		if (browserWindow.isMaximized()) {
+			this.minimize();
+		} else {
+			this.maximize();
+		}
+	}
 
-  maximize(): void {
-    (window as any).electron.getCurrentWindow().maximize();
-  }
+	maximize(): void {
+		(window as any).electron.getCurrentWindow().maximize();
+	}
 
-  minimize(): void {
-    (window as any).electron.getCurrentWindow().minimize();
-  }
+	minimize(): void {
+		(window as any).electron.getCurrentWindow().minimize();
+	}
 
-  close(): void {
-    (window as any).electron.getCurrentWindow().close();
-  }
+	close(): void {
+		(window as any).electron.getCurrentWindow().close();
+	}
 
-  toggleDropdown(event: MouseEvent) {
-      let target = <HTMLElement>event.target;
+	toggleDropdown(event: MouseEvent) {
+		let target = <HTMLElement>event.target;
 
-      if (target.parentElement.classList.contains('item-has-children')) {
-          target.parentElement.classList.add('expanded');
-      }
-  }
-};
-
+		if (target.parentElement.classList.contains('item-has-children')) {
+			target.parentElement.classList.add('expanded');
+		}
+	}
+}
 </script>
 
 <style scoped lang="scss">
@@ -131,6 +126,6 @@ export default class MainMenu extends Vue {
 // }
 
 .menu-item {
-    cursor: pointer;
+	cursor: pointer;
 }
 </style>
