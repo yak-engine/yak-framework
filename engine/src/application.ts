@@ -5,6 +5,7 @@ import CollisionSystem from './systems/collision-system';
 import SceneManager from './scene-manager';
 import Configuration from './configuration';
 import Mouse from './graphics/mouse';
+import EngineConfig from './engine-config';
 
 export default class Application {
     /**
@@ -22,9 +23,12 @@ export default class Application {
      */
     input: Input;
 
-    mouse: Mouse;
-
-    constructor() {
+    /**
+     * The main constructor.
+     * @param baseUrl If not provided the current url will be used to serve the required resources.
+     */
+    constructor(public baseUrl?: string) {
+        Configuration.baseUrl = this.baseUrl;
         Configuration.RegisterManagers();
     }
 
@@ -35,11 +39,15 @@ export default class Application {
      * @since 11/8/2020
      */
     start(): void {
-        const urlParams = new URLSearchParams(window.location.search);
-        const sceneName = urlParams.get('sceneName');
+        let engineConfigPath: string = 'engine-config.json';
 
-        fetch(`./api/scaffold/get`).then((response) => response.json()).then(async (scaffold: any) => {
-            this.renderer.scene = await SceneManager.load(scaffold.scenes[0]);
+        if (this.baseUrl) {
+            engineConfigPath = `${this.baseUrl}/${engineConfigPath}`;
+        }
+
+        fetch(engineConfigPath).then((response) => response.json()).then(async (engineConfig: any) => {
+            Configuration.engineConfig = engineConfig;
+            this.renderer.scene = await SceneManager.load(engineConfig.scenes[0]);
             this.renderer.init();
             window.requestAnimationFrame((time: number) => this.mainLoop(time));
         })
@@ -54,28 +62,22 @@ export default class Application {
      * @since 11/8/2020
      */
     mainLoop(time: number) {
-        window.requestAnimationFrame((time: number) => this.mainLoop(time));
-
         // Calculate delta time for update method.
         Time.calculateDeltaTime(time);
 
+        // Update the mouse position.
         Mouse.update(this.renderer.mousePosition);
-
-        // Call the update method. Implemented by the consuming class.
-        // this.update(Time.deltaTime);
 
         // Run the systems between the update and draw calls.
         this.collision.run();
 
         // The main render call.
         this.renderer.draw();
+
+        // Request a new animation frame.
+        window.requestAnimationFrame((time: number) => this.mainLoop(time));
     }
 
     // abstract ready(): void;
     // abstract update(deltaTime: number): void;
 }
-
-window.addEventListener('DOMContentLoaded', (event) => {
-    let application = new Application();
-    application.start();
-})

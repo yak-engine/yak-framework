@@ -15,6 +15,7 @@ import TilemapComponent from "./components/tilemap/TilemapComponent";
 import TilemapComponentManager from "./components/tilemap/TilemapComponentManager";
 import TransformComponent from "./components/transform/TransformComponent";
 import TransformComponentManager from "./components/transform/TransformComponentManager";
+import EngineConfig from "./engine-config";
 
 /**
  * Contains configuration options for the application instance.
@@ -23,6 +24,13 @@ import TransformComponentManager from "./components/transform/TransformComponent
  * @since 11/8/2020
  */
 export default class Configuration {
+    /**
+     * Loaded resource.
+     */
+    public static engineConfig: EngineConfig = null;
+
+    public static baseUrl: string;
+
     /**
      * Default size of the squares of the canvas.
      */

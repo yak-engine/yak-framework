@@ -1,55 +1,51 @@
 
 <template>
-  <div class="play-component" v-if="isVisible">
-    <div
-      class=""
-      style="
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.8);
-        z-index: 1000;
-      "
-    >
-      <div
-        class="play-overlay is-shadowed"
-        style="
-          position: absolute;
-          inset: 120px;
-          background-color: #181818;
-          border-radius: 8px;
-        ">
-
-        <div class="play-header">
-          <span class="title">Preview</span>
-          <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="background-color: transparent; cursor: pointer;" @click="$emit('on-play-stopped')">
-            <span aria-hidden="true" style="font-size: 42px;">&times;</span>
-          </button>
+  <div class="play-component">
+    <h1>test</h1>
+    <div class="modal-overlay" :class="{ 'open': isPlayMode }">
+      <div class="modal">
+        <div class="modal-header flex flex-r justify-content-between">
+          <span class="modal-title">My Projects</span>
+          <div class="modal-actions">
+            <button type="button" @click="$emit('on-play-stopped')">
+                <i class="fa fa-close fa-lg text-red"></i>
+            </button>
+          </div>
         </div>
-        <div class="play-body">
-          <iframe :src="previewUrl" frameborder="0"></iframe>
+        <div class="modal-content">
+          <canvas id="engine-canvas"></canvas>
         </div>
-        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
 
-import { Component, Prop, Vue } from "vue-property-decorator";
+import { Component, Prop, Vue, Watch } from "vue-property-decorator";
+import { State } from "vuex-class";
+
+import Application from '../../../engine/src/application';
+import Project from "../models/project";
 
 @Component
-export default class SceneHierarchy extends Vue {
-  @Prop() isVisible: boolean = false;
+export default class Play extends Vue {
+  @State project: Project;
+  @State isPlayMode: boolean;
 
-  // previewUrl: string = 'http://localhost:9000/play.html';
-  previewUrl: string = 'http://localhost:8080';
+  application: Application = null;
 
-  mounted() {
-    this.previewUrl = `${this.previewUrl}?rootPath=${encodeURIComponent('')}&sceneName=scene1`;
-    console.log(this.previewUrl);
+  @Watch('isPlayMode', { immediate: true })
+  onIsVisibleChanged(newValue: boolean, oldValue: boolean): void {
+    if (newValue) {
+      this.application = new Application(this.project.path);
+      this.application.start();
+    }
+    else {
+      this.application = null;
+    }
+
+    console.log(this.application);
   }
 };
 

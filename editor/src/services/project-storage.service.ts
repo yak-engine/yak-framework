@@ -71,7 +71,7 @@ export default class ProjectStorageService extends AppDataService {
     }
 
     private loadEngineConfig(projectPath: string): EngineConfig {
-        let engineConfigPath: string = path.join(projectPath, 'engine.yaml');
+        let engineConfigPath: string = path.join(projectPath, 'engine-config.json');
 
         if (!fs.existsSync(engineConfigPath)){
             throw "Not a valid project folder.";

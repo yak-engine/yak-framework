@@ -24,27 +24,28 @@ export default class SceneStorageService {
           EditorGlobal.scene.layers.push(updatedLayer);
         }
     
-        this.save();
+        // this.save();
     }
 
-    public save(): void {
-        EditorGlobal.scene.layers.sort((a, b) => {
+    public save(scene: Scene, projectPath: string): void {
+        alert('are we here.');
+
+        scene.layers.sort((a, b) => {
             return a.order - b.order;
         });
       
         const path = window.require('path');
         const fs = window.require('fs');
-        const yaml = window.require('js-yaml');
     
-        let scenePath: string = path.join(EditorGlobal.project.path, `scenes/${EditorGlobal.scene.name}.yaml`);
+        let scenePath: string = path.join(projectPath, `scenes/${scene.name}.json`);
+
+        console.log(scenePath);
     
         if (!fs.existsSync(scenePath)){
             throw "Scene does not exist.";
         }
     
-        const scene = yaml.safeDump(EditorGlobal.scene);
-    
-        fs.writeFile(scenePath, scene, function (err) {
+        fs.writeFile(scenePath, JSON.stringify(scene), function (err) {
             if (err) throw err;
             console.log('Scene updated successfully.');
         });
@@ -53,15 +54,14 @@ export default class SceneStorageService {
     public load(project: Project, sceneName: string): Scene {
         const path = window.require('path');
         const fs = window.require('fs');
-        const yaml = window.require('js-yaml');
     
-        let scenePath: string = path.join(project.path, `scenes/${sceneName}.yaml`);
+        let scenePath: string = path.join(project.path, `scenes/${sceneName}.json`);
     
         if (!fs.existsSync(scenePath)){
             throw "Scene does not exist.";
         }
     
-        let sceneConfig: SceneConfig = yaml.safeLoad(fs.readFileSync(scenePath, 'utf8'));
+        let sceneConfig: SceneConfig = JSON.parse(fs.readFileSync(scenePath, 'utf8'));
 
         // Parsed entities to typescript objects.
         EntityManager.getInstance().parseEntities(sceneConfig);

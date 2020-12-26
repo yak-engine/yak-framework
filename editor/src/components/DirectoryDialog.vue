@@ -11,7 +11,7 @@ import { Component, Prop, Vue } from 'vue-property-decorator';
 import { app, OpenDialogReturnValue } from "electron/main";
 
 @Component
-export default class Default extends Vue {
+export default class DirectoryDialog extends Vue {
 
   async selectTargetPath(): Promise<void> {
     let results: OpenDialogReturnValue = await window.electron.dialog.showOpenDialog({

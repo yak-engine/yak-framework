@@ -86,8 +86,6 @@ export default class EditorRenderer {
 		this.engineCanvas.width = this.scene.columns * this.scene.tileSize;
 		this.engineCanvas.height = this.scene.rows * this.scene.tileSize;
 		this.sceneTilemapComponent = ManagerFactory.get(TilemapComponent.name).data[0];
-
-		console.log(ManagerFactory.get(TransformComponent.name).data);
     }
 
     /**

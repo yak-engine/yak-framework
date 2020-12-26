@@ -6,11 +6,14 @@ export default class ComponentManager {
     data: Array<Component> = new Array();
 
     entityDataMap: Map<number, number> = new Map();
+    dataEntityMap: Map<number, number> = new Map();
 
     addComponentInstance(entity: Entity, component: Component): void {
         // TODO: Ensure an entity cannot have the same component added more than once.
         
         this.data.push(component);
+
         this.entityDataMap.set(entity.id, this.data.length - 1);
+        this.dataEntityMap.set(this.data.length - 1, entity.id);
     }
 }

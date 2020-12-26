@@ -1,5 +1,6 @@
 <template>
 	<div class="component scene-editor-component">
+		<!-- <img src="file:\\C:\Users\Nick\Documents\Programming\game-engine\sample-projects\project-import-test\tilesets\BaseChip_pipo.png" /> -->
 		<div class="main">
 			<div class="editor-panel left">
 				<scene-hierarchy v-if="scene"></scene-hierarchy>
@@ -23,11 +24,11 @@
 					</div>
 					<inspector v-if="scene"></inspector>
 				</div>
-				<scene-layers v-if="scene" :layers="scene.layers" @on-layer-modified="sceneStorageService.updateLayer"></scene-layers>
+				<scene-layers v-if="scene"></scene-layers>
 			</div>
 		</div>
 
-		<play :is-visible="isPlaying" v-on:on-play-stopped="isPlaying = false"></play>
+		<play />
 	</div>
 </template>
 

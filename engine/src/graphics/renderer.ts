@@ -14,18 +14,21 @@ import Entity from "../components/entity";
 import MaterialComponent from "../components/material/MaterialComponent";
 import TransformComponent from "../components/transform/TransformComponent";
 import TilemapComponent from "../components/tilemap/TilemapComponent";
-import Scene from "./scene";
+import Scene from "../models/scene";
+import ManagerFactory from "../components/ManagerFactory";
+import TagComponent from "../components/tag/TagComponent";
+import TagComponentManager from "../components/tag/TagComponentManager";
 
 export default class Renderer {
     /**
      * The canvas located within the default index.html document.
      */
-    public engineCanvas: HTMLCanvasElement = <HTMLCanvasElement>document.querySelector('#engine-canvas');
+    public engineCanvas: HTMLCanvasElement = null;
 
     /**
      * The 2D rendering context for the default canvas.
      */
-    public context: CanvasRenderingContext2D = <CanvasRenderingContext2D>this.engineCanvas.getContext('2d');
+    public context: CanvasRenderingContext2D = null;
 
     /**
      * The renderer that handle drawing the UI fragments to the given canvas context.
@@ -69,11 +72,6 @@ export default class Renderer {
     public scene: Scene;
 
     /**
-     * The tilesets being used for the current scene. Get loaded on startup.
-     */
-    public tilesets: Array<Tileset> = new Array();
-
-    /**
      * The main scene camera this is always here.
      */
     public mainCamera: Camera = new Camera();
@@ -85,38 +83,49 @@ export default class Renderer {
 
     public playerEntity: Entity;
 
-    public tileMapEntity: Entity;
+    public defaultTilemapComponent: TilemapComponent;
 
     /**
      * Default constructor. Queries the canvas together with the canvas context
      * and bootstraps the canvas events.
      */
     constructor() {
+
+    }
+
+    init() {
+        this.engineCanvas = <HTMLCanvasElement>document.querySelector('#engine-canvas');
+        this.context = <CanvasRenderingContext2D>this.engineCanvas.getContext('2d');
+
         // Ensure we resize the canvas here.
         this.resizeCanvas();
 
         this.engineCanvas.addEventListener('mousedown', (event) => this.onCanvasMouseDown(event));
         this.engineCanvas.addEventListener('mouseup', (event) => this.onCanvasMouseUp(event));
         this.engineCanvas.addEventListener('mousemove', (event) => this.onCanvasMouseMove(event));
-    }
 
-    init() {
-        // this.playerEntity = EntityManager.getInstance().create();
-        let entity = this.scene.entities.find((entity) => {
-            if (entity.id === 2) {
-                return entity;
+        // Load and store a reference to the default tilemap component.
+        this.defaultTilemapComponent = ManagerFactory.get(TilemapComponent.name).data[0] as TilemapComponent;
+
+        // TODO: DON'T DO THIS.
+        EntityManager.getInstance().entities.forEach((entity) => {
+            let tag: string = entity.getComponent<TagComponent>(TagComponent.name).name;
+
+            if (tag === 'player') {
+                this.playerEntity = entity;
             }
         });
 
-        this.tileMapEntity = EntityManager.getInstance().create();
-        this.tileMapEntity.addComponent<TilemapComponent>(new TilemapComponent(entity.tilemapComponent.tiles));
+        // let tagManager: TagComponentManager = ManagerFactory.get(TagComponent.name);
+        // console.log(tagManager);
+        // let componentDataIndex: number = tagManager.data.findIndex(x => (x as TagComponent).name === 'player');
+        // this.playerEntity = EntityManager.getInstance().entities[tagManager.dataEntityMap[componentDataIndex]];
 
-        console.log(this.tileMapEntity);
+        console.log(this.playerEntity);
 
         // Bootstrap components
-
         this.mainCamera.viewport = new Transform(0, 0, this.getCanvasWidth(), this.getCanvasHeight());
-        this.mainCamera.max = new Point((this.scene.columns * this.scene.spriteSize) - this.mainCamera.viewport.width, (this.scene.rows * this.scene.spriteSize) - this.mainCamera.viewport.height);
+        this.mainCamera.max = new Point((this.scene.columns * this.scene.tileSize) - this.mainCamera.viewport.width, (this.scene.rows * this.scene.tileSize) - this.mainCamera.viewport.height);
     }
 
     draw() {
@@ -147,15 +156,15 @@ export default class Renderer {
                     }
 
                     this.context.drawImage(
-                        this.tilesets[0].image,// this.tilesets[spriteRendererComponent.layer].image,
-                        spriteRendererComponent.column * this.scene.spriteSize,
-                        spriteRendererComponent.row * this.scene.spriteSize,
-                        this.scene.spriteSize,
-                        this.scene.spriteSize,
+                        this.scene.tilesets[0].image,// this.tilesets[spriteRendererComponent.layer].image,
+                        spriteRendererComponent.column * this.scene.tileSize,
+                        spriteRendererComponent.row * this.scene.tileSize,
+                        this.scene.tileSize,
+                        this.scene.tileSize,
                         transform.x - cameraOffsetX,
                         transform.y - cameraOffsetY,
-                        this.scene.spriteSize,
-                        this.scene.spriteSize
+                        this.scene.tileSize,
+                        this.scene.tileSize
                     );
                 }
                 else {
@@ -180,32 +189,31 @@ export default class Renderer {
             if (layer.enabled) {
                 let camera = this.mainCamera;
     
-                var startCol = Math.floor(camera.viewport.x / this.scene.spriteSize);
-                var endCol = startCol + (camera.viewport.width / this.scene.spriteSize) + 1;
-                var startRow = Math.floor(camera.viewport.y / this.scene.spriteSize);
-                var endRow = startRow + (camera.viewport.height / this.scene.spriteSize) + 1;
-                var offsetX = -camera.viewport.x + startCol * this.scene.spriteSize;
-                var offsetY = -camera.viewport.y + startRow * this.scene.spriteSize;
+                var startCol = Math.floor(camera.viewport.x / this.scene.tileSize);
+                var endCol = startCol + (camera.viewport.width / this.scene.tileSize) + 1;
+                var startRow = Math.floor(camera.viewport.y / this.scene.tileSize);
+                var endRow = startRow + (camera.viewport.height / this.scene.tileSize) + 1;
+                var offsetX = -camera.viewport.x + startCol * this.scene.tileSize;
+                var offsetY = -camera.viewport.y + startRow * this.scene.tileSize;
     
                 for (let col = startCol; col <= endCol; col++) {
                     for (let row = startRow; row <= endRow; row++) {
                         // let sprite: number = layer.sprites[row * this.scene.columns + col];
-                        let tilemapComponent: TilemapComponent = this.tileMapEntity.getComponent<TilemapComponent>(TilemapComponent.name);
-                        let sprite: number = tilemapComponent.tiles[row * this.scene.columns + col];
+                        let sprite: number = this.defaultTilemapComponent.tiles[row * this.scene.columns + col];
     
-                        var x = (col - startCol) * this.scene.spriteSize + offsetX;
-                        var y = (row - startRow) * this.scene.spriteSize + offsetY;
+                        var x = (col - startCol) * this.scene.tileSize + offsetX;
+                        var y = (row - startRow) * this.scene.tileSize + offsetY;
     
                         this.context.drawImage(
-                            this.tilesets[0].image, //this.tilesets[layer.tileset].image,
-                            sprite * this.scene.spriteSize,
+                            this.scene.tilesets[0].image, //this.tilesets[layer.tileset].image,
+                            sprite * this.scene.tileSize,
                             0,
-                            this.scene.spriteSize,
-                            this.scene.spriteSize,
+                            this.scene.tileSize,
+                            this.scene.tileSize,
                             Math.round(x),
                             Math.round(y),
-                            this.scene.spriteSize,
-                            this.scene.spriteSize
+                            this.scene.tileSize,
+                            this.scene.tileSize
                         );
                     }
                 }

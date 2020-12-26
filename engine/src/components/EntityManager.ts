@@ -6,6 +6,8 @@ import SpriteRendererComponent from "./sprite-renderer/SpriteRendererComponent";
 import CameraComponent from "./camera/CameraComponent";
 import TilemapComponent from "./tilemap/TilemapComponent";
 import SceneConfig from "../models/scene-config";
+import Camera from "../graphics/camera";
+import Point from "../primitives/point";
 
 export default class EntityManager {
     private static instance: EntityManager;
@@ -59,7 +61,12 @@ export default class EntityManager {
                         parsedEntity.addComponent(new TransformComponent(new Transform(sourceComponent.x, sourceComponent.y, sourceComponent.width, sourceComponent.height)));
                     }
                     else if (sourceProperty === 'cameraComponent') {
-                        parsedEntity.addComponent(new CameraComponent());
+                        let camera: Camera = new Camera();
+
+                        camera.viewport = new Transform(sourceComponent.viewport.x, sourceComponent.viewport.y, sourceComponent.viewport.width, sourceComponent.viewport.height);
+                        camera.max = new Point(sourceComponent.max.x, sourceComponent.max.y);
+
+                        parsedEntity.addComponent(new CameraComponent(camera));
                     }
                     else if (sourceProperty === 'tagComponent') {
                         parsedEntity.addComponent(new TagComponent(sourceComponent.name));

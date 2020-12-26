@@ -1,135 +1,150 @@
 <template>
-  <div class="scene-layers-component tree-component" v-if="layers">
-      <div class="scene-editor-panel-header is-shadowed">
-        <span class="title">Manage Scene Layers</span>
-        <div class="actions">
-          <button type="button" @click="isUpdatingLayer = true;">
-            <i class="fa fa-gear"></i>
-          </button>
-          <button type="button" @click="toggleAddMode()">
-            <i class="fa fa-plus"></i>
-          </button>
-        </div>
-      </div>
-      <ul>
-          <li v-for="(layer, index) in layers" :key="index" @click="selectLayer(index)" v-bind:class="{ 'selected': selectedIndex === index }">
-            <span @click="toggleLayerProperty('enabled', index)" role="button" class="btn-layer-action btn-toggle-layer" aria-label="Toggle layer visibility">
-              <i class="fa" :class="{ 'fa-eye': layer.enabled, 'fa-eye-slash': !layer.enabled }"></i>
-            </span>
-            <span @click="toggleLayerProperty('locked', index)" role="button" class="btn-layer-action btn-lock-layer" aria-label="Lock layer for editing">
-              <i class="fa" :class="{ 'fa-lock': layer.locked, 'fa-unlock': !layer.locked }"></i>
-            </span>&nbsp;
-            <span>{{layer.name}}</span>
-          </li>
-      </ul>
-      <div class="modal-overlay" :class="{'open': isAddingLayer || isUpdatingLayer}" style="z-index: 999" v-if="layer">
-        <div class="modal">
-          <div class="modal-header flex flex-r justify-content-between">
-            <span class="modal-title">Layer Configuration</span>
-            <div class="modal-actions">
-              <div role="button" tabindex="0" @click="isAddingLayer = false; isUpdatingLayer = false;">
-                  <i class="fa fa-close fa-lg text-red"></i>
-              </div>
-            </div>
-          </div>
-          <div class="modal-content">
-            <div class="form-section">
-              <div class="form-label">Layer name</div>
-              <input type="text" v-model="layer.name" placeholder="Enter a layer name" />
-            </div>
-            <div class="form-section">
-              <div class="form-label">Layer order</div>
-              <input type="text" v-model.number="layer.order" placeholder="Enter the layer order" />
-            </div>
-          </div>
-          <div class="modal-footer flex justify-content-between">
-            <button type="button" class="button fill-green-darken-1 text-white" @click="save()">Save</button>
-            <button v-if="layer.name" type="button" class="button fill-transparent text-red dangerous-action" @click="remove()">Delete</button>
-          </div>
-        </div>
-      </div>
-  </div>
+	<div class="scene-layers-component tree-component" v-if="scene.layers">
+		<div class="scene-editor-panel-header is-shadowed">
+			<span class="title">Manage Scene Layers</span>
+			<div class="actions">
+				<button type="button" @click="toggleEditMode()">
+					<i class="fa fa-gear"></i>
+				</button>
+				<button type="button" @click="toggleAddMode()">
+					<i class="fa fa-plus"></i>
+				</button>
+			</div>
+		</div>
+		<ul>
+			<li v-for="(layer, index) in scene.layers" :key="index" @click="selectLayer(index)" v-bind:class="{ selected: selectedIndex === index }">
+				<span @click="toggleLayerProperty('enabled', index)" role="button" class="btn-layer-action btn-toggle-layer" aria-label="Toggle layer visibility">
+					<i class="fa" :class="{ 'fa-eye': layer.enabled, 'fa-eye-slash': !layer.enabled }"></i>
+				</span>
+				<span @click="toggleLayerProperty('locked', index)" role="button" class="btn-layer-action btn-lock-layer" aria-label="Lock layer for editing">
+					<i class="fa" :class="{ 'fa-lock': layer.locked, 'fa-unlock': !layer.locked }"></i> </span
+				>&nbsp;
+				<span>{{ layer.name }}</span>
+			</li>
+		</ul>
+		<div class="modal-overlay" :class="{ open: isAddingLayer || isUpdatingLayer }" style="z-index: 999" v-if="layer">
+			<div class="modal">
+				<div class="modal-header flex flex-r justify-content-between">
+					<span class="modal-title">Layer Configuration</span>
+					<div class="modal-actions">
+						<div
+							role="button"
+							tabindex="0"
+							@click="
+								isAddingLayer = false;
+								isUpdatingLayer = false;
+							"
+						>
+							<i class="fa fa-close fa-lg text-red"></i>
+						</div>
+					</div>
+				</div>
+				<div class="modal-content">
+					<div class="form-section">
+						<div class="form-label">Layer name</div>
+						<input type="text" v-model="layer.name" placeholder="Enter a layer name" />
+					</div>
+					<div class="form-section">
+						<div class="form-label">Layer order</div>
+						<input type="text" v-model.number="layer.order" placeholder="Enter the layer order" />
+					</div>
+				</div>
+				<div class="modal-footer flex justify-content-between">
+					<button type="button" class="button fill-green-darken-1 text-white" @click="save()">Save</button>
+					<button v-if="layer.name" type="button" class="button fill-transparent text-red dangerous-action" @click="remove()">Delete</button>
+				</div>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script lang="ts">
-
-import { Component, Prop, Vue, Watch } from "vue-property-decorator";
-import Layer from "../../../engine/src/graphics/layer";
+import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
+import { Action, State } from 'vuex-class';
+import Layer from '../../../engine/src/graphics/layer';
+import Scene from '../../../engine/src/models/scene';
 
 @Component
 export default class SceneLayers extends Vue {
-  @Prop() layers: Array<any>;
+	@State scene: Scene;
+	@Action setScene;
 
-  layer: Layer = null;
+	layer: Layer = null;
 
-  isAddingLayer: boolean = false;
-  isUpdatingLayer: boolean = false;
+	isAddingLayer: boolean = false;
+	isUpdatingLayer: boolean = false;
 
-  selectedIndex: number = 0;
+	selectedIndex: number = 0;
 
-  selectLayer(index: number): void {
-    this.selectedIndex = index;
-    this.layer = this.layers[this.selectedIndex];
-    this.$emit('on-layer-selected', this.selectedIndex);
+	selectLayer(index: number): void {
+		this.selectedIndex = index;
+		this.layer = this.scene.layers[this.selectedIndex];
+		this.$emit('on-layer-selected', this.selectedIndex);
+	}
+
+	save(isDeletion: false): void {
+		if (this.isAddingLayer || this.isUpdatingLayer) {
+			if (this.isAddingLayer) {
+				this.scene.layers.push(this.layer);
+			} else {
+				this.scene.layers[this.selectedIndex] = this.layer;
+			}
+
+			this.setScene(this.scene);
+
+			this.layer = null;
+
+			this.isAddingLayer = false;
+			this.isUpdatingLayer = false;
+		}
+	}
+
+	remove(): void {
+		this.scene.layers.splice(this.selectedIndex, 1);
+		this.setScene(this.scene);
+		this.layer = null;
+		this.isAddingLayer = false;
+		this.isUpdatingLayer = false;
+  }
+  
+  toggleEditMode(): void {
+    this.isUpdatingLayer = true;
+    this.layer = Object.assign({}, this.scene.layers[this.selectedIndex]);
   }
 
-  save(isDeletion: false): void {
-    if (this.isAddingLayer || this.isUpdatingLayer) {
-      if (this.isAddingLayer) {
-        this.$emit('on-layer-modified', null, this.layer, false);
-      }
-      else {
-        this.$emit('on-layer-modified', this.layers[this.selectedIndex], this.layer, false);
-      }
+	toggleAddMode(): void {
+		this.isAddingLayer = true;
+		this.isUpdatingLayer = false;
+		this.layer = new Layer();
+	}
 
-      this.layer = null;
+	toggleLayerProperty(property: string, index: number): void {
+		if (this.selectedIndex !== index) {
+			this.selectedIndex = index;
+			this.layer = this.scene.layers[this.selectedIndex];
+		}
 
-      this.isAddingLayer = false;
-      this.isUpdatingLayer = false;
-    }
-  }
+		this.layer[property] = !this.layer[property];
 
-  remove(): void {
-    this.$emit('on-layer-modified', this.layers[this.selectedIndex], this.layer, true);
-    this.layer = null;
-    this.isAddingLayer = false;
-    this.isUpdatingLayer = false;
-  }
+		this.$emit('on-layer-modified', this.scene.layers[this.selectedIndex], this.layer);
+	}
 
-  toggleAddMode(): void {
-    this.isAddingLayer = true;
-    this.isUpdatingLayer = false;
-    this.layer = new Layer();
-  }
-
-  toggleLayerProperty(property: string, index: number): void {
-    if (this.selectedIndex !== index) {
-      this.selectedIndex = index;
-      this.layer = this.layers[this.selectedIndex];
-    }
-
-    this.layer[property] = !this.layer[property];
-    
-    this.$emit('on-layer-modified', this.layers[this.selectedIndex], this.layer);
-  }
-
-  @Watch('layers')
-  onPropertyChanged(newValue: Array<any>, oldValue: Array<any>) {
-    if (newValue) {
-      this.selectedIndex = 0;
-      this.layer = this.layers[this.selectedIndex];
-    }
-  }
-};
-
+	@Watch('layers')
+	onPropertyChanged(newValue: Array<any>, oldValue: Array<any>) {
+		if (newValue) {
+			this.selectedIndex = 0;
+			this.layer = this.scene.layers[this.selectedIndex];
+		}
+	}
+}
 </script>
 
 <style lang="scss" scoped>
 .scene-layers-component {
-  flex: 1;
+	flex: 1;
 }
 
 .btn-layer-action {
-  margin-right: 10px;
+	margin-right: 10px;
 }
 </style>

@@ -40,7 +40,7 @@ export default class TransformComponent extends Vue {
 
 </script>
 
-<style>
+<style lang="scss" scoped>
 .transform-values {
   display: grid;
   grid-template-columns: repeat(4, 75px);

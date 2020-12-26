@@ -23,7 +23,7 @@
 			<div class="nav-right">
 				<ul class="nav-item">
 					<li class="menu-item">
-						<div role="button" tabindex="0" class="btn-play" @click="isPlaying = true">
+						<div role="button" tabindex="0" class="btn-play" @click="setIsPlayMode(true)">
 							<i class="fa fa-play text-green-darken-2 mr-default"></i>
 							<span class="text-white">PLAY</span>
 						</div>
@@ -45,7 +45,8 @@ export default class SceneToolbar extends Vue {
     @State transformMode;
 
     // Store actions.
-    @Action setTransformMode;
+	@Action setTransformMode;
+	@Action setIsPlayMode;
 
     onSetTransformMode(transformMode: TransformMode): void {
         this.setTransformMode(transformMode);

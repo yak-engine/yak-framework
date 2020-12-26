@@ -86,8 +86,6 @@ export default class TransformGizmo {
         // this.context.stroke();
         // this.context.closePath();
 
-        console.log(this.yAxis.x);
-
         this.context.fillStyle = '#DD5246';
         this.context.fillRect(this.yAxis.x, this.yAxis.y, this.yAxis.width, this.yAxis.height);
 

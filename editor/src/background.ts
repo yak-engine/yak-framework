@@ -72,6 +72,7 @@ app.on('ready', async () => {
 app.whenReady().then(() => {
   protocol.registerFileProtocol('file', (request, callback) => {
     const pathname = decodeURI(request.url.replace('file:///', ''));
+    console.log(pathname);
     callback(pathname);
   });
 });

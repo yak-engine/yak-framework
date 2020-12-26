@@ -1,6 +1,7 @@
 import { PaletteMode } from '@/enums/PaletteMode';
 import { TransformMode } from '@/enums/TransformMode';
 import Project from '@/models/project';
+import SceneStorageService from '@/services/scene-storage.service';
 import Vue from 'vue';
 import Vuex from 'vuex';
 import Entity from '../../../engine/src/components/entity';
@@ -15,7 +16,8 @@ export default new Vuex.Store({
       scene: null,
       entity: null,
       transformMode: TransformMode.MOVE,
-      paletteMode: null
+      paletteMode: null,
+      isPlayMode: false
     }
   },
 
@@ -26,6 +28,7 @@ export default new Vuex.Store({
 
     setScene(state, scene: Scene) {
       state.scene = scene;
+      // new SceneStorageService().save(scene, state.project.path);
     },
 
     setEntity(state, entity: Entity) {
@@ -39,6 +42,10 @@ export default new Vuex.Store({
     setPaletteMode(state, scene: Scene) {
       state.paletteMode = scene;
     },    
+
+    setIsPlayMode(state, isPlayMode: boolean) {
+      state.isPlayMode = isPlayMode;
+    },
   },
   actions: {
     setProject(context, project: Project) {
@@ -59,6 +66,10 @@ export default new Vuex.Store({
 
     setPaletteMode(context, paletteMode: PaletteMode) {
       context.commit('setPaletteMode', paletteMode);
+    },
+
+    setIsPlayMode(context, isPlayMode: boolean) {
+      context.commit('setIsPlayMode', isPlayMode);
     }
   }
 });

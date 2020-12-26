@@ -57,7 +57,7 @@ export default class Inspector extends Vue {
     });
   }
 
-  @Watch('entity')
+  @Watch('entity', { immediate: true })
   onEntityChanged(newValue: any, oldValue: any): void {
     this.bootstrapAvailableComponents();
   }

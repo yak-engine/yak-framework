@@ -61,7 +61,7 @@ export default class Settings extends Vue {
   editorSettings: EditorSettings = null;
   
   save(): void {
-    new SettingsStorageService().save(this.editorSettings);
+    // new SettingsStorageService().save(this.editorSettings);
   }
 
   @Watch('isOpen')
