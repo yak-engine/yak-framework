@@ -4,7 +4,7 @@
   "description": "",
   "author": "",
   "scripts": {
-    "dev": "npm run electron:serve --prefix editor && npm run watch --prefix engine",
+    "dev": "concurrently \"npm run watch --prefix engine\" \"npm run electron:serve --prefix editor\"",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
@@ -13,6 +13,7 @@
   "main": "background.js",
   "dependencies": {
     "async": "^3.2.0",
+    "directory-tree": "^2.2.5",
     "express": "^4.17.1",
     "js-yaml": "^3.14.0",
     "open": "^7.3.0"

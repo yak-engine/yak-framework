@@ -29,6 +29,10 @@ export default class Configuration {
      */
     public static engineConfig: EngineConfig = null;
 
+    public static width: number;
+
+    public static height: number;
+
     public static baseUrl: string;
 
     /**

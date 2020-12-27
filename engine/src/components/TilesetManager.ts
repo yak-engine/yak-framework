@@ -1,67 +1,46 @@
+import Configuration from '../configuration';
 import Tileset from '../graphics/tileset';
 import SceneConfig from '../models/scene-config';
 
-import { Logger } from '../logging/logger';
-import Configuration from '../configuration';
-
 export default class TilesetManager {
-	public static async loadTilesets(sceneConfig: SceneConfig): Promise<Tileset[]> {
-        let tilesets: Tileset[] = [];
+	public static loadTilesets(sceneConfig: SceneConfig, onCompleted: any): void {
+        console.log('[ENGINE]: Started loading scene tilesets');
 
-        let isLoading: boolean = true;
+		let tilesets: Tileset[] = [];
 
-        // let img = await fetch('file:\\\\\\C:\\Users\\Nick\\Documents\\Programming\\game-engine\\sample-projects\\project-import-test\\tilesets\\BaseChip_pipo.png');
-        // let blob: Blob = await img.blob();
+		let tilesetsLoaded = 0;
 
-        // let fileReader = new FileReader();
+		sceneConfig.tilesets.forEach(async (tilesetName, index) => {
+            console.log(`[ENGINE]: Started fetching ${tilesetName} tileset`);
 
-        // fileReader.readAsDataURL(blob);
+			let img = new Image();
 
-        // fileReader.onload = () => {
-        //     alert('hello');
-        //     let base64 = fileReader.result as string;
-        //     console.log(base64);
-        //     let img = new Image();
-        //     img.src = base64;
-        //     let tileset = new Tileset(img);
-        //     tilesets.push(tileset);
-        //     isLoading = false;
-        // }
-        
-		// sceneConfig.tilesets.forEach((tilesetName: string) => {
-		// 	let image = new Image();
+			let tilesetPath: string = `tilesets/${tilesetName}`;
 
-		// 	image.onload = () => {
-		// 		tilesets.push(new Tileset(image));
-        //     };
+			if (Configuration.baseUrl) {
+				tilesetPath = `file://${Configuration.baseUrl.replace(/\\/g, "/")}/${tilesetPath}`;
+            }
             
-		// 	image.onerror = () => {
-		// 		Logger.data('failed to load tileset');
-		// 	};
+            console.log(`[ENGINE] Tileset path: ${tilesetPath}`);
 
-		// 	// let tilesetPath: string = `tilesets\\${tilesetName}`;
+			img.onload = async () => {
+				tilesetsLoaded++;
+				tilesets.splice(index, 0, new Tileset(img));
+                
+                console.log(`[ENGINE]: Tileset loaded: ${tilesetPath}`);
 
-		// 	// if (Configuration.baseUrl) {
-		// 	// 	tilesetPath = `file:\\\\${Configuration.baseUrl}\\${tilesetPath}`;
-        //     // }
-
-        //     // console.log(tilesetPath);
+				if (tilesetsLoaded === sceneConfig.tilesets.length) {
+					console.log('[ENGINE] Scene tilesets loaded successfully.');
+					console.log(tilesets);
+					onCompleted(tilesets);
+				}
+            };
             
-        //     // image.src = tilesetPath;
+            img.onerror = async(error) => {
+                console.error(error);
+            }
 
-        //     image.src = 'file:\\\C:\Users\Nick\Documents\Programming\game-engine\sample-projects\project-import-test\tilesets\BaseChip_pipo.png';
-        // });
-
-		// while (tilesets.length !== sceneConfig.tilesets.length) {
-		// 	continue;
-        // }
-        
-        while(isLoading) {
-            continue;
-        }
-
-        console.log('loaded tilesets');
-
-		return tilesets;
+            img.src = tilesetPath;
+		});
 	}
 }

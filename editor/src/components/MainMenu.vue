@@ -14,18 +14,21 @@
 									<li>
 										<div role="button" tabindex="0" @click="$emit('on-open-project')">Open project</div>
 									</li>
+								</ul>
+							</li>
+							<li class="menu-item item-has-children">
+								<div role="button" tabindex="0" class="dropdown-toggle" @click="toggleDropdown($event)">Project</div>
+								<ul class="sub-menu">
 									<li>
-										<div role="button" tabindex="0" @click="$emit('on-new-scene-clicked')">New scene</div>
+										<div role="button" tabindex="0" @click="$emit('on-new-project-clicked')">Scene configuration</div>
 									</li>
-									<li>
-										<div role="button" tabindex="0" @click="$emit('on-open-scene-config')">Scene configuration</div>
-									</li>
+									<li class="divider"></li>
 									<li>
 										<div role="button" tabindex="0" @click="$emit('on-open-settings')">Settings</div>
 									</li>
 								</ul>
 							</li>
-							<li class="menu-item item-has-children">
+							<!-- <li class="menu-item item-has-children">
 								<div role="button" tabindex="0" class="dropdown-toggle" @click="toggleDropdown($event)">View</div>
 								<ul class="sub-menu">
 									<li>
@@ -38,7 +41,7 @@
 							</li>
 							<li class="menu-item">
 								<div role="button" tabindex="0" y-ref="/options">Options</div>
-							</li>
+							</li> -->
 						</ul>
 					</div>
 					<!-- <div class="nav-center" v-if="project && project.engineConfig">{{ project.engineConfig.name }} <span>/</span> Yak Engine</div> -->
@@ -127,5 +130,13 @@ export default class MainMenu extends Vue {
 
 .menu-item {
 	cursor: pointer;
+}
+
+.fill-dark {
+	background-color: #323233;
+}
+
+.nav.nav-menu .nav-item > li div[role="button"] {
+	font-size: 15px;
 }
 </style>

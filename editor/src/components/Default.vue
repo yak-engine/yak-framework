@@ -40,7 +40,7 @@
       <modal 
         :title="'Scene Configuration'" 
         :is-open="isOpeningSceneConfig" 
-        @on-modal-saved="sceneInformation.setScene(sceneInformation.sceneCopy)" 
+        @on-modal-saved="sceneInformation.setScene(sceneInformation.sceneCopy); isOpeningSceneConfig = false;" 
         @on-modal-closed="isOpeningSceneConfig = false">
         <scene-information ref="sceneInformation"></scene-information>
       </modal>
@@ -131,8 +131,6 @@ export default class Default extends Vue {
   @Watch('scene')
   onSceneChanged(newValue: Scene, oldValue: Scene): void {
     if (newValue) {
-
-
       let sceneConfig: SceneConfig = new SceneConfig();
 
       EditorGlobal.sceneConfig.name = this.scene.name;
@@ -141,8 +139,6 @@ export default class Default extends Vue {
       EditorGlobal.sceneConfig.tileSize = this.scene.tileSize;
       // EditorGlobal.sceneConfig.tilesets = scene.tilesets;
       EditorGlobal.sceneConfig.layers = this.scene.layers;
-
-      console.log(EditorGlobal.sceneConfig);
 
       // TODO: Set project path properly.
       new SceneStorageService().save(EditorGlobal.sceneConfig, this.project.path);

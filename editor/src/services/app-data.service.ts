@@ -1,5 +1,3 @@
-const fs = window.require('fs');
-
 export default abstract class AppDataService {
     // The application folder in the AppData.
     userDataPath: string;
@@ -15,10 +13,13 @@ export default abstract class AppDataService {
     }
 
     public save<TEntity>(entity: TEntity): void {
+        const fs = window.require('fs');
         fs.writeFileSync(this.filePath, JSON.stringify(entity));
     }
 
     public load<TEntity>(): TEntity {
+        const fs = window.require('fs');
+
         if (fs.existsSync(this.filePath)) {
             let fileData = fs.readFileSync(this.filePath);
 

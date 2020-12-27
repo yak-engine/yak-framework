@@ -48,6 +48,7 @@ export default class Inspector extends Vue {
     this.entityComponents = Constants.componentNames.filter((componentName) => {
        return this.entity.getComponent<any>(componentName) !== null;
     }).map((componentName) => {
+      console.log(componentName);
       let componentInstance = this.entity.getComponent<any>(componentName);
 
       return {

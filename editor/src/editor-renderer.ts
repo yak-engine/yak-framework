@@ -20,6 +20,7 @@ import ComponentManager from '../../engine/src/components/ComponentManager';
 import ManagerFactory from '../../engine/src/components/ManagerFactory';
 import MaterialComponent from '../../engine/src/components/material/MaterialComponent';
 import TagComponent from '../../engine/src/components/tag/TagComponent';
+import ColliderComponent from '../../engine/src/components/collider/ColliderComponent';
 
 export default class EditorRenderer {
 	/**
@@ -138,6 +139,11 @@ export default class EditorRenderer {
 		this.drawGridLines();
 		this.drawTransformGizmos();
 		// this.drawSpritePreview();
+
+		let collider: ColliderComponent = (ManagerFactory.get(ColliderComponent.name).data[0] as ColliderComponent);
+		this.context.lineWidth = 3;
+		this.context.strokeStyle = '#8FE761';
+		this.context.strokeRect(collider.transform.x, collider.transform.y, collider.transform.width, collider.transform.height);
 
 		// // TODO: Move this.
 		// if (!this.currentLayer.locked) {

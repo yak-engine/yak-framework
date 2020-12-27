@@ -8,6 +8,7 @@ import TilemapComponent from "./tilemap/TilemapComponent";
 import SceneConfig from "../models/scene-config";
 import Camera from "../graphics/camera";
 import Point from "../primitives/point";
+import ColliderComponent from "./collider/ColliderComponent";
 
 export default class EntityManager {
     private static instance: EntityManager;
@@ -73,6 +74,9 @@ export default class EntityManager {
                     }
                     else if (sourceProperty === 'tilemapComponent') {
                         parsedEntity.addComponent(new TilemapComponent(sourceComponent.tiles, sourceComponent.tilesetIndex));
+                    }
+                    else if (sourceProperty === 'colliderComponent') {
+                        parsedEntity.addComponent(new ColliderComponent(sourceComponent.transform, sourceComponent.isTrigger));
                     }
                 }
             }

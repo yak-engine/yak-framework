@@ -21,6 +21,6 @@ module.exports = {
     },
     output: {
         filename: 'engine.js',
-        path: path.join(__dirname, '../editor/public/preview/bundle'),
+        path: path.join(__dirname, '../editor/public/preview'),
     }
 };

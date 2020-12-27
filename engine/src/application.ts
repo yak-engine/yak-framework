@@ -21,14 +21,17 @@ export default class Application {
     /**
      * The main input system.
      */
-    input: Input;
+    // input: Input;
 
     /**
      * The main constructor.
      * @param baseUrl If not provided the current url will be used to serve the required resources.
      */
-    constructor(public baseUrl?: string) {
-        Configuration.baseUrl = this.baseUrl;
+    constructor() {
+        const urlParams = new URLSearchParams(location.search);
+        console.log(location);
+        Configuration.baseUrl = decodeURIComponent(urlParams.get('baseUrl'));
+        console.log(Configuration.baseUrl);
         Configuration.RegisterManagers();
     }
 
@@ -41,13 +44,15 @@ export default class Application {
     start(): void {
         let engineConfigPath: string = 'engine-config.json';
 
-        if (this.baseUrl) {
-            engineConfigPath = `${this.baseUrl}/${engineConfigPath}`;
+        // Used in the editor.
+        if (Configuration.baseUrl) {
+            engineConfigPath = `${Configuration.baseUrl}/${engineConfigPath}`;
         }
 
         fetch(engineConfigPath).then((response) => response.json()).then(async (engineConfig: any) => {
             Configuration.engineConfig = engineConfig;
             this.renderer.scene = await SceneManager.load(engineConfig.scenes[0]);
+            console.log(this.renderer.scene);
             this.renderer.init();
             window.requestAnimationFrame((time: number) => this.mainLoop(time));
         })
@@ -71,6 +76,8 @@ export default class Application {
         // Run the systems between the update and draw calls.
         this.collision.run();
 
+        this.renderer.update();
+
         // The main render call.
         this.renderer.draw();
 
@@ -81,3 +88,8 @@ export default class Application {
     // abstract ready(): void;
     // abstract update(deltaTime: number): void;
 }
+
+document.addEventListener('DOMContentLoaded', (event) => {
+    let application = new Application();
+    application.start();
+})

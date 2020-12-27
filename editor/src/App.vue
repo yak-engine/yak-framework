@@ -22,6 +22,8 @@ export default class App extends Vue {
   constructor() {
     super();
 
+    console.log('[VUE APP]');
+
     document.addEventListener("keydown", (event) => {
       switch (event.key) {
         case "w":

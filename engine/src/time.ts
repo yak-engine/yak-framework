@@ -1,6 +1,6 @@
 export default class Time {
     public static lastTimestamp: number = performance.now();
-    public static deltaTime: number;
+    public static deltaTime: any;
     public static fps: number;
 
     public static calculateDeltaTime(time: number): void {

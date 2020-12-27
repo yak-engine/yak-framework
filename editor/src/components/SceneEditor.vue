@@ -4,7 +4,7 @@
 		<div class="main">
 			<div class="editor-panel left">
 				<scene-hierarchy v-if="scene"></scene-hierarchy>
-				project hierarchy
+				<project-hierarchy v-if="scene"></project-hierarchy>
 			</div>
 			<div style="flex: 1; display: flex; flex-direction: column; overflow: hidden">
 				<scene-listing v-if="scene" :selected-scene="scene.name" @on-scene-selected="loadEditorScene($event)"></scene-listing>
@@ -28,7 +28,7 @@
 			</div>
 		</div>
 
-		<play />
+		<play v-if="isPlayMode" />
 	</div>
 </template>
 
@@ -41,6 +41,7 @@ import EditorRenderer from '../editor-renderer';
 
 // Child components.
 import SceneHierarchy from './SceneHierarchy.vue';
+import ProjectHierarchy from './ProjectHierarchy.vue';
 import SceneListing from './SceneListing.vue';
 import Inspector from './Inspector.vue';
 import SceneLayers from './SceneLayers.vue';
@@ -77,6 +78,7 @@ import Configuration from '../../../engine/src/configuration';
 @Component({
 	components: {
 		SceneHierarchy,
+		ProjectHierarchy,
 		SceneListing,
 		Inspector,
 		Play,
@@ -91,6 +93,7 @@ export default class SceneEditor extends Vue {
 	@State scene;
 	@State entity;
 	@State transformMode;
+	@State isPlayMode;
 
 	@Action setScene;
 	@Action setEntity;
@@ -139,8 +142,8 @@ export default class SceneEditor extends Vue {
 	mainLoop(time: number) {
 		window.requestAnimationFrame((time: number) => this.mainLoop(time));
 
-		Time.calculateDeltaTime(time);
-		Mouse.update(this.editorRenderer.mousePosition);
+		// Time.calculateDeltaTime(time);
+		// Mouse.update(this.editorRenderer.mousePosition);
 
 		this.editorRenderer.update();
 		this.editorRenderer.draw();

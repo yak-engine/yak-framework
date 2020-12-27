@@ -20,6 +20,7 @@
 <script lang="ts">
 import { Component, Prop, Vue, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
+
 import Scene from '../../../engine/src/models/scene';
 
 @Component

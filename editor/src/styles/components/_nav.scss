@@ -59,8 +59,6 @@
             list-style-type: none;
             
             > li {
-                padding: 8px 15px;
-    
                 a {
                     color: $color-dark;
                 }
@@ -68,6 +66,7 @@
                 div[role="button"] {
                     // TODO: Add specific Sass variable for this color.
                     color: $color-white;
+                    padding: 8px 15px;
                 }
 
                 .nav-menu.fill-dark & {
@@ -81,10 +80,25 @@
 
                 .sub-menu {
                     background-color: $color-dark;
+                    border-radius: 0;
 
                     > li {
+                        padding: 0;
+
                         &:hover {
                             background-color: #007ACC;
+                        }
+
+                        &.divider {
+                            height: 1px;
+                            padding: 0;
+                            margin: 0;
+                            overflow: hidden;
+                            background-color: #787878;
+        
+                            &:hover {
+                                background-color: transparent;
+                            }
                         }
                     }
                 }

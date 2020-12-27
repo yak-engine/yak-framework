@@ -18,6 +18,9 @@ import Scene from "../models/scene";
 import ManagerFactory from "../components/ManagerFactory";
 import TagComponent from "../components/tag/TagComponent";
 import TagComponentManager from "../components/tag/TagComponentManager";
+import CameraComponent from "../components/camera/CameraComponent";
+import Time from "../time";
+import ColliderComponent from "../components/collider/ColliderComponent";
 
 export default class Renderer {
     /**
@@ -107,8 +110,13 @@ export default class Renderer {
         // Load and store a reference to the default tilemap component.
         this.defaultTilemapComponent = ManagerFactory.get(TilemapComponent.name).data[0] as TilemapComponent;
 
+        console.log(EntityManager.getInstance().entities);
+
+        // TODO: THIS IS NOT SHOWING THE CORRECT DATA WHEN COMPILED.
+        console.log(ManagerFactory.get(ColliderComponent.name));
+
         // TODO: DON'T DO THIS.
-        EntityManager.getInstance().entities.forEach((entity) => {
+        EntityManager.getInstance().entities.forEach((entity: Entity) => {
             let tag: string = entity.getComponent<TagComponent>(TagComponent.name).name;
 
             if (tag === 'player') {
@@ -128,10 +136,52 @@ export default class Renderer {
         this.mainCamera.max = new Point((this.scene.columns * this.scene.tileSize) - this.mainCamera.viewport.width, (this.scene.rows * this.scene.tileSize) - this.mainCamera.viewport.height);
     }
 
+    update(): void {
+        // let horizontal = Input.horizontal();
+        // let vertical = Input.vertical();
+
+        // let playerTransform: Transform = this.playerEntity.getComponent<TransformComponent>(TransformComponent.name).transform;
+        // let camera: Camera = (ManagerFactory.get(CameraComponent.name).data[0] as CameraComponent).camera;
+
+        // if (horizontal !== 0) {
+        //     let movementX = horizontal * 150;
+        //     playerTransform.x += movementX;
+
+        //     if (camera.viewport.x > (camera.viewport.width - 100)) {
+        //         playerTransform.clampX(0, camera.viewport.width - this.scene.tileSize);
+        //     }
+        //     else {
+        //         playerTransform.clampX(0, camera.viewport.width);
+        //     }
+        // }
+
+        // if (vertical !== 0) {
+        //     let movementY = vertical * 150;
+        //     playerTransform.y += movementY;
+        //     playerTransform.y = Math.max(0, Math.min(playerTransform.y, this.scene.rows * this.scene.tileSize - 32));
+
+        //     if (camera.viewport.y > (camera.viewport.height - 100)) {
+        //         playerTransform.clampY(0, camera.viewport.height - this.scene.tileSize);
+        //     }
+        //     else {
+        //         playerTransform.clampY(0, camera.viewport.height - 100);
+        //     }
+        // }
+
+        // if (playerTransform.x >= camera.viewport.width - 100 || playerTransform.x < 100) {
+        //     camera.viewport.x += playerTransform.x;
+        //     // camera.viewport.x = Math.max(0, Math.min(camera.viewport.x, camera.max.x));
+        // }
+
+        // if (playerTransform.y >= camera.viewport.height - 100 || playerTransform.y <= 100) {
+        //     camera.viewport.y += vertical * 150;
+        //     camera.viewport.y = Math.max(0, Math.min(camera.viewport.y, camera.max.y));
+        // }
+    }
+
     draw() {
         this.clearCanvas();
         this.fillCanvas();
-        this.drawLayers();
 
         // Run through renderer system.
         EntityManager.getInstance().entities.forEach((entity: Entity) => {
@@ -203,9 +253,9 @@ export default class Renderer {
     
                         var x = (col - startCol) * this.scene.tileSize + offsetX;
                         var y = (row - startRow) * this.scene.tileSize + offsetY;
-    
+
                         this.context.drawImage(
-                            this.scene.tilesets[0].image, //this.tilesets[layer.tileset].image,
+                            this.scene.tilesets[this.defaultTilemapComponent.tilesetIndex].image, //this.tilesets[layer.tileset].image,
                             sprite * this.scene.tileSize,
                             0,
                             this.scene.tileSize,
@@ -246,10 +296,15 @@ export default class Renderer {
      * @since 11/8/2020
      */
     resizeCanvas(): void {
-        if (this.getCanvasWidth() !== window.innerWidth || this.getCanvasHeight() !== window.innerHeight) {
-            this.setCanvasWidth(window.innerWidth);
-            this.setCanvasHeight(window.innerHeight);
+        if (this.getCanvasWidth() !== Configuration.width || this.getCanvasHeight() !== Configuration.height) {
+            this.setCanvasWidth(Configuration.width);
+            this.setCanvasHeight(Configuration.height);
         }
+
+        // if (this.getCanvasWidth() !== window.innerWidth || this.getCanvasHeight() !== window.innerHeight) {
+        //     this.setCanvasWidth(window.innerWidth);
+        //     this.setCanvasHeight(window.innerHeight);
+        // }
     }
 
     /**

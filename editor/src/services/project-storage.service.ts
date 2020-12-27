@@ -5,7 +5,6 @@ import SettingsStorageService from './settings-storage.service';
 import EditorSettings from '@/models/editor-settings';
 
 const fs = window.require('fs');
-const fs_extra = window.require('fs-extra');
 const path = window.require('path');
 const yaml = window.require('js-yaml');
 
@@ -23,14 +22,23 @@ export default class ProjectStorageService extends AppDataService {
             if (!fs.existsSync(project.path)){
                 fs.mkdirSync(project.path, { recursive: true });
             }
-    
-            fs_extra.copy(path.join((window as any).dirname, "../public/default-project"), project.path, function(error) {
-                if (error) {
-                    throw error;
-                } else {
-                  console.log("Project directory created successfully!");
+
+            // TODO: These directories shouldn't alway be required. Let the user decide the project directory structure.
+            // Create required directories.
+            let requiredDirs = ['tilesets', 'scripts', 'scenes'];
+
+            requiredDirs.map((requiredDir) => {
+                if (!fs.existsSync(requiredDir)) {
+                    fs.mkdirSync(requiredDir)
                 }
-            }); 
+            });
+
+            let defaultEngineConfig: EngineConfig = new EngineConfig();
+
+            defaultEngineConfig.name = 'default';
+            defaultEngineConfig.scenes = [];
+
+            fs.writeFileSync(project.path, JSON.stringify(defaultEngineConfig));
         }
     }
 
@@ -66,6 +74,25 @@ export default class ProjectStorageService extends AppDataService {
         let editorSettings: EditorSettings = settingsStorageService.load() || new EditorSettings();
         editorSettings.lastProjectPath = existingProject.path;
         settingsStorageService.save(editorSettings);
+
+        const getDirectories = (path, projectTree) => {
+            return fs.readdirSync(path, { withFileTypes: true }).filter((dirent) => dirent.isDirectory()).map((directory) => {
+                let directoryItem = {
+                    title: directory.name,
+                    children: []
+                };
+
+                getDirectories(`${path}\\${directory.name}`, directoryItem.children);
+
+                projectTree.push(directoryItem);
+            });
+        }
+
+        let projectTree = [];
+        
+        getDirectories(existingProject.path, projectTree)
+        
+        existingProject.tree = projectTree;
 
         return existingProject;
     }

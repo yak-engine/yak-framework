@@ -37,8 +37,6 @@ export default class SceneStorageService {
     
         let scenePath: string = path.join(projectPath, `scenes/${sceneConfig.name}.json`);
 
-        console.log(scenePath);
-    
         if (!fs.existsSync(scenePath)){
             console.log(scenePath);
             throw "Scene does not exist.";

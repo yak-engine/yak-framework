@@ -398,7 +398,7 @@ button.active {
 }
 
 .tree {
-    ul {
+    > ul {
         padding-left: 15px;
         padding-top: 5px;
 
@@ -410,7 +410,7 @@ button.active {
             }
 
             &.expanded {
-                ul {
+                > ul {
                     display: inherit;
                 }
             }

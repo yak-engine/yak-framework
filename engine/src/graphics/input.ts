@@ -30,7 +30,7 @@ export default class Input {
     }
 
     static horizontal(): number {
-        let xDirection;
+        let xDirection: number;
 
         if (Input.isPressed('a'))
         {
