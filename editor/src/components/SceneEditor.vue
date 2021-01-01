@@ -18,12 +18,7 @@
 				<tilemap-palette v-if="scene"></tilemap-palette>
 			</div>
 			<div class="editor-panel right">
-				<div style="flex: 1">
-					<div class="scene-editor-panel-header">
-						<span class="title" style="font-weight: bold; color: #e7e7e7"><i class="fa fa-cube fa-lg"></i> Inspector</span>
-					</div>
-					<inspector v-if="scene"></inspector>
-				</div>
+				<inspector v-if="scene"></inspector>
 				<scene-layers v-if="scene" :layers="scene.layers" @on-layer-modified="sceneStorageService.updateLayer"></scene-layers>
 			</div>
 		</div>
@@ -74,6 +69,9 @@ import { Logger } from '../../../engine/src/logging/logger';
 // Vuex.
 import { Action, State } from 'vuex-class';
 import Configuration from '../../../engine/src/configuration';
+import ColliderGizmo from '../systems/gizmos/collider-gizmo';
+import Transform from '../../../engine/src/primitives/transform';
+import SystemManager from '../systems/system-manager';
 
 @Component({
 	components: {
@@ -86,7 +84,7 @@ import Configuration from '../../../engine/src/configuration';
 		TilemapPalette,
 		SceneInformation,
 		SceneToolbar
-	}
+	},
 })
 export default class SceneEditor extends Vue {
 	@State project;
@@ -122,7 +120,7 @@ export default class SceneEditor extends Vue {
 		this.editorRenderer = new EditorRenderer();
 
 		this.editorRenderer.scene = this.scene;
-		this.editorRenderer.selectedEntity = this.entity;
+		this.editorRenderer.setSelectedEntity(this.entity);
 		this.editorRenderer.init();
 
 		window.requestAnimationFrame((time: number) => this.mainLoop(time));
@@ -136,7 +134,7 @@ export default class SceneEditor extends Vue {
 
 	onEntitySelected(entity: Entity): void {
 		this.setEntity(entity);
-		this.editorRenderer.selectedEntity = entity;
+		this.editorRenderer.setSelectedEntity(entity);
 	}
 
 	mainLoop(time: number) {

@@ -1,9 +1,5 @@
 <template>
   <div class="tag-component">
-    <div class="text-default" style="padding-bottom: 5px; font-weight: bold; margin-bottom: 5px;">
-      <i class="fa fa-tag" style="margin-right: 10px;"></i>
-      <span>Tag</span>  
-    </div>
     <input class="tag-name" type="text" v-model="inspectorComponentData.name" />
   </div>
 </template>

@@ -26,7 +26,8 @@ export default class SceneManager {
 		console.log('[ENGINE]: Scene parsed successfully;');
 
 		// Parsed entities to typescript objects.
-        EntityManager.getInstance().parseEntities(sceneConfig);
+		EntityManager.getInstance().parseEntities(sceneConfig);
+		
         console.log('[ENGINE]: Scene entities parsed successfully.');
 
 		scene.name = sceneConfig.name;

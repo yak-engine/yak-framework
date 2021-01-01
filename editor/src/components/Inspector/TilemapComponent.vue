@@ -1,9 +1,5 @@
 <template>
   <div class="camera-component">
-    <div class="text-default" style="padding-bottom: 5px; font-weight: bold; margin-bottom: 5px;">
-      <i class="fa fa-map" style="margin-right: 10px;"></i>
-      <span>Tilemap</span>  
-    </div>
     <div class="form-section">
       <div class="form-label">Tilemap</div>
       <select>
@@ -33,8 +29,6 @@ export default class TilemapComponent extends Vue {
     const fs = window.require('fs');
 
     let tilesetsPath: string = path.join(this.project.path, 'tilesets');
-
-    console.log(tilesetsPath);
 
     if (!fs.existsSync(tilesetsPath)){
       throw "Required folder does not exist.";

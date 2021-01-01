@@ -61,8 +61,8 @@ export default class SceneLayers extends Vue {
 	@Action setScene;
 
 	layer: Layer = null;
-  selectedIndex: number = 0;
-  isManagingLayer: boolean = false;
+  	selectedIndex: number = 0;
+  	isManagingLayer: boolean = false;
 
 	selectLayer(index: number): void {
 		this.selectedIndex = index;

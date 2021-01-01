@@ -1,9 +1,5 @@
 <template>
   <div class="transform-component" v-if="inspectorComponentData">
-    <div class="text-default" style="padding-bottom: 5px; font-weight: bold; margin-bottom: 5px;">
-      <i class="fa fa-arrows" style="margin-right: 10px;"></i>
-      <span>Transform</span>  
-    </div>
     <div class="transform-values">
       <div class="transform-value flex flex-r align-items-center">
         <div class="form-label text-small">X</div>

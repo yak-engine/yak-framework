@@ -9,6 +9,11 @@ import SceneConfig from "../models/scene-config";
 import Camera from "../graphics/camera";
 import Point from "../primitives/point";
 import ColliderComponent from "./collider/ColliderComponent";
+import ComponentManager from "./ComponentManager";
+import ManagerFactory from "./ManagerFactory";
+import Configuration from "../configuration";
+import Constants from "../constants";
+import Component from "./Component";
 
 export default class EntityManager {
     private static instance: EntityManager;
@@ -64,8 +69,8 @@ export default class EntityManager {
                     else if (sourceProperty === 'cameraComponent') {
                         let camera: Camera = new Camera();
 
-                        camera.viewport = new Transform(sourceComponent.viewport.x, sourceComponent.viewport.y, sourceComponent.viewport.width, sourceComponent.viewport.height);
-                        camera.max = new Point(sourceComponent.max.x, sourceComponent.max.y);
+                        camera.viewport = new Transform(sourceComponent.camera.viewport.x, sourceComponent.camera.viewport.y, sourceComponent.camera.viewport.width, sourceComponent.camera.viewport.height);
+                        camera.max = new Point(sourceComponent.camera.max.x, sourceComponent.camera.max.y);
 
                         parsedEntity.addComponent(new CameraComponent(camera));
                     }
@@ -85,6 +90,28 @@ export default class EntityManager {
         });
 
         EntityManager.getInstance().entities = parsedEntities;
+
+        console.log(EntityManager.getInstance().entities);
+    }
+
+    public packEntities(): any[] {
+        let entityConfigs: any[] = [];
+
+        EntityManager.getInstance().entities.forEach((entity) => {
+            let entityConfig: any = {};
+
+            Constants.componentNames.forEach((componentName) => {
+                let componentInstance: Component = entity.getComponent(componentName);
+
+                if (componentInstance) {
+                    entityConfig[componentName.charAt(0).toLowerCase() + componentName.slice(1)] = componentInstance;
+                }
+            });
+
+            entityConfigs.push(entityConfig);
+        });
+
+        return entityConfigs;
     }
 
     private addRequiredComponents(entity: Entity): void {

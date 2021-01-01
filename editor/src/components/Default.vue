@@ -76,11 +76,18 @@ import {
   Mutation,
   namespace
 } from 'vuex-class'
+
 import Configuration from '../../../engine/src/configuration';
 import { watchFile } from 'fs-extra';
 import Scene from '../../../engine/src/models/scene';
 import SceneStorageService from '../services/scene-storage.service';
 import SceneConfig from '../../../engine/src/models/scene-config';
+import SystemManager from '../systems/system-manager';
+import GizmoSystem from '../systems/gizmos/gizmo-system';
+import ColliderGizmo from '../systems/gizmos/collider-gizmo';
+import System from '../systems/system';
+import Transform from '../../../engine/src/primitives/transform';
+import EntityManager from '../../../engine/src/components/EntityManager';
 
 @Component({
   components: {
@@ -112,6 +119,8 @@ export default class Default extends Vue {
   sceneInformation: SceneInformation;
 
   mounted(): void {
+    SystemManager.register(new GizmoSystem());
+
     let editorSettings: EditorSettings = new SettingsStorageService().load() || new EditorSettings();
 
     if (editorSettings.defaultProjectPath) {
@@ -139,9 +148,11 @@ export default class Default extends Vue {
       EditorGlobal.sceneConfig.tileSize = this.scene.tileSize;
       // EditorGlobal.sceneConfig.tilesets = scene.tilesets;
       EditorGlobal.sceneConfig.layers = this.scene.layers;
+      EditorGlobal.sceneConfig.entities = EntityManager.getInstance().packEntities();
 
-      // TODO: Set project path properly.
-      new SceneStorageService().save(EditorGlobal.sceneConfig, this.project.path);
+      console.log(EditorGlobal.sceneConfig.entities.length);
+
+      new SceneStorageService().save(Object.assign({}, EditorGlobal.sceneConfig), this.project.path);
     }
   }
 };

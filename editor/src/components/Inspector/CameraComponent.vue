@@ -1,9 +1,5 @@
 <template>
 	<div class="camera-component">
-		<div class="text-default" style="padding-bottom: 5px; font-weight: bold; margin-bottom: 5px;">
-			<i class="fa fa-camera" style="margin-right: 10px;"></i>
-			<span>Camera</span>
-		</div>
 		<div class="form-section">
 			<div class="component-header">Viewport</div>
 			<div class="viewport-values">

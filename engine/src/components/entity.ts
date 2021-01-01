@@ -36,5 +36,16 @@ export default class Entity {
         return null;
     }
 
+    public removeComponent(componentName: string): void {
+        let manager = ManagerFactory.get(componentName);
+
+        if (manager.entityDataMap.has(this.id)) {
+            let componentInstanceIndex: number = manager.entityDataMap.get(this.id);
+            manager.data.splice(componentInstanceIndex, 1);
+            manager.entityDataMap.delete(this.id);
+            manager.dataEntityMap.delete(componentInstanceIndex);
+        }
+    }
+
     public getComponentName
 }

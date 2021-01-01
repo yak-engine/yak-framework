@@ -1,9 +1,5 @@
 <template>
   <div class="material-component">
-    <div class="text-default" style="padding-bottom: 5px; font-weight: bold; margin-bottom: 5px;">
-      <i class="fa fa-paint-brush" style="margin-right: 10px;"></i>
-      <span>Material</span>  
-    </div>
     <input class="fill-style" type="text" v-model="inspectorComponentData.fillStyle" />
   </div>
 </template>

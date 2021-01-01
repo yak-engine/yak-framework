@@ -28,6 +28,10 @@ export default class SceneStorageService {
     }
 
     public save(sceneConfig: SceneConfig, projectPath: string): void {
+        if (!sceneConfig) {
+            throw "Cannot save a null of undefined scene.";
+        }
+
         sceneConfig.layers.sort((a, b) => {
             return a.order - b.order;
         });
@@ -41,8 +45,8 @@ export default class SceneStorageService {
             console.log(scenePath);
             throw "Scene does not exist.";
         }
-    
-        fs.writeFile(scenePath, JSON.stringify(sceneConfig), function (err) {
+
+        fs.writeFile(scenePath, JSON.stringify(sceneConfig, null, 2), function (err) {
             if (err) throw err;
             console.log('Scene updated successfully.');
         });
@@ -55,6 +59,7 @@ export default class SceneStorageService {
         let scenePath: string = path.join(project.path, `scenes/${sceneName}.json`);
     
         if (!fs.existsSync(scenePath)){
+            console.log(scenePath);
             throw "Scene does not exist.";
         }
     

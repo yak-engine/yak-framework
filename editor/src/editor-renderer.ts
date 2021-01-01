@@ -12,7 +12,6 @@ import TilemapComponent from '../../engine/src/components/tilemap/TilemapCompone
 import isCoordinateContained from '../../engine/src/helpers/is-coordinate-contained';
 import isTransformEmpty from '../../engine/src/helpers/is-transform-empty';
 import pointWorldPosition from '../../engine/src/helpers/current-viewport-grid-square';
-import TransformGizmo from './models/transform-gizmo';
 import Mouse from '../../engine/src/graphics/mouse';
 import EditorGlobal from './editor-global';
 import Scene from '../../engine/src/models/scene';
@@ -21,6 +20,11 @@ import ManagerFactory from '../../engine/src/components/ManagerFactory';
 import MaterialComponent from '../../engine/src/components/material/MaterialComponent';
 import TagComponent from '../../engine/src/components/tag/TagComponent';
 import ColliderComponent from '../../engine/src/components/collider/ColliderComponent';
+import SystemManager from './systems/system-manager';
+import GizmoSystem from './systems/gizmos/gizmo-system';
+import TransformGizmo from './systems/gizmos/transform-gizmo';
+import ColliderGizmo from './systems/gizmos/collider-gizmo';
+import { copySync } from 'fs-extra';
 
 export default class EditorRenderer {
 	/**
@@ -58,10 +62,6 @@ export default class EditorRenderer {
 
 	public scene: Scene = null;
 
-	public selectedEntity: Entity = null;
-
-	public transformGizmo: TransformGizmo = null;
-
 	public mousePosition: Point = new Point(0, 0);
 
 	public isMouseDown: boolean = false;
@@ -73,6 +73,8 @@ export default class EditorRenderer {
 	public sceneTilemapComponent: TilemapComponent = null;
 
 	public mouse: Mouse = new Mouse();
+
+	private selectedEntity: Entity = null;
 
 	constructor() {
 		this.engineCanvas = <HTMLCanvasElement>document.querySelector('#editor-canvas');
@@ -115,35 +117,39 @@ export default class EditorRenderer {
 		this.engineCanvas.width = width;
 	}
 
+	public setSelectedEntity(entity: Entity): void {
+		this.selectedEntity = entity;
+		SystemManager.get('gizmo-system').data.push(new TransformGizmo(this.selectedEntity, this.context));
+		SystemManager.get('gizmo-system').data.push(new ColliderGizmo(this.selectedEntity, this.context));
+	}
+
+	public getSelectedEntity(): Entity {
+		return this.selectedEntity;
+	}
+
 	public update(): void {
-		EntityManager.getInstance().entities.forEach((entity) => {
-			let transform: Transform = entity.getComponent<TransformComponent>(TransformComponent.name).transform;
-
-			if (this.selectedEntity.id === entity.id) {
-				this.selectedEntity = entity;
-				this.transformGizmo = new TransformGizmo(transform, this.context);
-			}
+		SystemManager.systems.forEach((system) => {
+			system.data.forEach((instance) => {
+				instance.update();
+			});
 		});
-
-		this.transformGizmo?.update(this.mousePosition);
 	}
 
 	public draw(): void {
-		// Clear canvas.
-		this.clearCanvas();
-
 		// Draw calls.
 		this.drawTilemap();
 		this.drawEntities();
 		this.drawSelectionTransform();
 		this.drawGridLines();
-		this.drawTransformGizmos();
 		// this.drawSpritePreview();
 
-		let collider: ColliderComponent = (ManagerFactory.get(ColliderComponent.name).data[0] as ColliderComponent);
-		this.context.lineWidth = 3;
-		this.context.strokeStyle = '#8FE761';
-		this.context.strokeRect(collider.transform.x, collider.transform.y, collider.transform.width, collider.transform.height);
+		SystemManager.systems.forEach((system) => {
+			system.data.forEach((instance) => {
+				instance.draw();
+			});
+		});
+
+		// Add as collider gizmo
 
 		// // TODO: Move this.
 		// if (!this.currentLayer.locked) {
@@ -222,10 +228,6 @@ export default class EditorRenderer {
 				this.context.globalAlpha = 1;
 			}
 		});
-	}
-
-	private drawTransformGizmos(): void {
-		this.transformGizmo?.draw();
 	}
 
 	private highlightSelectedSprites(): void {
