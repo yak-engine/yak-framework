@@ -45,6 +45,8 @@ export default class Entity {
             manager.entityDataMap.delete(this.id);
             manager.dataEntityMap.delete(componentInstanceIndex);
         }
+
+        console.log(manager);
     }
 
     public getComponentName

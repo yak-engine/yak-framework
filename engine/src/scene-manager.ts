@@ -17,8 +17,6 @@ export default class SceneManager {
 			scenePath = `${Configuration.baseUrl}\\${scenePath}`;
 		}
 
-		console.log(scenePath);
-
 		let response = await fetch(scenePath);
 		console.log('[ENGINE]: Scene feteched successfully;');
 
@@ -34,8 +32,8 @@ export default class SceneManager {
 		scene.rows = sceneConfig.columns;
 		scene.columns = sceneConfig.columns;
         scene.tileSize = sceneConfig.tileSize;
-        scene.layers = sceneConfig.layers;
-
+		scene.layers = sceneConfig.layers;
+		
 		return new Promise((resolve, reject) => {
 			TilesetManager.loadTilesets(sceneConfig, (tilesets: Tileset[]) => {
 				scene.tilesets = tilesets;

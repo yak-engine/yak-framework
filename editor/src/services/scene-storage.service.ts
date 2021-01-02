@@ -27,10 +27,21 @@ export default class SceneStorageService {
         // this.save();
     }
 
-    public save(sceneConfig: SceneConfig, projectPath: string): void {
-        if (!sceneConfig) {
+    public save(scene: Scene, projectPath: string): void {
+        if (!scene) {
             throw "Cannot save a null of undefined scene.";
         }
+
+        // Cache the scene config on load instead of creating a new one.
+        let sceneConfig: SceneConfig = new SceneConfig();
+
+        sceneConfig.name = scene.name;
+        sceneConfig.rows = scene.columns;
+        sceneConfig.columns = scene.columns;
+        sceneConfig.tileSize = scene.tileSize;
+        // sceneConfig.tilesets = scene.tilesets;
+        sceneConfig.layers = scene.layers;
+        sceneConfig.entities = EntityManager.getInstance().packEntities();
 
         sceneConfig.layers.sort((a, b) => {
             return a.order - b.order;
@@ -46,7 +57,11 @@ export default class SceneStorageService {
             throw "Scene does not exist.";
         }
 
-        fs.writeFile(scenePath, JSON.stringify(sceneConfig, null, 2), function (err) {
+        const sceneConfigJson: string = JSON.stringify(sceneConfig, null, 2);
+
+        console.log(sceneConfigJson);
+
+        fs.writeFile(scenePath, sceneConfigJson, function (err) {
             if (err) throw err;
             console.log('Scene updated successfully.');
         });

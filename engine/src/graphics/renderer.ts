@@ -3,24 +3,17 @@ import Point from "../primitives/point";
 import Transform from "../primitives/transform";
 import UIFragmentsRenderer from "../ui/ui-fragments-renderer";
 import Layer from "./layer";
-import Tileset from "./tileset";
 import Configuration from "../configuration";
 import Camera from "./camera";
 import Input from "./input";
 import isTransformEmpty from "../helpers/is-transform-empty";
-import SpriteRendererComponent from "../components/sprite-renderer/SpriteRendererComponent";
 import EntityManager from "../components/EntityManager";
 import Entity from "../components/entity";
-import MaterialComponent from "../components/material/MaterialComponent";
-import TransformComponent from "../components/transform/TransformComponent";
 import TilemapComponent from "../components/tilemap/TilemapComponent";
 import Scene from "../models/scene";
 import ManagerFactory from "../components/ManagerFactory";
 import TagComponent from "../components/tag/TagComponent";
-import TagComponentManager from "../components/tag/TagComponentManager";
-import CameraComponent from "../components/camera/CameraComponent";
-import Time from "../time";
-import ColliderComponent from "../components/collider/ColliderComponent";
+import SystemManager from "../systems/system-manager";
 
 export default class Renderer {
     /**
@@ -107,13 +100,9 @@ export default class Renderer {
         this.engineCanvas.addEventListener('mouseup', (event) => this.onCanvasMouseUp(event));
         this.engineCanvas.addEventListener('mousemove', (event) => this.onCanvasMouseMove(event));
 
+        // TODO: Don't do this here refactor this out into a system.
         // Load and store a reference to the default tilemap component.
         this.defaultTilemapComponent = ManagerFactory.get(TilemapComponent.name).data[0] as TilemapComponent;
-
-        console.log(EntityManager.getInstance().entities);
-
-        // TODO: THIS IS NOT SHOWING THE CORRECT DATA WHEN COMPILED.
-        console.log(ManagerFactory.get(ColliderComponent.name));
 
         // TODO: DON'T DO THIS.
         EntityManager.getInstance().entities.forEach((entity: Entity) => {
@@ -137,6 +126,10 @@ export default class Renderer {
     }
 
     update(): void {
+        SystemManager.systems.forEach((system) => {
+            system.update();
+        });
+
         // let horizontal = Input.horizontal();
         // let vertical = Input.vertical();
 
@@ -183,50 +176,8 @@ export default class Renderer {
         this.clearCanvas();
         this.fillCanvas();
 
-        // Run through renderer system.
-        EntityManager.getInstance().entities.forEach((entity: Entity) => {
-            let spriteRendererComponent = entity.getComponent<SpriteRendererComponent>(SpriteRendererComponent.name);
-
-            if (spriteRendererComponent) {
-                let materialComponent = entity.getComponent<MaterialComponent>(MaterialComponent.name);
-
-                if (materialComponent) {
-                    this.context.fillStyle = materialComponent.fillStyle;
-                    this.context.globalAlpha = materialComponent.alpha;
-                }
-
-                let transform = entity.getComponent<TransformComponent>(TransformComponent.name).transform;
-
-                if (spriteRendererComponent.row !== undefined) {
-                    let cameraOffsetX = 0, cameraOffsetY = 0;
-
-                    if (this.playerEntity.id !== entity.id) {
-                        cameraOffsetX = this.mainCamera.viewport.x;
-                        cameraOffsetY = this.mainCamera.viewport.y;
-                    }
-
-                    this.context.drawImage(
-                        this.scene.tilesets[0].image,// this.tilesets[spriteRendererComponent.layer].image,
-                        spriteRendererComponent.column * this.scene.tileSize,
-                        spriteRendererComponent.row * this.scene.tileSize,
-                        this.scene.tileSize,
-                        this.scene.tileSize,
-                        transform.x - cameraOffsetX,
-                        transform.y - cameraOffsetY,
-                        this.scene.tileSize,
-                        this.scene.tileSize
-                    );
-                }
-                else {
-                    if (transform) {
-                        this.context.fillRect(transform.x, transform.y, transform.width, transform.height);
-                    }
-                }
-            }
-
-            // Reset renderer context to default values.
-            this.context.fillStyle = Configuration.canvasFill;
-            this.context.globalAlpha = 1;
+        SystemManager.systems.forEach((system) => {
+            system.draw(this.context);
         });
         
         this.uiFragmentsRender.run();
@@ -234,6 +185,7 @@ export default class Renderer {
         this.resizeCanvas();
     }
 
+    // Refactor into tilemap system
     drawLayers(): void {
         this.scene.layers.forEach((layer: Layer) => {
             if (layer.enabled) {
@@ -296,12 +248,12 @@ export default class Renderer {
      * @since 11/8/2020
      */
     resizeCanvas(): void {
-        if (this.getCanvasWidth() !== Configuration.width || this.getCanvasHeight() !== Configuration.height) {
-            this.setCanvasWidth(Configuration.width);
-            this.setCanvasHeight(Configuration.height);
+        if (this.getCanvasWidth() !== window.innerWidth || this.getCanvasHeight() !== window.innerHeight) {
+            this.setCanvasWidth(window.innerWidth);
+            this.setCanvasHeight(window.innerHeight);
         }
 
-        // if (this.getCanvasWidth() !== window.innerWidth || this.getCanvasHeight() !== window.innerHeight) {
+        // if (this.getCanvasWidth() !== Configuration.width || this.getCanvasHeight() !== window.innerHeight) {
         //     this.setCanvasWidth(window.innerWidth);
         //     this.setCanvasHeight(window.innerHeight);
         // }

@@ -4,7 +4,8 @@
   "description": "",
   "author": "",
   "scripts": {
-    "dev": "concurrently \"npm run watch --prefix engine\" \"npm run electron:serve --prefix editor\"",
+    "dev:editor": "concurrently \"npm run watch --prefix engine\" \"npm run electron:serve --prefix editor\"",
+    "dev:demo": "concurrently \"npm run watch --prefix engine\" \"npm run serve --prefix demo\"",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",

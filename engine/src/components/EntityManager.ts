@@ -47,6 +47,8 @@ export default class EntityManager {
     }
 
     public parseEntities(sceneConfig: SceneConfig): void {
+        console.log(sceneConfig);
+
         let parsedEntities: Entity[] = [];
 
         // Bootstrap entities.
@@ -90,8 +92,6 @@ export default class EntityManager {
         });
 
         EntityManager.getInstance().entities = parsedEntities;
-
-        console.log(EntityManager.getInstance().entities);
     }
 
     public packEntities(): any[] {
@@ -108,7 +108,9 @@ export default class EntityManager {
                 }
             });
 
-            entityConfigs.push(entityConfig);
+            if (Object.keys(entityConfig).length !== 0 && entityConfig.constructor === Object) {
+                entityConfigs.push(entityConfig);
+            }
         });
 
         return entityConfigs;

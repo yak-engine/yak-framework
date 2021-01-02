@@ -88,6 +88,9 @@ import ColliderGizmo from '../systems/gizmos/collider-gizmo';
 import System from '../systems/system';
 import Transform from '../../../engine/src/primitives/transform';
 import EntityManager from '../../../engine/src/components/EntityManager';
+import { mixin } from 'vue/types/umd';
+
+import BaseComponent from './BaseComponent';
 
 @Component({
   components: {
@@ -101,17 +104,16 @@ import EntityManager from '../../../engine/src/components/EntityManager';
     SceneInformation
   }
 })
-export default class Default extends Vue {
+export default class Default extends BaseComponent {
   isOpeningProject: boolean = false;
   isOpeningSettings: boolean = false;
   isAddingProject: boolean = false;
   isAddingScene: boolean = false;
   isOpeningSceneConfig: boolean = false;
-
   isLoaded: boolean = false;
 
-  @State project: Project;
-  @State scene: Scene;
+  // @State project: Project;
+  // @State scene: Scene;
   @Action setProject;
   @Action setScene;
 
@@ -135,25 +137,6 @@ export default class Default extends Vue {
     }
 
     this.isLoaded = true;
-  }
-
-  @Watch('scene')
-  onSceneChanged(newValue: Scene, oldValue: Scene): void {
-    if (newValue) {
-      let sceneConfig: SceneConfig = new SceneConfig();
-
-      EditorGlobal.sceneConfig.name = this.scene.name;
-      EditorGlobal.sceneConfig.rows = this.scene.columns;
-      EditorGlobal.sceneConfig.columns = this.scene.columns;
-      EditorGlobal.sceneConfig.tileSize = this.scene.tileSize;
-      // EditorGlobal.sceneConfig.tilesets = scene.tilesets;
-      EditorGlobal.sceneConfig.layers = this.scene.layers;
-      EditorGlobal.sceneConfig.entities = EntityManager.getInstance().packEntities();
-
-      console.log(EditorGlobal.sceneConfig.entities.length);
-
-      new SceneStorageService().save(Object.assign({}, EditorGlobal.sceneConfig), this.project.path);
-    }
   }
 };
 

@@ -31,7 +31,6 @@ export default class TilesetManager {
 
 				if (tilesetsLoaded === sceneConfig.tilesets.length) {
 					console.log('[ENGINE] Scene tilesets loaded successfully.');
-					console.log(tilesets);
 					onCompleted(tilesets);
 				}
             };

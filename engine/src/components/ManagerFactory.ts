@@ -1,4 +1,3 @@
-import ColliderComponentManager from "./collider/ColliderComponentManager";
 import ComponentManager from "./ComponentManager";
 
 export default class ManagerFactory {

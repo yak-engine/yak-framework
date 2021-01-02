@@ -1,7 +1,6 @@
 <template>
 	<div class="component-template">
 		<div class="flex flex-r justify-content-between align-items-center" style="padding-bottom: 10px; font-weight: bold; margin-bottom: 5px;">
-			<!-- <i class="fa fa-arrows" style="margin-right: 10px;"></i> -->
 			<span>{{entityComponent.componentName}}</span>
 			<button type="button" class="fill-transparent" aria-label="Remove component" @click="removeComponent(entityComponent)">
                 <i class="fa fa-trash text-red-lighten-2"></i>
@@ -28,6 +27,7 @@ import Entity from '../../../../engine/src/components/entity';
 import ComponentManager from '../../../../engine/src/components/ComponentManager';
 import EngineComponent from '../../../../engine/src/components/Component';
 import Scene from '../../../../engine/src/models/scene';
+import BaseComponent from '../BaseComponent';
 
 @Component({
     components: {
@@ -40,15 +40,14 @@ import Scene from '../../../../engine/src/models/scene';
     	TilemapComponent,
     }
 })
-export default class ComponentTemplate extends Vue {
+export default class ComponentTemplate extends BaseComponent {
 	@Prop() entityComponent: string;
 
 	@State entity: Entity;
-	@State scene: Scene;
 
 	removeComponent(entityComponent: any): void {
 		this.entity.removeComponent(entityComponent.componentName);
-		this.scene.name = this.scene.name + '1';
+		this.saveCurrentScene();
 	}
 }
 </script>

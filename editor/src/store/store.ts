@@ -7,7 +7,6 @@ import Vue from 'vue';
 import Vuex from 'vuex';
 import Entity from '../../../engine/src/components/entity';
 import Scene from '../../../engine/src/models/scene';
-import SceneConfig from '../../../engine/src/models/scene-config';
 
 Vue.use(Vuex);
 
@@ -47,6 +46,12 @@ export default new Vuex.Store({
     setIsPlayMode(state, isPlayMode: boolean) {
       state.isPlayMode = isPlayMode;
     },
+
+    saveScene(state, scene: Scene) {
+      // Save the updated copy of the scene object back to the state then write the scene config to the file system.
+      state.scene = scene;
+      new SceneStorageService().save(state.scene, state.project.path)
+    }
   },
   actions: {
     setProject(context, project: Project) {
@@ -71,6 +76,10 @@ export default new Vuex.Store({
 
     setIsPlayMode(context, isPlayMode: boolean) {
       context.commit('setIsPlayMode', isPlayMode);
+    },
+
+    saveScene(context, scene: Scene) {
+      context.commit('saveScene', scene);
     }
   }
 });
