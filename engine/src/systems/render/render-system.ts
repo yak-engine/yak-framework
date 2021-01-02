@@ -15,9 +15,9 @@ export default class RenderSystem extends Runnable {
     }
 
     draw(context: CanvasRenderingContext2D): void {
-        // Run through renderer system.
+        // // Run through renderer system.
         // EntityManager.getInstance().entities.forEach((entity: Entity) => {
-        //     let transformComponent: Transform = entity.getComponent<TransformComponent>(SpriteRendererComponent.name).transform;
+        //     let transform: Transform = entity.getComponent<TransformComponent>(SpriteRendererComponent.name).transform;
         //     let spriteRendererComponent = entity.getComponent<SpriteRendererComponent>(SpriteRendererComponent.name);
 
         //     if (spriteRendererComponent) {
@@ -28,8 +28,8 @@ export default class RenderSystem extends Runnable {
         //             context.globalAlpha = materialComponent.alpha;
         //         }
 
-        //         this.context.drawImage(
-        //             Configuration.engineConfig.scen.tilesets[0].image,// this.tilesets[spriteRendererComponent.layer].image,
+        //         context.drawImage(
+        //             Configuration.engineConfig.sce.tilesets[0].image,// this.tilesets[spriteRendererComponent.layer].image,
         //             spriteRendererComponent.column * this.scene.tileSize,
         //             spriteRendererComponent.row * this.scene.tileSize,
         //             this.scene.tileSize,

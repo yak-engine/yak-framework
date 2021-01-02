@@ -37,6 +37,7 @@ export default class SceneManager {
 		return new Promise((resolve, reject) => {
 			TilesetManager.loadTilesets(sceneConfig, (tilesets: Tileset[]) => {
 				scene.tilesets = tilesets;
+				Configuration.tilesets = tilesets;
 				resolve(scene);
 			});
 		});

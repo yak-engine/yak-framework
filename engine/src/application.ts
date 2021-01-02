@@ -84,7 +84,7 @@ export default class Application {
         this.renderer.scene = await SceneManager.load(engineConfig.scenes[0]);
 
         this.renderer.init();
-
+        
         // Start the main application loop.
         window.requestAnimationFrame((time: number) => this.mainLoop(time));
     }

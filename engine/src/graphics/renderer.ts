@@ -105,20 +105,20 @@ export default class Renderer {
         this.defaultTilemapComponent = ManagerFactory.get(TilemapComponent.name).data[0] as TilemapComponent;
 
         // TODO: DON'T DO THIS.
-        EntityManager.getInstance().entities.forEach((entity: Entity) => {
-            let tag: string = entity.getComponent<TagComponent>(TagComponent.name).name;
+        // EntityManager.getInstance().entities.forEach((entity: Entity) => {
+        //     let tag: string = entity.getComponent<TagComponent>(TagComponent.name).name;
 
-            if (tag === 'player') {
-                this.playerEntity = entity;
-            }
-        });
+        //     if (tag === 'player') {
+        //         this.playerEntity = entity;
+        //     }
+        // });
 
         // let tagManager: TagComponentManager = ManagerFactory.get(TagComponent.name);
         // console.log(tagManager);
         // let componentDataIndex: number = tagManager.data.findIndex(x => (x as TagComponent).name === 'player');
         // this.playerEntity = EntityManager.getInstance().entities[tagManager.dataEntityMap[componentDataIndex]];
 
-        console.log(this.playerEntity);
+        // console.log(this.playerEntity);
 
         // Bootstrap components
         this.mainCamera.viewport = new Transform(0, 0, this.getCanvasWidth(), this.getCanvasHeight());

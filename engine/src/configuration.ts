@@ -1,4 +1,5 @@
 import EngineConfig from "./engine-config";
+import Tileset from "./graphics/tileset";
 
 /**
  * Contains configuration options for the application instance.
@@ -32,4 +33,9 @@ export default class Configuration {
      * When in selection mode this is the fill color of the selected area.
      */
     public static selectionTransformFill: string = 'rgba(252,248,227, 0.7)';
+
+    /**
+     * TEMPORARY.
+     */
+    public static tilesets: Tileset[] = [];
 }

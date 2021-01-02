@@ -52,14 +52,14 @@ export default class EntityManager {
         let parsedEntities: Entity[] = [];
 
         // Bootstrap entities.
-        ((sceneConfig.entities as unknown) as Entity[]).forEach((sourceEntity) => {
+        sceneConfig.entities.forEach((entityConfig) => {
             let parsedEntity = new Entity();
 
-            parsedEntity.id = sourceEntity.id;
-            parsedEntity.enabled = sourceEntity.enabled;
+            parsedEntity.id = entityConfig.id;
+            parsedEntity.enabled = entityConfig.enabled;
 
-            for(let sourceProperty in sourceEntity) {
-                let sourceComponent = sourceEntity[sourceProperty];
+            for(let sourceProperty in entityConfig) {
+                let sourceComponent = entityConfig[sourceProperty];
 
                 if (sourceComponent) {
                     if (sourceProperty === 'spriteRendererComponent') {
@@ -92,6 +92,8 @@ export default class EntityManager {
         });
 
         EntityManager.getInstance().entities = parsedEntities;
+
+        console.log(parsedEntities);
     }
 
     public packEntities(): any[] {
