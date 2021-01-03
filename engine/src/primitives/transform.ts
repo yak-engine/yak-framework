@@ -22,27 +22,27 @@ export default class Transform {
     //     this.x = Math.max(min, Math.min(maxLowerRange, maxUpperRange));  
     // }
 
-    clampX(min: number, max: number): void {
+    clampX(min: number, max: number): boolean {
         if (this.x < min) {
             this.x = min;
-            return;
+            return true;
         }
 
         if (this.x > max) {
             this.x = max;
-            return;
+            return true;
         }
     }
 
-    clampY(min: number, max: number): void {
-        if (this.y < min) {
+    clampY(min: number, max: number): boolean {
+        if (this.y <= min) {
             this.y = min;
-            return;
+            return true;
         }
 
-        if (this.y > max) {
+        if (this.y >= max) {
             this.y = max;
-            return;
+            return true;
         }
     }
 

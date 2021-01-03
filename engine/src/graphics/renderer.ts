@@ -248,15 +248,15 @@ export default class Renderer {
      * @since 11/8/2020
      */
     resizeCanvas(): void {
-        if (this.getCanvasWidth() !== window.innerWidth || this.getCanvasHeight() !== window.innerHeight) {
-            this.setCanvasWidth(window.innerWidth);
-            this.setCanvasHeight(window.innerHeight);
-        }
-
-        // if (this.getCanvasWidth() !== Configuration.width || this.getCanvasHeight() !== window.innerHeight) {
+        // if (this.getCanvasWidth() !== window.innerWidth || this.getCanvasHeight() !== window.innerHeight) {
         //     this.setCanvasWidth(window.innerWidth);
         //     this.setCanvasHeight(window.innerHeight);
         // }
+
+        if (this.getCanvasWidth() !== Configuration.width || this.getCanvasHeight() !== Configuration.height) {
+            this.setCanvasWidth(Configuration.width);
+            this.setCanvasHeight(Configuration.height);
+        }
     }
 
     /**

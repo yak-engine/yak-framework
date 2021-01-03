@@ -1,5 +1,6 @@
 import EngineConfig from "./engine-config";
 import Tileset from "./graphics/tileset";
+import Scene from "./models/scene";
 
 /**
  * Contains configuration options for the application instance.
@@ -38,4 +39,9 @@ export default class Configuration {
      * TEMPORARY.
      */
     public static tilesets: Tileset[] = [];
+
+    /**
+     * TEMPORARY.
+     */
+    public static scene: Scene;
 }

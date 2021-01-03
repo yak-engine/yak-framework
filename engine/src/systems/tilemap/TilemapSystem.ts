@@ -12,13 +12,9 @@ export default class TilemapSystem extends System {
     }
 
     draw(context: CanvasRenderingContext2D): void {
-        console.log(Configuration.tilesets);
-
         let tilemapComponentManager: TilemapComponentManager = ManagerFactory.get(TilemapComponent.name);
 
         tilemapComponentManager.data.forEach((tilemapInstance: TilemapComponent) => {
-            console.log(tilemapInstance);
-
             var startCol = 0; // Math.floor(camera.viewport.x / this.scene.tileSize);
             var endCol = 64; // startCol + (camera.viewport.width / this.scene.tileSize) + 1;
             var startRow = 0; // Math.floor(camera.viewport.y / this.scene.tileSize);

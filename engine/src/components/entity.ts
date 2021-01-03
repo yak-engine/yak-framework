@@ -1,3 +1,4 @@
+import Component from "./Component";
 import ManagerFactory from "./ManagerFactory";
 
 /**
@@ -21,16 +22,16 @@ export default class Entity {
      */
     enabled: boolean = true;
 
-    public addComponent<TComponent>(component: TComponent): void {
+    public addComponent(component: Component): void {
         let manager = ManagerFactory.get(component.constructor.name);
         manager.addComponentInstance(this, component);
     }
 
-    public getComponent<TComponent>(componentName: string): TComponent {
+    public getComponent(componentName: string): Component {
         let manager = ManagerFactory.get(componentName);
 
         if (manager.entityDataMap.has(this.id)) {
-            return <TComponent>manager.data[manager.entityDataMap.get(this.id)];
+            return manager.data[manager.data.findIndex(x => x.id === manager.entityDataMap.get(this.id))];
         }
 
         return null;
@@ -40,10 +41,10 @@ export default class Entity {
         let manager = ManagerFactory.get(componentName);
 
         if (manager.entityDataMap.has(this.id)) {
-            let componentInstanceIndex: number = manager.entityDataMap.get(this.id);
-            manager.data.splice(componentInstanceIndex, 1);
+            let componentInstanceId: number = manager.entityDataMap.get(this.id);
+            manager.data.splice(manager.data.findIndex(x => x.id === componentInstanceId), 1);
             manager.entityDataMap.delete(this.id);
-            manager.dataEntityMap.delete(componentInstanceIndex);
+            manager.dataEntityMap.delete(componentInstanceId);
         }
 
         console.log(manager);

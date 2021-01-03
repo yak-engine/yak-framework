@@ -1,6 +1,7 @@
 import EntityManager from './components/EntityManager';
 import TilesetManager from './components/TilesetManager';
 import Configuration from './configuration';
+import EngineConfig from './engine-config';
 import Tileset from './graphics/tileset';
 import Scene from './models/scene';
 import SceneConfig from './models/scene-config';
@@ -33,7 +34,9 @@ export default class SceneManager {
 		scene.columns = sceneConfig.columns;
         scene.tileSize = sceneConfig.tileSize;
 		scene.layers = sceneConfig.layers;
-		
+
+		Configuration.scene = scene;
+
 		return new Promise((resolve, reject) => {
 			TilesetManager.loadTilesets(sceneConfig, (tilesets: Tileset[]) => {
 				scene.tilesets = tilesets;

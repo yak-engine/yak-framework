@@ -27,8 +27,11 @@ import EngineConfig from './engine-config';
 import TilemapSystem from './systems/tilemap/TilemapSystem';
 import MaterialComponentManager from './components/material/MaterialComponentManager';
 import EntityManager from './components/EntityManager';
+import ScriptSystem from './systems/script/ScriptSystem';
+import ScriptComponent from './components/script/ScriptComponent';
+import ScriptComponentManager from './components/script/ScriptComponentManager';
 
-export default class Application {
+export default abstract class Application {
     /**
      * Contains the rendering functionality from the main loop.
      */
@@ -39,14 +42,17 @@ export default class Application {
      */
     input: Input;
 
+    abstract onStart();
+
     /**
      * The main constructor.
      */
     constructor() {
         // Register systems.
+        SystemManager.register(new TilemapSystem());
         SystemManager.register(new RenderSystem());
         SystemManager.register(new CollisionSystem());
-        SystemManager.register(new TilemapSystem());
+        SystemManager.register(new ScriptSystem());
 
         // Register components.
         ManagerFactory.register(TagComponent.name, TagComponentManager);
@@ -57,6 +63,7 @@ export default class Application {
         ManagerFactory.register(TilemapComponent.name, TilemapComponentManager);
         ManagerFactory.register(ColliderComponent.name, ColliderComponentManager);
         ManagerFactory.register(ImageComponent.name, ImageComponentManager);
+        ManagerFactory.register(ScriptComponent.name, ScriptComponentManager);
     }
 
     /**
@@ -82,8 +89,9 @@ export default class Application {
 
         // Set the default scene on the renderer and initialize the renderer.
         this.renderer.scene = await SceneManager.load(engineConfig.scenes[0]);
-
         this.renderer.init();
+
+        this.onStart();
         
         // Start the main application loop.
         window.requestAnimationFrame((time: number) => this.mainLoop(time));

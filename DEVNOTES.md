@@ -9,3 +9,9 @@
     - [ ] Move the tilemap toolbar to a separate panel/custom toolbar thing
     - [ ] Create pallete editor for tilemap component opened from inspector?
 - [ ] Add a class called Mouse.ts to the engine to handle tracking mouse movement.
+
+- [ ] ScriptComponent
+    - [ ] ScriptComponentManager
+    - [ ] ScriptSystem
+        - [ ] update and draw methods
+        - [ ] How to get entity that the component is applied to?

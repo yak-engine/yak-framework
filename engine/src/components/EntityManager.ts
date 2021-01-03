@@ -20,6 +20,7 @@ export default class EntityManager {
 
     public static getInstance(): EntityManager {
         if (!EntityManager.instance) {
+            console.log('entity manager created');
             EntityManager.instance = new EntityManager();
         }
 
@@ -30,8 +31,10 @@ export default class EntityManager {
 
     public create(): Entity {
         let entity: Entity = new Entity();
-        entity.id = this.entities.length;
+
         this.entities.push(entity);
+
+        entity.id = this.entities.length;
 
         this.addRequiredComponents(entity);
 
@@ -47,8 +50,6 @@ export default class EntityManager {
     }
 
     public parseEntities(sceneConfig: SceneConfig): void {
-        console.log(sceneConfig);
-
         let parsedEntities: Entity[] = [];
 
         // Bootstrap entities.
@@ -92,8 +93,6 @@ export default class EntityManager {
         });
 
         EntityManager.getInstance().entities = parsedEntities;
-
-        console.log(parsedEntities);
     }
 
     public packEntities(): any[] {
@@ -119,7 +118,7 @@ export default class EntityManager {
     }
 
     private addRequiredComponents(entity: Entity): void {
-        entity.addComponent<TagComponent>(new TagComponent());
-        entity.addComponent<TransformComponent>(new TransformComponent(Transform.empty));
+        entity.addComponent(new TagComponent());
+        entity.addComponent(new TransformComponent(Transform.empty));
     }
 }

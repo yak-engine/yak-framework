@@ -18,16 +18,20 @@ export default class CollisionSystem extends System {
 
 		// TODO: Replace this with a more robust collision dection implementation. For now this is fine for the number of sprites we are rendering with colliders.
 		for (let i = 0; i < collisionComponentManager.entities.length; i++) {
-			let sourceCollider: ColliderComponent = collisionComponentManager.entities[i].getComponent<ColliderComponent>(ColliderComponent.name);
+			let sourceCollider: ColliderComponent = collisionComponentManager.entities[i].getComponent(ColliderComponent.name) as ColliderComponent;
 			let sourceTransform: Transform = sourceCollider.transform;
 
 			for (let ii = i + 1; ii < collisionComponentManager.entities.length; ii++) {
-				let targetCollider: ColliderComponent = collisionComponentManager.entities[ii].getComponent<ColliderComponent>(ColliderComponent.name);
+				let targetCollider: ColliderComponent = collisionComponentManager.entities[ii].getComponent(ColliderComponent.name) as ColliderComponent;
 				let targetTransform: Transform = targetCollider.transform;
 
 				if (collisionComponentManager.entities[i].id !== collisionComponentManager.entities[ii].id) {
 					if (!sourceCollider.isTrigger && !targetCollider.isTrigger) {
 						this.resolveCollision(sourceTransform, targetTransform);
+					}
+					else {
+						// TODO: Fire trigger events.
+						console.log('trigger collision');
 					}
 				}
 			}

@@ -12,6 +12,8 @@ export default class Camera {
      */
     max: Point;
 
+    orthographicSize: number = 5;
+
     isClampedX(): boolean {
         if (this.viewport.x >= this.max.x / 2 || this.viewport.x === 0) {
             return true;

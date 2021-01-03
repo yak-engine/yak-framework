@@ -1,7 +1,10 @@
 import Entity from "../../components/entity";
 import EntityManager from "../../components/EntityManager";
+import ManagerFactory from "../../components/ManagerFactory";
 import MaterialComponent from "../../components/material/MaterialComponent";
 import SpriteRendererComponent from "../../components/sprite-renderer/SpriteRendererComponent";
+import SpriteRendererComponentManager from "../../components/sprite-renderer/SpriteRendererComponentManager";
+import TagComponent from "../../components/tag/TagComponent";
 import TransformComponent from "../../components/transform/TransformComponent";
 import Configuration from "../../configuration";
 import Transform from "../../primitives/transform";
@@ -15,35 +18,43 @@ export default class RenderSystem extends Runnable {
     }
 
     draw(context: CanvasRenderingContext2D): void {
-        // // Run through renderer system.
-        // EntityManager.getInstance().entities.forEach((entity: Entity) => {
-        //     let transform: Transform = entity.getComponent<TransformComponent>(SpriteRendererComponent.name).transform;
-        //     let spriteRendererComponent = entity.getComponent<SpriteRendererComponent>(SpriteRendererComponent.name);
+        // Run through renderer system.
+        let spriteRendererComponentManager: SpriteRendererComponentManager = ManagerFactory.get(SpriteRendererComponent.name);
 
-        //     if (spriteRendererComponent) {
-        //         let materialComponent = entity.getComponent<MaterialComponent>(MaterialComponent.name);
+        spriteRendererComponentManager.data.forEach((spriteRendererComponent: SpriteRendererComponent, index: number) => {
+            let entityId: number = spriteRendererComponentManager.dataEntityMap.get(spriteRendererComponent.id);
+            
+            let entity: Entity = spriteRendererComponentManager.entities.find(x => x.id === entityId);
 
-        //         if (materialComponent) {
-        //             context.fillStyle = materialComponent.fillStyle;
-        //             context.globalAlpha = materialComponent.alpha;
-        //         }
+            let transform: Transform = (entity.getComponent(TransformComponent.name) as TransformComponent).transform;
 
-        //         context.drawImage(
-        //             Configuration.engineConfig.sce.tilesets[0].image,// this.tilesets[spriteRendererComponent.layer].image,
-        //             spriteRendererComponent.column * this.scene.tileSize,
-        //             spriteRendererComponent.row * this.scene.tileSize,
-        //             this.scene.tileSize,
-        //             this.scene.tileSize,
-        //             transform.x - cameraOffsetX,
-        //             transform.y - cameraOffsetY,
-        //             this.scene.tileSize,
-        //             this.scene.tileSize
-        //         );
-        //     }
+            if (spriteRendererComponent) {
+                let materialComponent = entity.getComponent(MaterialComponent.name) as MaterialComponent;
 
-        //     // Reset renderer context to default values.
-        //     context.fillStyle = Configuration.canvasFill;
-        //     context.globalAlpha = 1;
-        // });
+                if (materialComponent) {
+                    context.fillStyle = materialComponent.fillStyle;
+                    context.globalAlpha = materialComponent.alpha;
+
+                    context.fillRect(transform.x, transform.y, transform.width, transform.height);
+                }
+                else {
+                    context.drawImage(
+                        Configuration.tilesets[0].image,// this.tilesets[spriteRendererComponent.layer].image,
+                        spriteRendererComponent.column * Configuration.scene.tileSize,
+                        spriteRendererComponent.row * Configuration.scene.tileSize,
+                        Configuration.scene.tileSize,
+                        Configuration.scene.tileSize,
+                        transform.x - 0, // cameraOffsetX,
+                        transform.y - 0, // cameraOffsetY,
+                        Configuration.scene.tileSize,
+                        Configuration.scene.tileSize
+                    );
+                }
+            }
+
+            // Reset renderer context to default values.
+            context.fillStyle = Configuration.canvasFill;
+            context.globalAlpha = 1;
+        });
     }
 }

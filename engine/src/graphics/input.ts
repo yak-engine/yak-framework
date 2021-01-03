@@ -4,7 +4,7 @@ import Time from "../time";
  * Tracks keyboard input only. For mouse input use Mouse.
  */
 export default class Input {
-    public static keys: Map<string, boolean> = new Map();
+    public static codes: Map<string, boolean> = new Map();
 
     constructor() {
         window.addEventListener('keydown', (event) => this.onKeyDown(event));
@@ -12,31 +12,31 @@ export default class Input {
     }
 
     onKeyDown(event: KeyboardEvent): void {
-        Input.keys.set(event.key, true);
+        Input.codes.set(event.code.toLowerCase(), true);
     }
 
     onKeyUp(event: KeyboardEvent): void {
-        if (Input.keys.has(event.key)) {
-            Input.keys.set(event.key, false);
+        if (Input.codes.has(event.code.toLowerCase())) {
+            Input.codes.set(event.code.toLowerCase(), false);
         }
     }
 
-    static isPressed(key: string): boolean {
-        if (!Input.keys.has(key)) {
+    static isPressed(code: string): boolean {
+        if (!Input.codes.has(code.toLowerCase())) {
             return false;
         }
 
-        return Input.keys.get(key);
+        return Input.codes.get(code.toLowerCase());
     }
 
     static horizontal(): number {
         let xDirection: number;
 
-        if (Input.isPressed('a'))
+        if (Input.isPressed('keya'))
         {
             xDirection = -1;
         }
-        else if (Input.isPressed('d'))
+        else if (Input.isPressed('keyd'))
         {
             xDirection = 1;
         }
@@ -44,17 +44,17 @@ export default class Input {
             xDirection = 0;
         }
 
-        return xDirection * Time.deltaTime;
+        return xDirection;
     }
 
     static vertical(): number {
         let yDirection;
 
-        if (Input.isPressed('w'))
+        if (Input.isPressed('keyw'))
         {
             yDirection = -1;
         }
-        else if (Input.isPressed('s'))
+        else if (Input.isPressed('keys'))
         {
             yDirection = 1;
         }
