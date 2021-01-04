@@ -55,15 +55,15 @@ export default abstract class Application {
         SystemManager.register(new ScriptSystem());
 
         // Register components.
-        ManagerFactory.register(TagComponent.name, TagComponentManager);
-        ManagerFactory.register(TransformComponent.name, TransformComponentManager);
-        ManagerFactory.register(CameraComponent.name, CameraComponentManager);
-        ManagerFactory.register(MaterialComponent.name, MaterialComponentManager);
-        ManagerFactory.register(SpriteRendererComponent.name, SpriteRendererComponentManager);
-        ManagerFactory.register(TilemapComponent.name, TilemapComponentManager);
-        ManagerFactory.register(ColliderComponent.name, ColliderComponentManager);
-        ManagerFactory.register(ImageComponent.name, ImageComponentManager);
-        ManagerFactory.register(ScriptComponent.name, ScriptComponentManager);
+        ManagerFactory.register(TagComponent, TagComponentManager);
+        ManagerFactory.register(TransformComponent, TransformComponentManager);
+        ManagerFactory.register(CameraComponent, CameraComponentManager);
+        ManagerFactory.register(MaterialComponent, MaterialComponentManager);
+        ManagerFactory.register(SpriteRendererComponent, SpriteRendererComponentManager);
+        ManagerFactory.register(TilemapComponent, TilemapComponentManager);
+        ManagerFactory.register(ColliderComponent, ColliderComponentManager);
+        ManagerFactory.register(ImageComponent, ImageComponentManager);
+        ManagerFactory.register(ScriptComponent, ScriptComponentManager);
     }
 
     /**

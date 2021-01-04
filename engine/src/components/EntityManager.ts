@@ -11,7 +11,6 @@ import Point from "../primitives/point";
 import ColliderComponent from "./collider/ColliderComponent";
 import ComponentManager from "./ComponentManager";
 import ManagerFactory from "./ManagerFactory";
-import Configuration from "../configuration";
 import Constants from "../constants";
 import Component from "./Component";
 
@@ -35,6 +34,7 @@ export default class EntityManager {
         this.entities.push(entity);
 
         entity.id = this.entities.length;
+        entity.index = this.entities.length - 1;
 
         this.addRequiredComponents(entity);
 
@@ -47,6 +47,9 @@ export default class EntityManager {
         if (index !== -1) {
             this.entities.splice(index, 1);
         }
+
+        // Remove all references stored in each of the component manager instances.
+        ManagerFactory.managers.forEach((manager: ComponentManager) => manager.dispose(entity));
     }
 
     public parseEntities(sceneConfig: SceneConfig): void {
@@ -101,11 +104,11 @@ export default class EntityManager {
         EntityManager.getInstance().entities.forEach((entity) => {
             let entityConfig: any = {};
 
-            Constants.componentNames.forEach((componentName) => {
-                let componentInstance: Component = entity.getComponent(componentName);
+            Constants.componentTypes.forEach((componentType) => {
+                let componentInstance: Component = entity.getComponent(componentType);
 
                 if (componentInstance) {
-                    entityConfig[componentName.charAt(0).toLowerCase() + componentName.slice(1)] = componentInstance;
+                    entityConfig[componentType.name.charAt(0).toLowerCase() + componentType.name.slice(1)] = componentInstance;
                 }
             });
 
@@ -118,7 +121,7 @@ export default class EntityManager {
     }
 
     private addRequiredComponents(entity: Entity): void {
-        entity.addComponent(new TagComponent());
+        entity.addComponent(new TagComponent(`entity${entity.id}`));
         entity.addComponent(new TransformComponent(Transform.empty));
     }
 }

@@ -12,7 +12,7 @@ import Transform from '../../engine/src/primitives/transform';
 import Time from '../../engine/src/time';
 import ScriptComponent from '../../engine/src/components/script/ScriptComponent';
 import ScriptableEntity from '../../engine/src/systems/script/ScriptableEntity';
-import TransformComponentManager from '../../engine/src/components/transform/TransformComponentManager';
+import ManagerFactory from '../../engine/src/components/ManagerFactory';
 
 export default class GameClone extends Application {
     constructor() {
@@ -38,11 +38,61 @@ export default class GameClone extends Application {
     }
 }
 
+class BulletController extends ScriptableEntity {
+    public bulletSpeed: number = 256;
+
+    public onCreate(): void {
+        console.log('ON BULLET CREATED');
+
+        this.addComponent(new SpriteRendererComponent());
+        this.addComponent(new MaterialComponent('#DD5145', 1));
+        this.addComponent(new ColliderComponent(Transform.empty, true));
+        
+        (this.entity.getComponent(TagComponent) as TagComponent).name = `bullet`;
+    }
+
+    public onTriggerEnter(collisionEntity: Entity): void {
+        console.log(collisionEntity);
+
+        if ((collisionEntity.getComponent(TagComponent) as TagComponent).name === 'enemy') {
+            console.log('[BULLET HIT ENEMY]');
+
+            // console.log(this.entity);
+            // console.log(collisionEntity);
+
+            EntityManager.getInstance().destroy(collisionEntity);
+        }
+
+        // console.log(this.entity);
+        // console.log(collisionEntity);
+        // console.log('bullet trigger enter');
+    }
+
+    public update(): void {
+        let transformComponent = this.entity.getComponent(TransformComponent) as TransformComponent;
+
+        if(transformComponent) {
+            let transform: Transform = transformComponent.transform;
+
+            // If bullet goes off screen destroy that bullet entity.
+            if (transform.y + 32 < 0) {
+                console.log('[BULLET DESTROYED OFF SCREEN]');
+                EntityManager.getInstance().destroy(this.entity);
+            }
+            else {
+                transform.y -= this.bulletSpeed * Time.deltaTime;
+            }
+        }
+        else {
+            console.log('transform no longer exists');
+        }
+
+        // console.log(ManagerFactory.get(TransformComponent.name));
+    }
+}
+
 class PlayerFireController extends ScriptableEntity {
-    bullets: Entity[] = [];
-    bulletSpeed: number = 256;
-    autofireRate: number = 0.5;
-    lastFire: number = 0;
+    isEligibleForFire: boolean = true;
 
     public onCreate(): void {
 
@@ -50,44 +100,24 @@ class PlayerFireController extends ScriptableEntity {
 
     public update(): void {
         if (Input.isPressed('space')) {
-            if (this.lastFire === 0 || this.lastFire > this.autofireRate) {
-                console.log(this.lastFire);
+            if (this.isEligibleForFire) {
+                this.isEligibleForFire = false;
 
-                this.lastFire = Time.deltaTime;
-                
                 let bulletEntity: Entity = EntityManager.getInstance().create();
+                bulletEntity.addComponent(new ScriptComponent(BulletController));
     
-                bulletEntity.addComponent(new SpriteRendererComponent());
-                bulletEntity.addComponent(new MaterialComponent('#DD5145', 1));
-    
-                let transform: Transform = (bulletEntity.getComponent(TransformComponent.name) as TransformComponent).transform;
-    
-                let shipTransform: Transform = (this.entity.getComponent(TransformComponent.name) as TransformComponent).transform;
+                let transform: Transform = (bulletEntity.getComponent(TransformComponent) as TransformComponent).transform;
+                let shipTransform: Transform = (this.entity.getComponent(TransformComponent) as TransformComponent).transform;
     
                 transform.x = shipTransform.x + (shipTransform.width / 2);
                 transform.y = shipTransform.y;
                 transform.width = 8;
                 transform.height = 8;
-
-                this.bullets.push(bulletEntity);
-            }
-            else {
-                this.lastFire += Time.deltaTime;
             }
         }
-
-        this.bullets.forEach((bullet: Entity, index: number) => {
-            let transform: Transform = (bullet.getComponent(TransformComponent.name) as TransformComponent).transform;
-
-            // If bullet goes off screen destroy that bullet entity.
-            if (transform.y + 32 < 0) {
-                this.bullets.splice(index, 1);
-                EntityManager.getInstance().destroy(bullet);
-            }
-            else {
-                transform.y -= this.bulletSpeed * Time.deltaTime;
-            }
-        });
+        else {
+            this.isEligibleForFire = true;
+        }
     }
 }
 
@@ -104,7 +134,7 @@ class CoverItemGeneratorController extends ScriptableEntity {
             coverEntity.addComponent(new SpriteRendererComponent());
             coverEntity.addComponent(new MaterialComponent(this.coverItemColor));
 
-            let transform: Transform = (coverEntity.getComponent(TransformComponent.name) as TransformComponent).transform;
+            let transform: Transform = (coverEntity.getComponent(TransformComponent) as TransformComponent).transform;
             
             transform.x = ((Configuration.width / 4) * i) + 84;
             transform.y = (Configuration.height - 192);
@@ -126,12 +156,14 @@ class ShipGeneratorController extends ScriptableEntity {
     public shipSpeed: number = 256;
 
     public onCreate(): void {
-        (this.entity.getComponent(TagComponent.name) as TagComponent).name = 'ship';
+        console.log('CREATE SHIP');
+
+        (this.entity.getComponent(TagComponent) as TagComponent).name = 'ship';
 
         this.entity.addComponent(new SpriteRendererComponent());
         this.entity.addComponent(new MaterialComponent(this.shipColor));
 
-        this.shipTransform = (this.entity.getComponent(TransformComponent.name) as TransformComponent).transform;
+        this.shipTransform = (this.entity.getComponent(TransformComponent) as TransformComponent).transform;
 
         this.entity.addComponent(new ColliderComponent(this.shipTransform, true));
 
@@ -169,19 +201,25 @@ class EnemyGeneratorController extends ScriptableEntity {
     private _shipTransform: Transform;
 
     public onCreate(): void {
-        this._shipTransform = (EntityManager.getInstance().entities.find(x => x.id === 1).getComponent(TransformComponent.name) as TransformComponent).transform;
+        // this._shipTransform = (EntityManager.getInstance().entities.find(x => x.id === 1).getComponent(TransformComponent) as TransformComponent).transform;
 
         let enemyGridOffsetX: number = ((this.columns * this.enemyWidth) + (this.columns * this.gridGap)) / 2;
         let enemyGridOffsetY: number = ((this.rows * this.enemyHeight) + (this.rows * this.gridGap)) / 2;
 
+        let int: number = 0;
+
         for (let row = 0; row < 5; row++) {
             for (let column = 0; column < 11; column++) {
+                int++;
+
                 let enemyEntity: Entity = EntityManager.getInstance().create();
 
                 enemyEntity.addComponent(new SpriteRendererComponent());
+                enemyEntity.addComponent(new ColliderComponent(Transform.empty, true));
+                (enemyEntity.getComponent(TagComponent) as TagComponent).name = `enemy`;
                 enemyEntity.addComponent(new MaterialComponent("hsl(" + 360 * Math.random() + ',' + (25 + 70 * Math.random()) + '%,' +  (85 + 10 * Math.random()) + '%)', 1));
 
-                let transform: Transform = (enemyEntity.getComponent(TransformComponent.name) as TransformComponent).transform;
+                let transform: Transform = (enemyEntity.getComponent(TransformComponent) as TransformComponent).transform;
 
                 transform.x = ((this.enemyWidth * column) + (column * this.gridGap)) + (Configuration.width / 2) - enemyGridOffsetX;
                 transform.y = ((this.enemyHeight * row) + (row * this.gridGap)) + (Configuration.height / 3.5) - enemyGridOffsetY;
@@ -192,6 +230,9 @@ class EnemyGeneratorController extends ScriptableEntity {
                 this._enemyTransforms.push(transform);
             }   
         }
+
+        console.log(int);
+        console.log(ManagerFactory.get(ColliderComponent.name));
     }
 
     public update(): void {
@@ -205,7 +246,8 @@ class EnemyGeneratorController extends ScriptableEntity {
             this._increaseYOffset = true;
         }
 
-        if ((this._enemyTransforms[this._enemyTransforms.length - 1].y + 32) < this._shipTransform.y) {
+        // (this._enemyTransforms[this._enemyTransforms.length - 1].y + 32) < this._shipTransform.y
+        if (true) {
             this._enemyTransforms.forEach((enemyTransform: Transform) => {
                 enemyTransform.x += this.movementSpeed * Time.deltaTime * this._movementDirection;
                 

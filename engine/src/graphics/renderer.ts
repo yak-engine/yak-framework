@@ -102,7 +102,7 @@ export default class Renderer {
 
         // TODO: Don't do this here refactor this out into a system.
         // Load and store a reference to the default tilemap component.
-        this.defaultTilemapComponent = ManagerFactory.get(TilemapComponent.name).data[0] as TilemapComponent;
+        this.defaultTilemapComponent = ManagerFactory.get(TilemapComponent.name).components[0] as TilemapComponent;
 
         // TODO: DON'T DO THIS.
         // EntityManager.getInstance().entities.forEach((entity: Entity) => {

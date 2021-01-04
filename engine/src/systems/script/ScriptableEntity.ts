@@ -1,10 +1,5 @@
+import Component from "../../components/Component";
 import Entity from "../../components/entity";
-
-// class NativeScriptableEntity {
-//     constructor(public scritableEntity: typeof ScriptableEntity) {
-        
-//     }
-// }
 
 /**
  * User inherits this on the script classes.
@@ -15,11 +10,17 @@ export default class ScriptableEntity {
      */
     public entity: Entity;
 
-    public onCreate(): void {
+    public onCreate(): string | void {};
+    public update(): string | void {};
+    public onTriggerEnter(entity: Entity): void {};
+    public onTriggerLeave(entity: Entity): void {};
+    public onTriggerStay(entity: Entity): void {};
 
+    public addComponent(component: Component): void {
+        this.entity.addComponent(component);
     }
 
-    public update(): void {
-
-    }
+    // public getComponent<TComponent>(component: typeof TComponent): void {
+    //     return this.entity.getComponent()
+    // }
 }

@@ -1,5 +1,6 @@
 import Component from "./Component";
 import ManagerFactory from "./ManagerFactory";
+import ScriptComponent from "./script/ScriptComponent";
 
 /**
  * Base object class used for sprites, colliders, primitives, etc. Contains
@@ -22,33 +23,40 @@ export default class Entity {
      */
     enabled: boolean = true;
 
-    public addComponent(component: Component): void {
-        let manager = ManagerFactory.get(component.constructor.name);
-        manager.addComponentInstance(this, component);
+    public index: number = -1;
+
+    public addComponent(componentInstance: Component) {
+        let manager = ManagerFactory.get(componentInstance.constructor.name);
+        manager.addComponentInstance(this, componentInstance);
     }
 
-    public getComponent(componentName: string): Component {
-        let manager = ManagerFactory.get(componentName);
+    public getComponent<TComponent>(componenType: typeof Component): TComponent {
+        if (componenType.name === ScriptComponent.name) {
+            throw "Getting script components is not currently supported.";
+        }
+        
+        let manager = ManagerFactory.get(componenType.name);
 
         if (manager.entityDataMap.has(this.id)) {
-            return manager.data[manager.data.findIndex(x => x.id === manager.entityDataMap.get(this.id))];
+            // TODO: This will not work for script components.
+            return <TComponent>(manager.components[manager.entityDataMap.get(this.id).componentIndexes[0]] as unknown);
         }
 
         return null;
     }
 
-    public removeComponent(componentName: string): void {
-        let manager = ManagerFactory.get(componentName);
+    // public removeComponent(componentName: string): void {
+    //     let manager = ManagerFactory.get(componentName);
 
-        if (manager.entityDataMap.has(this.id)) {
-            let componentInstanceId: number = manager.entityDataMap.get(this.id);
-            manager.data.splice(manager.data.findIndex(x => x.id === componentInstanceId), 1);
-            manager.entityDataMap.delete(this.id);
-            manager.dataEntityMap.delete(componentInstanceId);
-        }
+    //     if (manager.entityDataMap.has(this.id)) {
+    //         let componentInstanceId: number = manager.entityDataMap.get(this.id);
+    //         manager.data.splice(manager.data.findIndex(x => x.id === componentInstanceId), 1);
+    //         manager.entityDataMap.delete(this.id);
+    //         manager.dataEntityMap.delete(componentInstanceId);
+    //     }
 
-        console.log(manager);
-    }
+    //     console.log(manager);
+    // }
 
     public getComponentName
 }

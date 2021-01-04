@@ -1,3 +1,3 @@
-export default abstract class Component {
+export default class Component {
     id: number = 0;
 }

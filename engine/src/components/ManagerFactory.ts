@@ -1,16 +1,17 @@
+import Component from "./Component";
 import ComponentManager from "./ComponentManager";
 
 export default class ManagerFactory {
-    private static managers: Map<string, ComponentManager> = new Map();
+    public static managers: Map<string, ComponentManager> = new Map();
 
     constructor() {
 
     }
 
-    public static register(componentName: string, manager: typeof ComponentManager): void {
-        if (!ManagerFactory.managers.has(componentName)) {
+    public static register(componentType: typeof Component, manager: typeof ComponentManager): void {
+        if (!ManagerFactory.managers.has(componentType.name)) {
             let managerInstance = new manager();
-            ManagerFactory.managers.set(componentName, managerInstance);
+            ManagerFactory.managers.set(componentType.name, managerInstance);
         }
     }
 
@@ -21,7 +22,7 @@ export default class ManagerFactory {
 
         throw `Manager has not been registered: ${componentName}`;
     }
-    
+
     public static log(): void {
         ManagerFactory.managers.forEach((manager) => console.log(manager));
     }

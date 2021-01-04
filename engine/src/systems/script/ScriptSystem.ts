@@ -1,3 +1,4 @@
+import Entity from "../../components/entity";
 import ManagerFactory from "../../components/ManagerFactory";
 import ScriptComponent from "../../components/script/ScriptComponent";
 import ScriptComponentManager from "../../components/script/ScriptComponentManager";
@@ -7,16 +8,21 @@ export default class ScriptSystem extends System {
     public name: string = 'script-system';
 
     public update(): void {
-        let scriptComponentManager: ScriptComponentManager = ManagerFactory.get(ScriptComponent.name);
+        let manager: ScriptComponentManager = ManagerFactory.get(ScriptComponent.name);
 
-        scriptComponentManager.data.forEach((scriptComponent: ScriptComponent) => {
-            if (!scriptComponent.scriptableEntityInstance) {
-                scriptComponent.scriptableEntityInstance = new scriptComponent.scritableEntity();
-                scriptComponent.scriptableEntityInstance.entity = scriptComponentManager.entities.find(x => x.id === scriptComponentManager.dataEntityMap.get(scriptComponent.id));
-                scriptComponent.scriptableEntityInstance.onCreate();
-            }
+        manager.entities.forEach((entity: Entity) => {
+            manager.entityDataMap.get(entity.id).componentIndexes.forEach((componentIndex: number) => {
+                let scriptComponent: ScriptComponent = manager.components[componentIndex] as ScriptComponent;
 
-            scriptComponent.scriptableEntityInstance.update();
+                if (!scriptComponent.scriptableEntityInstance) {
+                    scriptComponent.scriptableEntityInstance = new scriptComponent.scritableEntity();
+                    scriptComponent.scriptableEntityInstance.entity = entity;
+    
+                    scriptComponent.scriptableEntityInstance.onCreate();
+                }
+    
+                scriptComponent.scriptableEntityInstance.update();
+            });
         });
     }
 

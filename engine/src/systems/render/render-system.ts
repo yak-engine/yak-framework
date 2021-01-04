@@ -1,11 +1,10 @@
 import Entity from "../../components/entity";
-import EntityManager from "../../components/EntityManager";
 import ManagerFactory from "../../components/ManagerFactory";
 import MaterialComponent from "../../components/material/MaterialComponent";
 import SpriteRendererComponent from "../../components/sprite-renderer/SpriteRendererComponent";
 import SpriteRendererComponentManager from "../../components/sprite-renderer/SpriteRendererComponentManager";
-import TagComponent from "../../components/tag/TagComponent";
 import TransformComponent from "../../components/transform/TransformComponent";
+import TransformComponentManager from "../../components/transform/TransformComponentManager";
 import Configuration from "../../configuration";
 import Transform from "../../primitives/transform";
 import Runnable from "../system";
@@ -19,23 +18,20 @@ export default class RenderSystem extends Runnable {
 
     draw(context: CanvasRenderingContext2D): void {
         // Run through renderer system.
-        let spriteRendererComponentManager: SpriteRendererComponentManager = ManagerFactory.get(SpriteRendererComponent.name);
+        let manager: SpriteRendererComponentManager = ManagerFactory.get(SpriteRendererComponent.name);
 
-        spriteRendererComponentManager.data.forEach((spriteRendererComponent: SpriteRendererComponent, index: number) => {
-            let entityId: number = spriteRendererComponentManager.dataEntityMap.get(spriteRendererComponent.id);
-            
-            let entity: Entity = spriteRendererComponentManager.entities.find(x => x.id === entityId);
-
-            let transform: Transform = (entity.getComponent(TransformComponent.name) as TransformComponent).transform;
+        manager.entities.forEach((entity: Entity) => {
+            let spriteRendererComponent: SpriteRendererComponent = entity.getComponent(SpriteRendererComponent);
+            let transformComponent: TransformComponent = entity.getComponent(TransformComponent);
 
             if (spriteRendererComponent) {
-                let materialComponent = entity.getComponent(MaterialComponent.name) as MaterialComponent;
+                let materialComponent = entity.getComponent(MaterialComponent) as MaterialComponent;
 
                 if (materialComponent) {
                     context.fillStyle = materialComponent.fillStyle;
                     context.globalAlpha = materialComponent.alpha;
 
-                    context.fillRect(transform.x, transform.y, transform.width, transform.height);
+                    context.fillRect(transformComponent.transform.x, transformComponent.transform.y, transformComponent.transform.width, transformComponent.transform.height);
                 }
                 else {
                     context.drawImage(
@@ -44,8 +40,8 @@ export default class RenderSystem extends Runnable {
                         spriteRendererComponent.row * Configuration.scene.tileSize,
                         Configuration.scene.tileSize,
                         Configuration.scene.tileSize,
-                        transform.x - 0, // cameraOffsetX,
-                        transform.y - 0, // cameraOffsetY,
+                        transformComponent.transform.x - 0, // cameraOffsetX,
+                        transformComponent.transform.y - 0, // cameraOffsetY,
                         Configuration.scene.tileSize,
                         Configuration.scene.tileSize
                     );
@@ -56,5 +52,15 @@ export default class RenderSystem extends Runnable {
             context.fillStyle = Configuration.canvasFill;
             context.globalAlpha = 1;
         });
+
+        // manager.data.forEach((spriteRendererComponent: SpriteRendererComponent, index: number) => {
+        //     let entityId: number = manager.dataEntityMap.get(spriteRendererComponent.id);
+            
+        //     let entity: Entity = manager.entities.find(x => x.id === entityId);
+
+
+
+
+        // });
     }
 }
