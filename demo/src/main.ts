@@ -50,11 +50,16 @@ class BulletController extends ScriptableEntity {
     }
 
     public onTriggerEnter(collisionEntity: Entity): void {
-        console.log(collisionEntity);
+        console.log(collisionEntity.getComponent(TagComponent) as TagComponent);
 
-        if ((collisionEntity.getComponent(TagComponent) as TagComponent).name === 'enemy') {
+        let collisionTargetName: string = (collisionEntity.getComponent(TagComponent) as TagComponent).name;
+
+        if (collisionTargetName === 'enemy') {
             console.log('[BULLET HIT ENEMY]');
             EntityManager.getInstance().destroy(collisionEntity);
+        }
+        else if (collisionTargetName === 'cover') {
+            EntityManager.getInstance().destroy(this.entity);
         }
     }
 
@@ -125,8 +130,13 @@ class CoverItemGeneratorController extends ScriptableEntity {
         for (let i = 0; i < this.numberOfCoverItems; i++) {
             let coverEntity: Entity = EntityManager.getInstance().create();
 
+            console.log(coverEntity);
+
             coverEntity.addComponent(new SpriteRendererComponent());
             coverEntity.addComponent(new MaterialComponent(this.coverItemColor));
+            coverEntity.addComponent(new ColliderComponent(Transform.empty));
+
+            (coverEntity.getComponent(TagComponent) as TagComponent).name = 'cover';
 
             let transform: Transform = (coverEntity.getComponent(TransformComponent) as TransformComponent).transform;
             
@@ -139,6 +149,11 @@ class CoverItemGeneratorController extends ScriptableEntity {
 
     public update(): void {
 
+    }
+
+    public onTriggerEnter(collisionEntity: Entity): void {
+        alert('test');
+        console.log(collisionEntity);
     }
 }
 

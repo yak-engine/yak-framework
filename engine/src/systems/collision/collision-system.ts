@@ -103,6 +103,11 @@ export default class CollisionSystem extends System {
 						}
 					}
 				} else {
+					console.log('TRIGGER ENTER');
+
+					console.log(sourceEntity);
+					console.log(targetEntity);
+
 					sourceEntity.getScriptInstances().forEach((scriptInstance) => {
 						if (scriptInstance.scriptableEntityInstance && scriptInstance.scriptableEntityInstance.onTriggerEnter) {
 							scriptInstance.scriptableEntityInstance.onTriggerEnter(targetEntity);
@@ -117,6 +122,8 @@ export default class CollisionSystem extends System {
 				}
 			}
 			else {
+				console.log('TRIGGER STAY');
+
 				sourceEntity.getScriptInstances().forEach((scriptInstance) => {
 					if (scriptInstance.scriptableEntityInstance && scriptInstance.scriptableEntityInstance.onTriggerEnter) {
 						scriptInstance.scriptableEntityInstance.onTriggerStay(targetEntity);
