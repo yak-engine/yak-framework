@@ -7,12 +7,10 @@ import Configuration from "../configuration";
 import Camera from "./camera";
 import Input from "./input";
 import isTransformEmpty from "../helpers/is-transform-empty";
-import EntityManager from "../components/EntityManager";
 import Entity from "../components/entity";
 import TilemapComponent from "../components/tilemap/TilemapComponent";
 import Scene from "../models/scene";
 import ManagerFactory from "../components/ManagerFactory";
-import TagComponent from "../components/tag/TagComponent";
 import SystemManager from "../systems/system-manager";
 
 export default class Renderer {

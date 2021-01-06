@@ -42,11 +42,9 @@ class BulletController extends ScriptableEntity {
     public bulletSpeed: number = 256;
 
     public onCreate(): void {
-        console.log('ON BULLET CREATED');
+        console.log(this.entity);
 
-        this.addComponent(new SpriteRendererComponent());
-        this.addComponent(new MaterialComponent('#DD5145', 1));
-        this.addComponent(new ColliderComponent(Transform.empty, true));
+
         
         (this.entity.getComponent(TagComponent) as TagComponent).name = `bullet`;
     }
@@ -56,16 +54,8 @@ class BulletController extends ScriptableEntity {
 
         if ((collisionEntity.getComponent(TagComponent) as TagComponent).name === 'enemy') {
             console.log('[BULLET HIT ENEMY]');
-
-            // console.log(this.entity);
-            // console.log(collisionEntity);
-
             EntityManager.getInstance().destroy(collisionEntity);
         }
-
-        // console.log(this.entity);
-        // console.log(collisionEntity);
-        // console.log('bullet trigger enter');
     }
 
     public update(): void {
@@ -86,8 +76,6 @@ class BulletController extends ScriptableEntity {
         else {
             console.log('transform no longer exists');
         }
-
-        // console.log(ManagerFactory.get(TransformComponent.name));
     }
 }
 
@@ -105,8 +93,14 @@ class PlayerFireController extends ScriptableEntity {
 
                 let bulletEntity: Entity = EntityManager.getInstance().create();
                 bulletEntity.addComponent(new ScriptComponent(BulletController));
+                bulletEntity.addComponent(new SpriteRendererComponent());
+                bulletEntity.addComponent(new MaterialComponent('#DD5145', 1));
+                bulletEntity.addComponent(new ColliderComponent(Transform.empty, true));
+
+                console.log(EntityManager.getInstance().entities.filter(x => x.id === bulletEntity.id).length);
     
                 let transform: Transform = (bulletEntity.getComponent(TransformComponent) as TransformComponent).transform;
+
                 let shipTransform: Transform = (this.entity.getComponent(TransformComponent) as TransformComponent).transform;
     
                 transform.x = shipTransform.x + (shipTransform.width / 2);
@@ -156,8 +150,6 @@ class ShipGeneratorController extends ScriptableEntity {
     public shipSpeed: number = 256;
 
     public onCreate(): void {
-        console.log('CREATE SHIP');
-
         (this.entity.getComponent(TagComponent) as TagComponent).name = 'ship';
 
         this.entity.addComponent(new SpriteRendererComponent());
@@ -230,9 +222,6 @@ class EnemyGeneratorController extends ScriptableEntity {
                 this._enemyTransforms.push(transform);
             }   
         }
-
-        console.log(int);
-        console.log(ManagerFactory.get(ColliderComponent.name));
     }
 
     public update(): void {

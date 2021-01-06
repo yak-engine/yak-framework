@@ -7,12 +7,18 @@ import System from "../system";
 export default class ScriptSystem extends System {
     public name: string = 'script-system';
 
+    disposeEntityRefs(entity: Entity): void {
+        
+    }
+
     public update(): void {
         let manager: ScriptComponentManager = ManagerFactory.get(ScriptComponent.name);
 
         manager.entities.forEach((entity: Entity) => {
-            manager.entityDataMap.get(entity.id).componentIndexes.forEach((componentIndex: number) => {
-                let scriptComponent: ScriptComponent = manager.components[componentIndex] as ScriptComponent;
+            let componentIds: number[] = manager.entityDataMap.get(entity.id);
+
+            componentIds.forEach((componentId: number) => {
+                let scriptComponent: ScriptComponent = manager.components.find(x => x.id === componentId) as ScriptComponent;
 
                 if (!scriptComponent.scriptableEntityInstance) {
                     scriptComponent.scriptableEntityInstance = new scriptComponent.scritableEntity();

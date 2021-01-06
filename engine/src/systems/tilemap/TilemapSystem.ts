@@ -1,3 +1,4 @@
+import Entity from "../../components/entity";
 import ManagerFactory from "../../components/ManagerFactory";
 import TilemapComponent from "../../components/tilemap/TilemapComponent";
 import TilemapComponentManager from "../../components/tilemap/TilemapComponentManager";
@@ -9,6 +10,10 @@ export default class TilemapSystem extends System {
 
     update(): void {
         return;
+    }
+
+    disposeEntityRefs(entity: Entity): void {
+        
     }
 
     draw(context: CanvasRenderingContext2D): void {

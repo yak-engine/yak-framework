@@ -14,7 +14,7 @@ export default class Entity {
      * Generates a unique 12 character ID for each entity.
      */
     // id: string = Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 12);
-    id: number = 0; // Refactored to number for ECS.
+    id: string = ''; // Refactored to number for ECS.
 
     name: string;
 
@@ -22,8 +22,6 @@ export default class Entity {
      * Determines if the entity should be rendered.
      */
     enabled: boolean = true;
-
-    public index: number = -1;
 
     public addComponent(componentInstance: Component) {
         let manager = ManagerFactory.get(componentInstance.constructor.name);
@@ -39,10 +37,22 @@ export default class Entity {
 
         if (manager.entityDataMap.has(this.id)) {
             // TODO: This will not work for script components.
-            return <TComponent>(manager.components[manager.entityDataMap.get(this.id).componentIndexes[0]] as unknown);
+            return <TComponent>(manager.components.find(x => x.id === manager.entityDataMap.get(this.id)[0]) as unknown);
         }
 
         return null;
+    }
+
+    public getScriptInstances(): ScriptComponent[] {
+        let manager = ManagerFactory.get(ScriptComponent.name);
+
+        if (manager.entityDataMap.has(this.id)) {
+            console.log(manager.components.filter(x => manager.entityDataMap.get(this.id).includes(x.id)));
+            // TODO: This will not work for script components.
+            return manager.components.filter(x => manager.entityDataMap.get(this.id).includes(x.id)) as ScriptComponent[];
+        }
+
+        return [];
     }
 
     // public removeComponent(componentName: string): void {

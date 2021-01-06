@@ -12,7 +12,21 @@ import { CollisionDirection } from './collision-direction';
 export default class CollisionSystem extends System {
 	public name: string = 'collision-name';
 
-	public currentEntityCollisions: Map<number, number> = new Map();
+	public currentEntityCollisions: Map<any, any[]> = new Map();
+
+	public disposeEntityRefs(entity: Entity): void {
+		if (this.currentEntityCollisions.has(entity.id)) {
+			this.currentEntityCollisions.delete(entity.id);
+		}
+
+		this.currentEntityCollisions.forEach((values: any[], key: number) => {
+			let valueIndex: any = values.indexOf(entity.id);
+
+			if (valueIndex !== -1) {
+				values.splice(valueIndex, 1);
+			}
+		});
+	}
 
 	public update(): void {
 		let manager: ColliderComponentManager = ManagerFactory.get(ColliderComponent.name);
@@ -33,8 +47,16 @@ export default class CollisionSystem extends System {
 		let sourceCollider: ColliderComponent = sourceEntity.getComponent(ColliderComponent) as ColliderComponent;
 		let targetCollider: ColliderComponent = targetEntity.getComponent(ColliderComponent) as ColliderComponent;
 
-		let sourceTransform: Transform = (sourceEntity.getComponent(TransformComponent) as TransformComponent).transform;
-		let targetTransform: Transform = (targetEntity.getComponent(TransformComponent) as TransformComponent).transform;
+		let sourceTransformComponent: TransformComponent = (sourceEntity.getComponent(TransformComponent) as TransformComponent);
+		let targetTransformComponent: TransformComponent = (targetEntity.getComponent(TransformComponent) as TransformComponent);
+
+		if (!sourceTransformComponent || !targetTransformComponent) {
+			console.log('[ENTITY NO LONGER EXISTS ABORTING COLLISION CHECK]');
+			return;
+		}
+
+		let sourceTransform: Transform = sourceTransformComponent.transform;
+		let targetTransform: Transform = targetTransformComponent.transform;
 
 		// get the vectors to check against
 		let vX = sourceTransform.x + sourceTransform.width / 2 - (targetTransform.x + targetTransform.width / 2);
@@ -48,8 +70,13 @@ export default class CollisionSystem extends System {
 
 		// If the x and y vector are less than the half width or half height, they we must be inside the object, causing a collision.
 		if (Math.abs(vX) < ww2 && Math.abs(vY) < hh2) {
-			if (!this.currentEntityCollisions.has(sourceEntity.id) || this.currentEntityCollisions.get(sourceEntity.id) !== targetEntity.id) {
-				this.currentEntityCollisions.set(sourceEntity.id, targetEntity.id);
+			if (!this.currentEntityCollisions.has(sourceEntity.id) || this.currentEntityCollisions.get(sourceEntity.id).indexOf(targetEntity.id) === -1) {
+				if (!this.currentEntityCollisions.has(sourceEntity.id)) {
+					this.currentEntityCollisions.set(sourceEntity.id, [targetEntity.id]);
+				}
+				else {
+					this.currentEntityCollisions.get(sourceEntity.id).push(targetEntity.id);
+				}
 
 				// Only resolve the collision if both the source and target colliders are not triggers.
 				if (!sourceCollider.isTrigger && !targetCollider.isTrigger) {
@@ -76,31 +103,49 @@ export default class CollisionSystem extends System {
 						}
 					}
 				} else {
-					// let sourceScriptComponent: ScriptComponent = sourceEntity.getComponent(ScriptComponent) as ScriptComponent;
-					// sourceScriptComponent?.scriptableEntityInstance?.onTriggerEnter(targetEntity);
-
-					// let targetScriptComponent: ScriptComponent = targetEntity.getComponent(ScriptComponent) as ScriptComponent;
-					// targetScriptComponent?.scriptableEntityInstance?.onTriggerEnter(sourceEntity);
+					sourceEntity.getScriptInstances().forEach((scriptInstance) => {
+						if (scriptInstance.scriptableEntityInstance && scriptInstance.scriptableEntityInstance.onTriggerEnter) {
+							scriptInstance.scriptableEntityInstance.onTriggerEnter(targetEntity);
+						}
+					});
+					
+					targetEntity.getScriptInstances().forEach((scriptInstance) => {
+						if (scriptInstance.scriptableEntityInstance && scriptInstance.scriptableEntityInstance.onTriggerEnter) {
+							scriptInstance.scriptableEntityInstance.onTriggerEnter(sourceEntity);
+						}
+					});
 				}
 			}
 			else {
-				// let sourceScriptComponent: ScriptComponent = sourceEntity.getComponent(ScriptComponent) as ScriptComponent;
-				// sourceScriptComponent?.scriptableEntityInstance?.onTriggerStay(targetEntity);
-
-				// let targetScriptComponent: ScriptComponent = targetEntity.getComponent(ScriptComponent) as ScriptComponent;
-				// targetScriptComponent?.scriptableEntityInstance?.onTriggerStay(sourceEntity);
+				sourceEntity.getScriptInstances().forEach((scriptInstance) => {
+					if (scriptInstance.scriptableEntityInstance && scriptInstance.scriptableEntityInstance.onTriggerEnter) {
+						scriptInstance.scriptableEntityInstance.onTriggerStay(targetEntity);
+					}
+				});
+				
+				targetEntity.getScriptInstances().forEach((scriptInstance) => {
+					if (scriptInstance.scriptableEntityInstance && scriptInstance.scriptableEntityInstance.onTriggerEnter) {
+						scriptInstance.scriptableEntityInstance.onTriggerStay(sourceEntity);
+					}
+				});
 			}
 		} else {
-			if (this.currentEntityCollisions.has(sourceEntity.id) && this.currentEntityCollisions.get(sourceEntity.id) === targetEntity.id) {
+			if (this.currentEntityCollisions.has(sourceEntity.id) && this.currentEntityCollisions.get(sourceEntity.id).indexOf(targetEntity.id) !== -1) {
 				this.currentEntityCollisions.delete(sourceEntity.id);
 
 				ManagerFactory.get(ScriptComponent.name).components
 
-				// let sourceScriptComponent: ScriptComponent = sourceEntity.getComponent(ScriptComponent) as ScriptComponent;
-				// sourceScriptComponent?.scriptableEntityInstance?.onTriggerLeave(targetEntity);
-
-				// let targetScriptComponent: ScriptComponent = targetEntity.getComponent(ScriptComponent) as ScriptComponent;
-				// targetScriptComponent?.scriptableEntityInstance?.onTriggerLeave(sourceEntity);
+				sourceEntity.getScriptInstances().forEach((scriptInstance) => {
+					if (scriptInstance.scriptableEntityInstance && scriptInstance.scriptableEntityInstance.onTriggerEnter) {
+						scriptInstance.scriptableEntityInstance.onTriggerLeave(targetEntity);
+					}
+				});
+				
+				targetEntity.getScriptInstances().forEach((scriptInstance) => {
+					if (scriptInstance.scriptableEntityInstance && scriptInstance.scriptableEntityInstance.onTriggerEnter) {
+						scriptInstance.scriptableEntityInstance.onTriggerLeave(sourceEntity);
+					}
+				});
 			}
 		}
 

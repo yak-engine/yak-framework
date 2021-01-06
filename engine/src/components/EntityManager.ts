@@ -13,6 +13,8 @@ import ComponentManager from "./ComponentManager";
 import ManagerFactory from "./ManagerFactory";
 import Constants from "../constants";
 import Component from "./Component";
+import SystemManager from "../systems/system-manager";
+import System from "../systems/system";
 
 export default class EntityManager {
     private static instance: EntityManager;
@@ -30,11 +32,18 @@ export default class EntityManager {
 
     public create(): Entity {
         let entity: Entity = new Entity();
-
         this.entities.push(entity);
-
-        entity.id = this.entities.length;
-        entity.index = this.entities.length - 1;
+        
+        let charSet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var randomString = '';
+        for (var i = 0; i < 8; i++) {
+            var randomPoz = Math.floor(Math.random() * charSet.length);
+            randomString += charSet.substring(randomPoz,randomPoz+1);
+        }
+        
+        entity.id = randomString;
+        console.log(entity.id);
+        // entity.id = this.entities.length;
 
         this.addRequiredComponents(entity);
 
@@ -44,12 +53,18 @@ export default class EntityManager {
     public destroy(entity: Entity): void {
         let index = this.entities.findIndex(x => x.id === entity.id);
 
+        // Remove all references stored in each of the component manager instances.
+        ManagerFactory.managers.forEach((manager: ComponentManager) => {
+            manager.dispose(entity)
+        });
+
+        SystemManager.systems.forEach((system: System) => system.disposeEntityRefs(entity));
+
         if (index !== -1) {
             this.entities.splice(index, 1);
         }
 
-        // Remove all references stored in each of the component manager instances.
-        ManagerFactory.managers.forEach((manager: ComponentManager) => manager.dispose(entity));
+        console.log(this.entities);
     }
 
     public parseEntities(sceneConfig: SceneConfig): void {

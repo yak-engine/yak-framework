@@ -4,15 +4,17 @@ import MaterialComponent from "../../components/material/MaterialComponent";
 import SpriteRendererComponent from "../../components/sprite-renderer/SpriteRendererComponent";
 import SpriteRendererComponentManager from "../../components/sprite-renderer/SpriteRendererComponentManager";
 import TransformComponent from "../../components/transform/TransformComponent";
-import TransformComponentManager from "../../components/transform/TransformComponentManager";
 import Configuration from "../../configuration";
-import Transform from "../../primitives/transform";
 import Runnable from "../system";
 
 export default class RenderSystem extends Runnable {
     public name: string = 'render-system';
 
     update(): void {
+
+    }
+
+    disposeEntityRefs(entity: Entity): void {
 
     }
 
