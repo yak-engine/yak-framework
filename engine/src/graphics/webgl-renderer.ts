@@ -1,4 +1,5 @@
 import TilemapSystem from "../systems/tilemap/TilemapSystem";
+import Time from "../time";
 import BaseRenderer from "./base-renderer";
 
 class Drawable {
@@ -22,11 +23,17 @@ export default class WebGLRenderer extends BaseRenderer {
 
     private _colorUniformLocation: WebGLUniformLocation;
 
+    private _translationUniformLocation: WebGLUniformLocation;
+
     private _drawables: Drawable[] = [];
 
     private _vertexShaders: WebGLShader[] = [];
 
     private _fragmentShaders: WebGLShader[] = [];
+
+    private _testTranslationAmount: number[] = [0, 0]; // x,y
+
+    private _testTranslateSpeed: number = 100;
 
     public async init(): Promise<void> {
         this.context = this.engineCanvas.getContext('webgl');
@@ -45,15 +52,16 @@ export default class WebGLRenderer extends BaseRenderer {
         let vertextShader: WebGLShader = this._createShader(this.context.VERTEX_SHADER, vertextShaderSource);
         let fragmentShader: WebGLShader = this._createShader(this.context.FRAGMENT_SHADER, fragmentShaderSource);
 
-        console.log(vertextShader);
+        console.log(fragmentShaderSource);
 
         // Create a new program and link the shaders.
-        this._program = this._createProgam(vertextShader, fragmentShader);
+        this._program = this._createProgram(vertextShader, fragmentShader);
 
         // Do this on init not in the render loop.
         this._positionAttributeLocation = this.context.getAttribLocation(this._program, 'a_position');
         this._resolutionUniformLocation = this.context.getUniformLocation(this._program, 'u_resolution');
         this._colorUniformLocation = this.context.getUniformLocation(this._program, 'u_color');
+        this._translationUniformLocation = this.context.getUniformLocation(this._program, 'u_translation');
 
         this._createDrawable([
             10, 20, // tri 1 vert 1
@@ -108,6 +116,9 @@ export default class WebGLRenderer extends BaseRenderer {
     public draw(): void {
         console.log('[WEBGL]: Draw');
 
+        // Update test translate
+        this._testTranslationAmount[0] += this._testTranslateSpeed * Time.deltaTime;
+
         // Tells WebGL to convert the clip space values we set gl_position to in the vertext shader back into pixels (screen space).
         // -1 maps to 0 and 1 maps to the canvas width same goes for the y-axis.
         this.context.viewport(0, 0, this.engineCanvas.width, this.engineCanvas.height);
@@ -117,13 +128,16 @@ export default class WebGLRenderer extends BaseRenderer {
         this.context.clear(this.context.COLOR_BUFFER_BIT);
 
         this.context.useProgram(this._program);
-        this.context.uniform2f(this._resolutionUniformLocation, this.engineCanvas.width, this.engineCanvas.height);
 
-        // Enable position attribute in vertext shader. So WebGL can use the data we set in the ARRAY_BUFFER.
-        this.context.enableVertexAttribArray(this._positionAttributeLocation);
+        // Transform from clip space back into pixels for positional data.
+        this.context.uniform2f(this._resolutionUniformLocation, this.engineCanvas.width, this.engineCanvas.height);
 
         // Iterate through the drawables to render.
         this._drawables.forEach((drawable) => {
+            // TODO: Should this be done in each iteration? Or before?
+            // Enable position attribute in vertext shader. So WebGL can use the data we set in the ARRAY_BUFFER.
+            this.context.enableVertexAttribArray(this._positionAttributeLocation);
+
             this.context.bindBuffer(this.context.ARRAY_BUFFER, drawable.buffer);
 
             let size: number = 2; // 2 components per iteration
@@ -136,9 +150,12 @@ export default class WebGLRenderer extends BaseRenderer {
 
             let primitiveType: number = this.context.TRIANGLES;
             let drawOffset: number = 0;
-            let drawCount: number = drawable.positions.length / 2; // square from two triangles would be 6.
+            let drawCount: number = 6; // square from two triangles would be 6.
     
-            this.context.uniform4f(this._colorUniformLocation, 1, 1, 1, 1);
+            // Set uniforms
+            this.context.uniform4f(this._colorUniformLocation, 1, 1, 1, 1); // color
+            this.context.uniform2fv(this._translationUniformLocation, this._testTranslationAmount);
+
             this.context.drawArrays(primitiveType, drawOffset, drawCount);
         });
     }
@@ -155,9 +172,9 @@ export default class WebGLRenderer extends BaseRenderer {
         this.context.shaderSource(shader, shaderSource);
         this.context.compileShader(shader);
 
-        let someType = this.context.getShaderParameter(shader, this.context.COMPILE_STATUS);
+        let successful: boolean = this.context.getShaderParameter(shader, this.context.COMPILE_STATUS);
 
-        if (someType) {
+        if (successful) {
             return shader;
         }
 
@@ -173,7 +190,7 @@ export default class WebGLRenderer extends BaseRenderer {
      * @param vertextShader The vertex shader to link to the program.
      * @param fragmentShader The fragment shader to link to the program.
      */
-    private _createProgam(vertextShader: WebGLShader, fragmentShader: WebGLShader): WebGLProgram {
+    private _createProgram(vertextShader: WebGLShader, fragmentShader: WebGLShader): WebGLProgram {
         let program: WebGLProgram = this.context.createProgram();
 
         // TODO: Add checks to determine that each shader parameter is actually of the correct shader type.
@@ -182,9 +199,9 @@ export default class WebGLRenderer extends BaseRenderer {
 
         this.context.linkProgram(program);
 
-        let someType = this.context.getProgramParameter(program, this.context.LINK_STATUS);
+        let successful: boolean = this.context.getProgramParameter(program, this.context.LINK_STATUS);
 
-        if (someType) {
+        if (successful) {
             return program;
         }
 
