@@ -1,6 +1,6 @@
 {
 	"name": "scene1",
-	"tilesets": ["BaseChip_pipo.png"],
+	"tilesets": ["BaseChip_pipo.png", "bad-cannon.png"],
 	"tileSize": 32,
 	"rows": 64,
 	"columns": 64,

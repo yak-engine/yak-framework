@@ -18,6 +18,8 @@ export default class GameClone extends Application {
     constructor() {
         super();
 
+        console.log(document.querySelector('#engine-canvas'));
+
         Configuration.width = 640 * 2;
         Configuration.height = 360 * 2;
     }
@@ -42,10 +44,6 @@ class BulletController extends ScriptableEntity {
     public bulletSpeed: number = 256;
 
     public onCreate(): void {
-        console.log(this.entity);
-
-
-        
         (this.entity.getComponent(TagComponent) as TagComponent).name = `bullet`;
     }
 
@@ -167,8 +165,9 @@ class ShipGeneratorController extends ScriptableEntity {
     public onCreate(): void {
         (this.entity.getComponent(TagComponent) as TagComponent).name = 'ship';
 
-        this.entity.addComponent(new SpriteRendererComponent());
+        // this.entity.addComponent(new SpriteRendererComponent());
         this.entity.addComponent(new MaterialComponent(this.shipColor));
+        this.entity.addComponent(new SpriteRendererComponent(0, 1, 0, 0));
 
         this.shipTransform = (this.entity.getComponent(TransformComponent) as TransformComponent).transform;
 

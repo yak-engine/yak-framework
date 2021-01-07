@@ -30,12 +30,14 @@ import EntityManager from './components/EntityManager';
 import ScriptSystem from './systems/script/ScriptSystem';
 import ScriptComponent from './components/script/ScriptComponent';
 import ScriptComponentManager from './components/script/ScriptComponentManager';
+import BaseRenderer from './graphics/base-renderer';
+import WebGLRenderer from './graphics/webgl-renderer';
 
 export default abstract class Application {
     /**
      * Contains the rendering functionality from the main loop.
      */
-    renderer: Renderer = new Renderer();
+    renderer: BaseRenderer; 
 
     /**
      * The main input system.
@@ -72,7 +74,11 @@ export default abstract class Application {
      * @author NSSure
      * @since 11/8/2020
      */
-    public async start(): Promise<void> {
+    public async start(renderer?: string): Promise<void> {
+        if (!renderer) {
+            renderer = 'webgl';
+        }
+
         let engineConfigPath: string = 'engine-config.json';
 
         // Determines what base url to use for loading application resources (tileset, configurations, etc).
@@ -88,6 +94,16 @@ export default abstract class Application {
         let engineConfig: EngineConfig = await (await fetch(engineConfigPath).catch(this.handleLoadError)).json();
 
         // Set the default scene on the renderer and initialize the renderer.
+
+        if (renderer === 'webgl') {
+            console.log('[RENDERER TYPE]: WebGL enabled');
+            this.renderer = new WebGLRenderer();
+        }
+        else {
+            console.log('[RENDERER TYPE]: Canvas enabled');
+            this.renderer = new Renderer();
+        }
+
         this.renderer.scene = await SceneManager.load(engineConfig.scenes[0]);
         this.renderer.init();
 
@@ -117,7 +133,7 @@ export default abstract class Application {
     mainLoop(time: number) {
         // Update peripheral data (time, mouse, etc) for use within the render systems.
         Time.calculateDeltaTime(time);
-        Mouse.update(this.renderer.mousePosition);
+        // Mouse.update(this.renderer.mousePosition);
 
         // The main render loop.
         this.renderer.update();

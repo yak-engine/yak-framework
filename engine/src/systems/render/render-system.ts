@@ -29,15 +29,17 @@ export default class RenderSystem extends Runnable {
             if (spriteRendererComponent) {
                 let materialComponent = entity.getComponent(MaterialComponent) as MaterialComponent;
 
-                if (materialComponent) {
+                if (spriteRendererComponent.tileset === undefined) {
                     context.fillStyle = materialComponent.fillStyle;
                     context.globalAlpha = materialComponent.alpha;
 
                     context.fillRect(transformComponent.transform.x, transformComponent.transform.y, transformComponent.transform.width, transformComponent.transform.height);
                 }
                 else {
+                    console.log('test');
+
                     context.drawImage(
-                        Configuration.tilesets[0].image,// this.tilesets[spriteRendererComponent.layer].image,
+                        Configuration.tilesets[1].image,// this.tilesets[spriteRendererComponent.layer].image,
                         spriteRendererComponent.column * Configuration.scene.tileSize,
                         spriteRendererComponent.row * Configuration.scene.tileSize,
                         Configuration.scene.tileSize,
