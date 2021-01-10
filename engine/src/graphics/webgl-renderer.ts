@@ -25,6 +25,8 @@ export default class WebGLRenderer extends BaseRenderer {
 
     private _translationUniformLocation: WebGLUniformLocation;
 
+    private _rotationUniformLocation: WebGLUniformLocation;
+
     private _drawables: Drawable[] = [];
 
     private _vertexShaders: WebGLShader[] = [];
@@ -32,6 +34,8 @@ export default class WebGLRenderer extends BaseRenderer {
     private _fragmentShaders: WebGLShader[] = [];
 
     private _testTranslationAmount: number[] = [0, 0]; // x,y
+
+    private _testRotationAmount: number[] = [0, 1]; // x,y
 
     private _testTranslateSpeed: number = 100;
 
@@ -62,6 +66,7 @@ export default class WebGLRenderer extends BaseRenderer {
         this._resolutionUniformLocation = this.context.getUniformLocation(this._program, 'u_resolution');
         this._colorUniformLocation = this.context.getUniformLocation(this._program, 'u_color');
         this._translationUniformLocation = this.context.getUniformLocation(this._program, 'u_translation');
+        this._rotationUniformLocation = this.context.getUniformLocation(this._program, 'u_rotation');
 
         this._createDrawable([
             10, 20, // tri 1 vert 1
@@ -109,6 +114,18 @@ export default class WebGLRenderer extends BaseRenderer {
         this._drawables.push(drawable);
     }
 
+    private _convertAngleUnitCircleCoordinates(angleInDegrees: number): any {
+        var angleInRadians = angleInDegrees * Math.PI / 180;
+
+        let sine = Math.sin(angleInRadians);
+        let cosine = Math.cos(angleInRadians);
+
+        return {
+            sine: sine,
+            cosine: cosine
+        }
+    }
+
     public update(): void {
 
     }
@@ -118,6 +135,14 @@ export default class WebGLRenderer extends BaseRenderer {
 
         // Update test translate
         this._testTranslationAmount[0] += this._testTranslateSpeed * Time.deltaTime;
+
+        let angleRotation: number = -45;
+
+        // Points on a unit circle are called sine and cosine (sine = x) (cosine = y).
+        let unitCircleCoordinatesthis: any = this._convertAngleUnitCircleCoordinates(angleRotation);
+
+        this._testRotationAmount[0] = unitCircleCoordinatesthis.sine;
+        this._testRotationAmount[1] = unitCircleCoordinatesthis.cosine;
 
         // Tells WebGL to convert the clip space values we set gl_position to in the vertext shader back into pixels (screen space).
         // -1 maps to 0 and 1 maps to the canvas width same goes for the y-axis.
@@ -155,6 +180,7 @@ export default class WebGLRenderer extends BaseRenderer {
             // Set uniforms
             this.context.uniform4f(this._colorUniformLocation, 1, 1, 1, 1); // color
             this.context.uniform2fv(this._translationUniformLocation, this._testTranslationAmount);
+            this.context.uniform2fv(this._rotationUniformLocation, this._testRotationAmount);
 
             this.context.drawArrays(primitiveType, drawOffset, drawCount);
         });

@@ -2,10 +2,16 @@
  
   uniform vec2 u_resolution;
   uniform vec2 u_translation;
+  uniform vec2 u_rotation;
  
   void main() {
+    // Rotate the position
+    vec2 rotatedPosition = vec2(
+     a_position.x * u_rotation.y + a_position.y * u_rotation.x,
+     a_position.y * u_rotation.y - a_position.x * u_rotation.x);
+
     // convert the position from pixels to 0.0 to 1.0
-    vec2 zeroToOne = (a_position + u_translation) / u_resolution;
+    vec2 zeroToOne = (rotatedPosition + u_translation) / u_resolution;
  
     // convert from 0->1 to 0->2
     vec2 zeroToTwo = zeroToOne * 2.0;
