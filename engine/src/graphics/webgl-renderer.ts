@@ -1,10 +1,16 @@
 import TilemapSystem from "../systems/tilemap/TilemapSystem";
 import Time from "../time";
 import BaseRenderer from "./base-renderer";
+import Mat3 from "./Mat3";
+import Mat4 from "./Mat4";
 
 class Drawable {
     buffer: WebGLBuffer;
     positions: number[];
+}
+
+class Image {
+
 }
 
 export default class WebGLRenderer extends BaseRenderer {
@@ -16,6 +22,8 @@ export default class WebGLRenderer extends BaseRenderer {
     public shaderPath: string = '/shaders';
 
     private _program: WebGLProgram;
+
+    private _imageProgram: WebGLProgram;
     
     private _positionAttributeLocation: number;
 
@@ -27,15 +35,21 @@ export default class WebGLRenderer extends BaseRenderer {
 
     private _rotationUniformLocation: WebGLUniformLocation;
 
+    private _scaleUniformLocation: WebGLUniformLocation;
+
+    private _matrixUniformLocation: WebGLUniformLocation;
+
     private _drawables: Drawable[] = [];
 
     private _vertexShaders: WebGLShader[] = [];
 
     private _fragmentShaders: WebGLShader[] = [];
 
-    private _testTranslationAmount: number[] = [0, 0]; // x,y
+    private _testTranslationAmount: number[] = [0, 0, 0]; // x,y,z
 
-    private _testRotationAmount: number[] = [0, 1]; // x,y
+    private _testRotationAmount: number[] = [0, 1, 0]; // x,y,z
+
+    private _testScaleAmount: number[] = [1, 1, 0]; //x,y,z
 
     private _testTranslateSpeed: number = 100;
 
@@ -56,34 +70,47 @@ export default class WebGLRenderer extends BaseRenderer {
         let vertextShader: WebGLShader = this._createShader(this.context.VERTEX_SHADER, vertextShaderSource);
         let fragmentShader: WebGLShader = this._createShader(this.context.FRAGMENT_SHADER, fragmentShaderSource);
 
-        console.log(fragmentShaderSource);
-
         // Create a new program and link the shaders.
         this._program = this._createProgram(vertextShader, fragmentShader);
 
-        // Do this on init not in the render loop.
+        // let imageVertexShaderSource: string = await (await fetch(`${this.shaderPath}/image/image-vertex-shader.glsl`)).text();
+        // let imageFragmentShaderSource: string = await (await fetch(`${this.shaderPath}/image/image-fragment-shader.glsl`)).text();
+
+        // // TODO: Refactor into basic helper method.
+        // let imageVertexShader: WebGLShader = this._createShader(this.context.VERTEX_SHADER, imageVertexShaderSource);
+        // let imageFragmentShader: WebGLShader = this._createShader(this.context.FRAGMENT_SHADER, imageFragmentShaderSource);
+
+        // // Create a new program and link the shaders.
+        // this._imageProgram = this._createProgram(imageVertexShader, imageFragmentShader);
+
+        // Look where position data will go.
         this._positionAttributeLocation = this.context.getAttribLocation(this._program, 'a_position');
-        this._resolutionUniformLocation = this.context.getUniformLocation(this._program, 'u_resolution');
+
+        // Looks up uniforms for shader.
+        // Do this on init not in the render loop.
+        // this._translationUniformLocation = this.context.getUniformLocation(this._program, 'u_translation');
+        // this._rotationUniformLocation = this.context.getUniformLocation(this._program, 'u_rotation');
+        // this._scaleUniformLocation = this.context.getUniformLocation(this._program, 'u_scale');
         this._colorUniformLocation = this.context.getUniformLocation(this._program, 'u_color');
-        this._translationUniformLocation = this.context.getUniformLocation(this._program, 'u_translation');
-        this._rotationUniformLocation = this.context.getUniformLocation(this._program, 'u_rotation');
+        this._resolutionUniformLocation = this.context.getUniformLocation(this._program, 'u_resolution');
+        this._matrixUniformLocation = this.context.getUniformLocation(this._program, 'u_matrix');
 
         this._createDrawable([
-            10, 20, // tri 1 vert 1
-            80, 20, // tri 1 vert 2
-            10, 30, // tri 1 vert 3
-            10, 30,
-            80, 20,
-            80, 30,
+            10, 20, 0, // tri 1 vert 1
+            80, 20, 0, // tri 1 vert 2
+            10, 30, 0, // tri 1 vert 3
+            10, 30, 0,
+            80, 20, 0,
+            80, 30, 0
         ]);
 
         this._createDrawable([
-            100, 200,
-            800, 200,
-            100, 300,
-            100, 300,
-            800, 200,
-            800, 300,
+            100, 200, 0,
+            800, 200, 0,
+            100, 300, 0,
+            100, 300, 0,
+            800, 200, 0,
+            800, 300, 0
         ]);
 
         // this._positionBuffer = this.context.createBuffer();
@@ -130,19 +157,22 @@ export default class WebGLRenderer extends BaseRenderer {
 
     }
 
+    angleInDegress: number = 0;
+    angleInRadians: number = 0;
+
     public draw(): void {
         console.log('[WEBGL]: Draw');
 
         // Update test translate
-        this._testTranslationAmount[0] += this._testTranslateSpeed * Time.deltaTime;
+        // this._testTranslationAmount[0] += this._testTranslateSpeed * Time.deltaTime;
 
-        let angleRotation: number = -45;
+        // this.angleInDegress += 10 * Time.deltaTime;
 
         // Points on a unit circle are called sine and cosine (sine = x) (cosine = y).
-        let unitCircleCoordinatesthis: any = this._convertAngleUnitCircleCoordinates(angleRotation);
+        let unitCircleCoordinates: any = this._convertAngleUnitCircleCoordinates(this.angleInDegress);
 
-        this._testRotationAmount[0] = unitCircleCoordinatesthis.sine;
-        this._testRotationAmount[1] = unitCircleCoordinatesthis.cosine;
+        this._testRotationAmount[0] = unitCircleCoordinates.sine;
+        this._testRotationAmount[1] = unitCircleCoordinates.cosine;
 
         // Tells WebGL to convert the clip space values we set gl_position to in the vertext shader back into pixels (screen space).
         // -1 maps to 0 and 1 maps to the canvas width same goes for the y-axis.
@@ -165,26 +195,75 @@ export default class WebGLRenderer extends BaseRenderer {
 
             this.context.bindBuffer(this.context.ARRAY_BUFFER, drawable.buffer);
 
-            let size: number = 2; // 2 components per iteration
+            let size: number = 3; // 2 components per iteration -> 3 for orthographic.
             let type = this.context.FLOAT; // the data is 32bit floats
             let normalize: boolean = false; // don't normalize the data
             let stride: number = 0; // 0 = move forward size * sizeof(type) each iteration to get the next position
             let offset: number = 0; // start at the beginning of the buffer
     
             this.context.vertexAttribPointer(this._positionAttributeLocation, size, type, normalize, stride, offset);
+    
+            // Set uniforms
+            this.context.uniform4f(this._colorUniformLocation, 1, 1, 1, 1); // color
+
+            // var left = 0;
+            // var right = this.context.canvas.width;
+            // var bottom = this.context.canvas.height;
+            // var top = 0;
+            // var near = 400;
+            // var far = -400;
+            // var matrix = Mat4.orthographic(left, right, bottom, top, near, far);
+
+            let matrix = Mat4.projection(this.context.canvas.width, this.context.canvas.height, 400);
+            matrix = Mat4.translate(matrix, this._testTranslationAmount[0], this._testTranslationAmount[1], this._testTranslationAmount[2]);
+            matrix = Mat4.xRotate(matrix, this.angleInDegress * Math.PI / 180);
+            matrix = Mat4.yRotate(matrix, this.angleInDegress * Math.PI / 180);
+            matrix = Mat4.zRotate(matrix, this.angleInDegress * Math.PI / 180);
+            matrix = Mat4.scale(matrix, this._testScaleAmount[0], this._testScaleAmount[1], this._testScaleAmount[2]);
+
+            // Adjust origin. How does this actually adjust the rotation point? Can't seem to get it working?
+            // matrix = Mat4.translate(matrix, 150, 150, 150);
+
+            this.context.uniformMatrix4fv(this._matrixUniformLocation, false, matrix);
 
             let primitiveType: number = this.context.TRIANGLES;
             let drawOffset: number = 0;
             let drawCount: number = 6; // square from two triangles would be 6.
-    
-            // Set uniforms
-            this.context.uniform4f(this._colorUniformLocation, 1, 1, 1, 1); // color
-            this.context.uniform2fv(this._translationUniformLocation, this._testTranslationAmount);
-            this.context.uniform2fv(this._rotationUniformLocation, this._testRotationAmount);
-
             this.context.drawArrays(primitiveType, drawOffset, drawCount);
         });
     }
+
+    // public drawImage(texture: WebGLTexture, textureWidth: number, textureHeight: number, destinationX: number, destinationY: number): void {
+    //     this.context.bindTexture(this.context.TEXTURE_2D);
+
+    //     this.context.useProgram(this._imageProgram);
+
+    //     this.context.bindBuffer(this.context.ARRAY_BUFFER, positionBuffer);
+    //     this.context.enableVertexAttribArray(positionLocation);
+    //     this.context.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+    //     this.context.bindBuffer(this.context.ARRAY_BUFFER, texcoordBuffer);
+    //     this.context.enableVertexAttribArray(texcoordLocation);
+    //     this.context.vertexAttribPointer(texcoordLocation, 2, gl.FLOAT, false, 0, 0);
+
+    //     // this matrix will convert from pixels to clip space
+    //     var matrix = Mat3.orthographic(0, gl.canvas.width, gl.canvas.height, 0, -1, 1);
+        
+    //     // this matrix will translate our quad to dstX, dstY
+    //     matrix = m4.translate(matrix, dstX, dstY, 0);
+        
+    //     // this matrix will scale our 1 unit quad
+    //     // from 1 unit to texWidth, texHeight units
+    //     matrix = Mat4.scale(matrix, texWidth, texHeight, 1);
+        
+    //     // Set the matrix.
+    //     this.context.uniformMatrix4fv(matrixLocation, false, matrix);
+        
+    //     // Tell the shader to get the texture from texture unit 0
+    //     this.context.uniform1i(textureLocation, 0);
+        
+    //     // draw the quad (2 triangles, 6 vertices)
+    //     gl.drawArrays(gl.TRIANGLES, 0, 6);
+    // }
 
     /**
      * Creates a shader of the given type using the shader source text.
