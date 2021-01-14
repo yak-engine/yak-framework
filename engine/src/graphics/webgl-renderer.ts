@@ -27,6 +27,8 @@ export default class WebGLRenderer extends BaseRenderer {
     
     private _positionAttributeLocation: number;
 
+    private _colorAttributeLocation: number;
+
     private _resolutionUniformLocation: WebGLUniformLocation;
 
     private _colorUniformLocation: WebGLUniformLocation;
@@ -53,6 +55,8 @@ export default class WebGLRenderer extends BaseRenderer {
 
     private _testTranslateSpeed: number = 100;
 
+    private _colorBuffer: WebGLBuffer;
+
     public async init(): Promise<void> {
         this.context = this.engineCanvas.getContext('webgl');
 
@@ -73,24 +77,24 @@ export default class WebGLRenderer extends BaseRenderer {
         // Create a new program and link the shaders.
         this._program = this._createProgram(vertextShader, fragmentShader);
 
-        // let imageVertexShaderSource: string = await (await fetch(`${this.shaderPath}/image/image-vertex-shader.glsl`)).text();
-        // let imageFragmentShaderSource: string = await (await fetch(`${this.shaderPath}/image/image-fragment-shader.glsl`)).text();
-
-        // // TODO: Refactor into basic helper method.
-        // let imageVertexShader: WebGLShader = this._createShader(this.context.VERTEX_SHADER, imageVertexShaderSource);
-        // let imageFragmentShader: WebGLShader = this._createShader(this.context.FRAGMENT_SHADER, imageFragmentShaderSource);
-
-        // // Create a new program and link the shaders.
-        // this._imageProgram = this._createProgram(imageVertexShader, imageFragmentShader);
-
         // Look where position data will go.
         this._positionAttributeLocation = this.context.getAttribLocation(this._program, 'a_position');
+        this._colorAttributeLocation = this.context.getAttribLocation(this._program, 'a_color');
+
+        this._colorBuffer = this.context.createBuffer();
+        this.context.bindBuffer(this.context.ARRAY_BUFFER, this._colorBuffer);
+
+        this.context.bufferData(this.context.ARRAY_BUFFER, new Uint8Array([
+            255, 255, 255,
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0,
+            0, 0, 0
+        ]), this.context.STATIC_DRAW);
 
         // Looks up uniforms for shader.
         // Do this on init not in the render loop.
-        // this._translationUniformLocation = this.context.getUniformLocation(this._program, 'u_translation');
-        // this._rotationUniformLocation = this.context.getUniformLocation(this._program, 'u_rotation');
-        // this._scaleUniformLocation = this.context.getUniformLocation(this._program, 'u_scale');
         this._colorUniformLocation = this.context.getUniformLocation(this._program, 'u_color');
         this._resolutionUniformLocation = this.context.getUniformLocation(this._program, 'u_resolution');
         this._matrixUniformLocation = this.context.getUniformLocation(this._program, 'u_matrix');
@@ -104,29 +108,14 @@ export default class WebGLRenderer extends BaseRenderer {
             80, 30, 0
         ]);
 
-        this._createDrawable([
-            100, 200, 0,
-            800, 200, 0,
-            100, 300, 0,
-            100, 300, 0,
-            800, 200, 0,
-            800, 300, 0
-        ]);
-
-        // this._positionBuffer = this.context.createBuffer();
-        // this.context.bindBuffer(this.context.ARRAY_BUFFER, this._positionBuffer);
-
-        // // This javascript array will be converted to a strongly type Float32Array for WebGL since it excepts a strongly typed array.
-        // let positions: number[] = [
-        //     10, 20,
-        //     80, 20,
-        //     10, 30,
-        //     10, 30,
-        //     80, 20,
-        //     80, 30,
-        // ];
-
-        // this.context.bufferData(this.context.ARRAY_BUFFER, new Float32Array(positions), this.context.STATIC_DRAW);
+        // this._createDrawable([
+        //     100, 200, 0,
+        //     800, 200, 0,
+        //     100, 300, 0,
+        //     100, 300, 0,
+        //     800, 200, 0,
+        //     800, 300, 0
+        // ]);
     }
 
     private _createDrawable(positions: number[]): void {
@@ -202,6 +191,20 @@ export default class WebGLRenderer extends BaseRenderer {
             let offset: number = 0; // start at the beginning of the buffer
     
             this.context.vertexAttribPointer(this._positionAttributeLocation, size, type, normalize, stride, offset);
+
+            // TODO: Should this be done in each iteration? Or before?
+            // Enable position attribute in vertext shader. So WebGL can use the data we set in the ARRAY_BUFFER.
+            this.context.enableVertexAttribArray(this._colorAttributeLocation);
+
+            this.context.bindBuffer(this.context.ARRAY_BUFFER, this._colorBuffer);
+
+            let cSize: number = 3; // 2 components per iteration -> 3 for orthographic.
+            let cType = this.context.UNSIGNED_BYTE; // the data is 32bit floats
+            let cNormalize: boolean = false; // don't normalize the data
+            let cStride: number = 0; // 0 = move forward size * sizeof(type) each iteration to get the next position
+            let cOffset: number = 0; // start at the beginning of the buffer
+    
+            this.context.vertexAttribPointer(this._colorAttributeLocation, cSize, cType, cNormalize, cStride, cOffset);
     
             // Set uniforms
             this.context.uniform4f(this._colorUniformLocation, 1, 1, 1, 1); // color
