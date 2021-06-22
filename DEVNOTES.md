@@ -1,0 +1,2 @@
+- [ ] Get component with scriptable entity. // entity.getComponent(ShipGeneratorController)?
+    - [ ] When that is fixed update the collision system code to properly grab the related scripts

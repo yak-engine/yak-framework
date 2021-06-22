@@ -1,0 +1,84 @@
+.modal-overlay {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, .8);
+    flex-direction: row;
+    justify-content: center;
+    display: none;
+    pointer-events: none;
+
+    &.open {
+        display: flex;
+        pointer-events: auto;
+    }
+
+    .modal {
+        background-color: #282828;
+        display: flex;
+        flex-direction: column;
+        align-self: center;
+        width: 700px;
+
+        &.modal-sm {
+            width: 350px;
+        }
+
+        .modal-header {
+            // border-bottom: 2px solid $color-divider;
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            padding: $padding-default;
+            font-weight: 100;
+            
+            .modal-title {
+                font-size: 24px;
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+            }
+
+            .modal-actions {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                > button, > div[role="button"] {
+                    margin-right: 10px;
+                }
+
+                > :last-child {
+                    margin-right: 0;
+                }
+            }
+        }
+        
+        .modal-content {
+            padding: $padding-default;
+            overflow-y: auto;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid $color-divider;
+            padding: $padding-default;
+
+            .dangerous-action {
+                &:hover {
+                    outline: 1px solid $color-red;
+                }
+            }
+        }
+
+        &.modal-fullscreen {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+
+            .modal-content {
+                flex-grow: 1;
+            }
+        }
+    }
+}
+  
