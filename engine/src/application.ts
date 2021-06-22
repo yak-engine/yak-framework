@@ -70,7 +70,7 @@ export default abstract class Application {
      * @author NSSure
      * @since 11/8/2020
      */
-    public async start(renderType?: string): Promise<void> {
+    public async init(renderType?: string): Promise<void> {
         if (!renderType) {
             renderType = 'canvas';
         }
