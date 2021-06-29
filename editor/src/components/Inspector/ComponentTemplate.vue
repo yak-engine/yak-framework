@@ -21,9 +21,9 @@ import ColliderComponent from './ColliderComponent.vue';
 import MaterialComponent from './MaterialComponent.vue';
 import SpriteRendererComponent from './SpriteRendererComponent.vue';
 import TilemapComponent from './TilemapComponent.vue';
-import Entity from '../../../../engine/src/components/entity';
 import BaseComponent from '../BaseComponent';
-import EngineComponent from '../../../../engine/src/components/Component';
+import EngineComponent from '../../../../engine/src/components/component';
+import Entity from '../../../../engine/src/models/entity';
 
 @Component({
     components: {

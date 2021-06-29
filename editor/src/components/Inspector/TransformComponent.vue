@@ -24,10 +24,7 @@
 <script lang="ts">
 
 import { Component, Prop, Vue } from "vue-property-decorator";
-import Entity from "../../../../engine/src/components/entity";
-import EntityManager from "../../../../engine/src/components/EntityManager";
-import EngineTransformComponent from "../../../../engine/src/components/transform/TransformComponent";
-import Transform from "../../../../engine/src/primitives/transform";
+import EngineTransformComponent from "../../../../engine/src/components/TransformComponent";
 
 @Component
 export default class TransformComponent extends Vue {

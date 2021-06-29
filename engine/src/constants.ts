@@ -1,20 +1,29 @@
-import CameraComponent from "./components/camera/CameraComponent";
-import ColliderComponent from "./components/collider/ColliderComponent";
-import Component from "./components/Component";
-import ImageComponent from "./components/image/ImageComponent";
-import MaterialComponent from "./components/material/MaterialComponent";
-import SpriteRendererComponent from "./components/sprite-renderer/SpriteRendererComponent";
-import TagComponent from "./components/tag/TagComponent";
-import TransformComponent from "./components/transform/TransformComponent";
+import CameraComponent from "./components/CameraComponent";
+import ColliderComponent from "./components/ColliderComponent";
+import ImageComponent from "./components/ImageComponent";
+import MaterialComponent from "./components/MaterialComponent";
+import ScriptComponent from "./components/ScriptComponent";
+import SpriteRendererComponent from "./components/SpriteRendererComponent";
+import TagComponent from "./components/TagComponent";
+import TransformComponent from "./components/TransformComponent";
 
 export default class Constants {
-    public static componentTypes: typeof Component[] = [
+    /**
+     * The types of all of the available components.
+     */
+    public static componentTypes: any[] = [
         TagComponent,
         TransformComponent,
         SpriteRendererComponent,
         MaterialComponent,
         ColliderComponent,
         CameraComponent,
-        ImageComponent
-    ]
+        ImageComponent,
+        ScriptComponent
+    ];
+
+    /**
+     * Valid characters.
+     */
+    public static characters: string = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
 }

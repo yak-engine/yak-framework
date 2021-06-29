@@ -37,10 +37,9 @@
 <script lang="ts">
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import { Action, State } from 'vuex-class';
-import CameraComponent from '../../../engine/src/components/camera/CameraComponent';
-import Entity from '../../../engine/src/components/entity';
-import EntityManager from '../../../engine/src/components/EntityManager';
-import TagComponent from '../../../engine/src/components/tag/TagComponent';
+import TagComponent from '../../../engine/src/components/TagComponent';
+import EntityManager from '../../../engine/src/entity-manager';
+import Entity from '../../../engine/src/models/entity';
 import Modal from './Modal.vue';
 
 @Component({
@@ -76,7 +75,7 @@ export default class SceneHierarchy extends Vue {
 	getName(entity: Entity): string {
 		console.log(entity);
 
-		let tagComponent: TagComponent = entity.getComponent<TagComponent>(TagComponent);
+		let tagComponent = entity.getComponent<TagComponent>(TagComponent);
 		
 		if (tagComponent) {
 			return tagComponent.name.charAt(0).toUpperCase() + tagComponent.name.slice(1);

@@ -1,4 +1,4 @@
-import Entity from "../components/entity";
+import Entity from "../models/entity";
 
 export default abstract class System {
     /**

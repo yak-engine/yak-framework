@@ -1,4 +1,4 @@
-import Entity from "../components/entity";
+import Entity from "../models/entity";
 import HoverState from "./states/hover-state";
 import Thickness from "./thickness";
 

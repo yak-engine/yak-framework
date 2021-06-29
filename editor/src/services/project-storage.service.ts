@@ -1,6 +1,6 @@
 import Project from '@/models/project';
 import AppDataService from './app-data.service';
-import ApplicationConfig from '../../../engine/src/models/application-config';
+import Manifest from '../../../engine/src/models/manifest';
 import SettingsStorageService from './settings-storage.service';
 import EditorSettings from '@/models/editor-settings';
 
@@ -33,7 +33,7 @@ export default class ProjectStorageService extends AppDataService {
                 }
             });
 
-            let defaultEngineConfig: ApplicationConfig = new ApplicationConfig();
+            let defaultEngineConfig: Manifest = new Manifest();
 
             defaultEngineConfig.name = 'default';
             defaultEngineConfig.scenes = [];
@@ -43,15 +43,16 @@ export default class ProjectStorageService extends AppDataService {
     }
 
     public open(projectPath: string, isImport: boolean = false): Project {
-        let engineConfigPath: string = path.join(projectPath, 'application.json');
+        let engineConfigPath: string = path.join(projectPath, 'manifest.json');
 
         if (!fs.existsSync(engineConfigPath)){
-            throw "Not a valid project folder.";
+            console.error(engineConfigPath);
+            throw `Not a valid project folder.`;
         }
 
-        let engineConfig = yaml.safeLoad(fs.readFileSync(engineConfigPath, 'utf8'));
+        let manifest = yaml.safeLoad(fs.readFileSync(engineConfigPath, 'utf8'));
 
-        if (!engineConfig) {
+        if (!manifest) {
             throw "Engine config does not exist cannot open folder.";
         }
 
@@ -65,7 +66,7 @@ export default class ProjectStorageService extends AppDataService {
                 let project = new Project();
     
                 project.path = path;
-                project.engineConfig = engineConfig;
+                project.manifest = manifest;
     
                 this.create(project, true);
 
@@ -73,7 +74,7 @@ export default class ProjectStorageService extends AppDataService {
             }
         }
         else {
-            existingProject.engineConfig = engineConfig;
+            existingProject.manifest = manifest;
         }
 
         let settingsStorageService: SettingsStorageService = new SettingsStorageService();

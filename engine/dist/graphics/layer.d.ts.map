@@ -1,0 +1,1 @@
+{"version":3,"file":"layer.d.ts","sourceRoot":"","sources":["../../src/graphics/layer.ts"],"names":[],"mappings":"AAAA;;GAEG;AACH,MAAM,CAAC,OAAO,OAAO,KAAK;IACtB;;OAEG;IACH,IAAI,EAAE,MAAM,CAAC;IAEb;;OAEG;IACH,OAAO,EAAE,OAAO,CAAQ;IAExB;;OAEG;IACH,MAAM,EAAE,OAAO,CAAS;IAExB;;OAEG;IACH,KAAK,EAAE,MAAM,CAAC;CACjB"}

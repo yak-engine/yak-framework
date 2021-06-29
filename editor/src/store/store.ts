@@ -4,7 +4,7 @@ import Project from '@/models/project';
 import SceneStorageService from '@/services/scene-storage.service';
 import Vue from 'vue';
 import Vuex from 'vuex';
-import Entity from '../../../engine/src/components/entity';
+import Entity from '../../../engine/src/models/entity';
 import Scene from '../../../engine/src/models/scene';
 
 Vue.use(Vuex);

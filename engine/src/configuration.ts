@@ -1,4 +1,4 @@
-import ApplicationConfig from "./models/application-config";
+import Manifest from "./models/manifest";
 
 /**
  * Contains configuration options for the application instance.
@@ -10,7 +10,7 @@ export default class Configuration {
     /**
      * Loaded resource.
      */
-    public static engineConfig: ApplicationConfig = null;
+    public static engineConfig: Manifest = null;
 
     public static width: number;
 

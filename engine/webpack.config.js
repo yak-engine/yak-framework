@@ -2,6 +2,8 @@ const path = require('path');
 
 module.exports = {
     entry: './src/application.ts',
+    devtool: "inline-source-map",
+    mode: "development",
     devServer: {
         contentBase: path.join(__dirname, 'dist'),
         compress: true,
@@ -19,8 +21,12 @@ module.exports = {
     resolve: {
         extensions: ['.tsx', '.ts', '.js'],
     },
+    optimization: {
+        minimize: false
+    },
     output: {
         filename: 'engine.js',
-        path: path.join(__dirname, '../editor/public/preview'),
+        path: path.join(__dirname, 'dist')
+        // path: path.join(__dirname, '../editor/public/preview'),
     }
 };

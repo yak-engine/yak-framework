@@ -1,0 +1,1 @@
+{"version":3,"file":"TransformComponent.d.ts","sourceRoot":"","sources":["TransformComponent.ts"],"names":[],"mappings":"AAAA,OAAO,SAAS,MAAM,yBAAyB,CAAC;AAChD,OAAO,SAAS,MAAM,aAAa,CAAC;AAEpC,MAAM,CAAC,OAAO,OAAO,kBAAmB,SAAQ,SAAS;IACrD,SAAS,EAAE,SAAS,CAAC;gBAET,SAAS,CAAC,EAAE,SAAS;CAIpC"}

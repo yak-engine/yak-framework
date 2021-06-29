@@ -1,7 +1,7 @@
-import Entity from "../../components/entity";
-import ManagerFactory from "../../components/ManagerFactory";
-import ScriptComponent from "../../components/script/ScriptComponent";
-import ScriptComponentManager from "../../components/script/ScriptComponentManager";
+import ScriptComponentManager from "../../components/managers/ScriptComponentManager";
+import ScriptComponent from "../../components/ScriptComponent";
+import ManagerFactory from "../../manager-factory";
+import Entity from "../../models/entity";
 import System from "../system";
 
 export default class ScriptSystem extends System {

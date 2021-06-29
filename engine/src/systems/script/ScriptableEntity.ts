@@ -1,5 +1,5 @@
 import Component from "../../components/Component";
-import Entity from "../../components/entity";
+import Entity from "../../models/entity";
 
 /**
  * User inherits this on the script classes.

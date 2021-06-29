@@ -1,4 +1,4 @@
-import Entity from "../components/entity";
+import Entity from "../models/entity";
 import Transform from "../primitives/transform";
 
 export default class Sprite extends Entity {

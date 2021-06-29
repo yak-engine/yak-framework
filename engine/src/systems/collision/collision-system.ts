@@ -1,12 +1,11 @@
-import ColliderComponent from '../../components/collider/ColliderComponent';
-import ColliderComponentManager from '../../components/collider/ColliderComponentManager';
-import Entity from '../../components/entity';
-import ManagerFactory from '../../components/ManagerFactory';
-import ScriptComponent from '../../components/script/ScriptComponent';
-import TransformComponent from '../../components/transform/TransformComponent';
+import ColliderComponent from '../../components/ColliderComponent';
+import ColliderComponentManager from '../../components/managers/ColliderComponentManager';
+import ScriptComponent from '../../components/ScriptComponent';
+import TransformComponent from '../../components/TransformComponent';
+import ManagerFactory from '../../manager-factory';
+import Entity from '../../models/entity';
 import Transform from '../../primitives/transform';
 import System from '../system';
-
 import { CollisionDirection } from './collision-direction';
 
 export default class CollisionSystem extends System {
@@ -140,7 +139,7 @@ export default class CollisionSystem extends System {
 			if (this.currentEntityCollisions.has(sourceEntity.id) && this.currentEntityCollisions.get(sourceEntity.id).indexOf(targetEntity.id) !== -1) {
 				this.currentEntityCollisions.delete(sourceEntity.id);
 
-				ManagerFactory.get(ScriptComponent.name).instances
+				(<any>ManagerFactory.get(ScriptComponent.name)).instances;
 
 				sourceEntity.getScriptInstances().forEach((scriptInstance) => {
 					if (scriptInstance.instance && scriptInstance.instance.onTriggerEnter) {

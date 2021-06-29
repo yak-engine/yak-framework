@@ -1,0 +1,1 @@
+{"version":3,"file":"ui-fragments-renderer.d.ts","sourceRoot":"","sources":["../../src/ui/ui-fragments-renderer.ts"],"names":[],"mappings":"AAAA,OAAO,YAAY,MAAM,oCAAoC,CAAC;AAE9D,MAAM,CAAC,OAAO,OAAO,mBAAmB;IACpC,QAAQ,EAAE,YAAY,CAAC;gBAEX,MAAM,EAAE,YAAY;IAIzB,GAAG,IAAI,IAAI;IAKlB,OAAO,CAAC,IAAI;CA2Df"}

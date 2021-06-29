@@ -1,8 +1,8 @@
 import Transform from "../../../../engine/src/primitives/transform";
 import IGizmo from './i-gizmo';
 import Runnable from '../runnable';
-import Entity from "../../../../engine/src/components/entity";
-import TransformComponent from "../../../../engine/src/components/transform/TransformComponent";
+import Entity from "../../../../engine/src/models/entity";
+import TransformComponent from "../../../../engine/src/components/TransformComponent";
 
 export default class TransformGizmo extends Runnable implements IGizmo {
     transform: Transform;

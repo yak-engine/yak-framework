@@ -1,53 +1,54 @@
 enum LogThreshold {
     NONE = 0,
-    DEBUG = 1,
-    INFO = 2,
-    ERROR = 3,
-    CRITICAL = 4
+    DATA = 1,
+    DEBUG = 2,
+    INFO = 3,
+    ERROR = 4,
+    CRITICAL = 5
 }
 
 class Logger {
-    static threshold: LogThreshold = LogThreshold.DEBUG;
+    static thresholds: LogThreshold[] = [LogThreshold.DATA, LogThreshold.DEBUG, LogThreshold.INFO, LogThreshold.ERROR, LogThreshold.CRITICAL];
 
     static debug(msg: string): void {
-        if (this.threshold != LogThreshold.DEBUG) {
+        if (!this.thresholds.includes(LogThreshold.DEBUG)) {
             return;
         }
 
-        console.log(`[DEBUG]: ${msg}`);
+        console.log(`[YAK DEBUG]: ${msg}`);
     }
 
-    static info(msg: string): void {
-        if (this.threshold > LogThreshold.INFO) {
+    static info(msg: string, source: string): void {
+        if (!this.thresholds.includes(LogThreshold.INFO)) {
             return;
         }
 
-        console.info(`[INFO]: ${msg}`);
+        console.info(`%c [YAK INFO - ${source}]: ${msg}`, 'background: #222; color: #bada55');
     }
 
     static error(msg: string): void {
-        if (this.threshold > LogThreshold.ERROR) {
+        if (!this.thresholds.includes(LogThreshold.ERROR)) {
             return;
         }
 
-        console.error(`[ERROR]: ${msg}`);
+        console.error(`[YAK ERROR]: ${msg}`);
     }
 
     static critical(msg: string): void {
-        if (this.threshold > LogThreshold.CRITICAL) {
+        if (!this.thresholds.includes(LogThreshold.CRITICAL)) {
             return;
         }
 
-        console.error(`[CRITICAL]: ${msg}`);
+        console.error(`[YAK CRITICAL]: ${msg}`);
     }
 
-    static data(data: any): void {
-        if (this.threshold < LogThreshold.DEBUG) {
+    static data(msg: string, data: any): void {
+        if (!this.thresholds.includes(LogThreshold.DATA)) {
             return;
         }
 
-        console.log(data);
+        console.log(`%c [YAK DATA]: ${msg}`, 'background: #222; color: #bada55', data);
     }
 }
 
-export { Logger };
+export { Logger, LogThreshold };

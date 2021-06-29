@@ -1,0 +1,1 @@
+{"version":3,"file":"screen-to-world.js","sourceRoot":"","sources":["../../src/helpers/screen-to-world.ts"],"names":[],"mappings":"AAEA,MAAM,CAAC,OAAO,UAAU,aAAa,CAAC,MAAc,EAAE,CAAS,EAAE,CAAS;IACtE,OAAO,EAAC,CAAC,EAAE,CAAC,GAAG,MAAM,CAAC,QAAQ,CAAC,CAAC,EAAE,CAAC,EAAE,CAAC,GAAG,MAAM,CAAC,QAAQ,CAAC,CAAC,EAAC,CAAC;AAC9D,CAAC"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"editor-image-source.d.ts","sourceRoot":"","sources":["../../src/graphics/editor-image-source.ts"],"names":[],"mappings":"AAAA,OAAO,SAAS,MAAM,yBAAyB,CAAC;AAEhD,MAAM,CAAC,OAAO,OAAO,iBAAiB;IAClC,SAAS,EAAE,SAAS,CAAmB;IACvC,SAAS,EAAE,MAAM,CAAC;CACrB"}

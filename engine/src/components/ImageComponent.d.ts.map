@@ -1,0 +1,1 @@
+{"version":3,"file":"ImageComponent.d.ts","sourceRoot":"","sources":["ImageComponent.ts"],"names":[],"mappings":"AAAA,OAAO,SAAS,MAAM,aAAa,CAAC;AAEpC,MAAM,CAAC,OAAO,OAAO,cAAe,SAAQ,SAAS;IACjD,MAAM,EAAE,MAAM,CAAC;gBAEH,MAAM,CAAC,EAAE,MAAM;CAI9B"}

@@ -1,5 +1,5 @@
-import ColliderComponent from "../../../../engine/src/components/collider/ColliderComponent";
-import Entity from "../../../../engine/src/components/entity";
+import ColliderComponent from "../../../../engine/src/components/ColliderComponent";
+import Entity from "../../../../engine/src/models/entity";
 import Transform from "../../../../engine/src/primitives/transform";
 import Runnable from "../runnable";
 import IGizmo from "./i-gizmo";

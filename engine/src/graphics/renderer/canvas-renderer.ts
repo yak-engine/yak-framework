@@ -3,13 +3,16 @@ import Transform from "../../primitives/transform";
 import Layer from "../layer";
 import Tileset from "../tileset";
 import Camera from "../camera";
-import SpriteRendererComponent from "../../components/sprite-renderer/SpriteRendererComponent";
-import MaterialComponent from "../../components/material/MaterialComponent";
-import TransformComponent from "../../components/transform/TransformComponent";
+import SpriteRendererComponent from "../../components/SpriteRendererComponent";
+import MaterialComponent from "../../components/MaterialComponent";
+import TransformComponent from "../../components/TransformComponent";
 import BaseRenderer from "./base-renderer";
 import Scene from "../../models/scene";
-import ManagerFactory from "../../components/ManagerFactory";
-import SpriteRendererComponentManager from "../../components/sprite-renderer/SpriteRendererComponentManager";
+import ManagerFactory from "../../manager-factory";
+import SpriteRendererComponentManager from "../../components/managers/SpriteRendererComponentManager";
+import TilemapComponent from "../../components/TilemapComponent";
+import TilemapComponentManager from "../../components/managers/TilemapComponentManager";
+import { Logger } from "../../logging/logger";
 
 export default class CanvasRenderer extends BaseRenderer  {
     /**
@@ -41,13 +44,26 @@ export default class CanvasRenderer extends BaseRenderer  {
      * Default constructor.
      */
     constructor(scene: Scene, tilesets: Tileset[]) {
-        super(scene, tilesets);
+        super();
+
+        this.scene = scene;
+        this.tilesets = tilesets;
+
+        if (!this.scene) {
+            throw "You cannot initialize the renderer without a scene.";
+        }
+
+        if (!this.tilesets || this.tilesets.length === 0) {
+            throw "You cannot initialize the renderer without any tilesets.";
+        }
     }
 
     /**
      * Initializes the canvas for the renderer.
      */
     public init() {
+        Logger.info('Started initializing canvas renderer', CanvasRenderer.name);
+
         this.engineCanvas = <HTMLCanvasElement>document.querySelector('#engine-canvas');
         this.context = <CanvasRenderingContext2D>this.engineCanvas.getContext('2d');
 
@@ -58,6 +74,8 @@ export default class CanvasRenderer extends BaseRenderer  {
         // Initialize the camera for the renderer.
         this.mainCamera.viewport = new Transform(0, 0, this.getCanvasWidth(), this.getCanvasHeight());
         this.mainCamera.max = new Point((this.scene.columns * this.scene.tileSize) - this.mainCamera.viewport.width, (this.scene.rows * this.scene.tileSize) - this.mainCamera.viewport.height);
+
+        Logger.info('Finished initializing canvas renderer', CanvasRenderer.name);
     }
 
     /**
@@ -84,7 +102,37 @@ export default class CanvasRenderer extends BaseRenderer  {
         this.scene.layers.forEach((layer: Layer, index: number) => {
             if (layer.enabled) {
                 // Render the tilemap sprites for the current layer.
+                let tilemapManager = ManagerFactory.get(TilemapComponent.name) as TilemapComponentManager;
 
+                tilemapManager.instances.forEach((tilemapInstance: TilemapComponent) => {
+                    var startCol = 0; // Math.floor(camera.viewport.x / this.scene.tileSize);
+                    var endCol = 64; // startCol + (camera.viewport.width / this.scene.tileSize) + 1;
+                    var startRow = 0; // Math.floor(camera.viewport.y / this.scene.tileSize);
+                    var endRow = 64; // startRow + (camera.viewport.height / this.scene.tileSize) + 1;
+                    var offsetX = 0; // -camera.viewport.x + startCol * this.scene.tileSize;
+                    var offsetY = 0; // -camera.viewport.y + startRow * this.scene.tileSize;
+
+                    for (let col = startCol; col <= endCol; col++) {
+                        for (let row = startRow; row <= endRow; row++) {
+                            let sprite: number = tilemapInstance.tiles[row * 64 + col]; // this.scene.columns
+
+                            var x = (col - startCol) * 32 + offsetX; // this.scene.tileSize
+                            var y = (row - startRow) * 32 + offsetY; // this.scene.tileSize
+
+                            this.context.drawImage(
+                                this.tilesets[tilemapInstance.tilesetIndex].image, //this.tilesets[layer.tileset].image,
+                                sprite * 32,
+                                0,
+                                32,
+                                32,
+                                Math.round(x),
+                                Math.round(y),
+                                32,
+                                32
+                            );
+                        }
+                    }
+                });
 
                 // Render any standalone sprites for the current layer.
                 let spriteManager = ManagerFactory.get(SpriteRendererComponent.name) as SpriteRendererComponentManager;
@@ -100,7 +148,7 @@ export default class CanvasRenderer extends BaseRenderer  {
                     }
 
                     this.context.drawImage(
-                        this.tilesets[spriteRenderer.tilesetIndex].image,// this.tilesets[spriteRendererComponent.layer].image,
+                        this.tilesets[0].image,// this.tilesets[spriteRendererComponent.layer].image,
                         spriteRenderer.column * this.scene.tileSize,
                         spriteRenderer.row * this.scene.tileSize,
                         this.scene.tileSize,

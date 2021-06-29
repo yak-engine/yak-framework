@@ -26,6 +26,9 @@ export default class Scene {
       */
      tilesets: Array<string> = new Array();
 
+     /**
+      * The tilemap for the current scene.
+      */
      tilemap: any = {};
  
      /**

@@ -1,6 +1,7 @@
 import BaseRenderer from "./base-renderer";
 import Mat4 from "../Mat4";
 import Tileset from "../tileset";
+import Scene from "../../models/scene";
 
 class Drawable {
     buffer: WebGLBuffer;
@@ -12,7 +13,11 @@ class Image {
 }
 
 export default class WebGLRenderer extends BaseRenderer {
-    tilesets: Tileset[] = [];
+    public scene: Scene;
+
+    public engineCanvas: HTMLCanvasElement;
+
+    public tilesets: Tileset[] = [];
 
     /**
      * The 2D rendering context for the default canvas.
@@ -56,6 +61,13 @@ export default class WebGLRenderer extends BaseRenderer {
     private _testTranslateSpeed: number = 100;
 
     private _colorBuffer: WebGLBuffer;
+
+    constructor(scene: Scene, tilesets: Tileset[]) {
+        super();
+
+        this.scene = scene;
+        this.tilesets = tilesets;
+    }
 
     public async init(): Promise<void> {
         this.context = this.engineCanvas.getContext('webgl');

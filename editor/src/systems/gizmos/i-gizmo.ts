@@ -1,4 +1,4 @@
-import Entity from "../../../../engine/src/components/entity";
+import Entity from "../../../../engine/src/models/entity";
 import Transform from "../../../../engine/src/primitives/transform";
 
 export default interface IGizmo {

@@ -27,13 +27,13 @@
 import { Component, Vue, Watch } from 'vue-property-decorator';
 import ComponentTemplate from './Inspector/ComponentTemplate.vue';
 import Modal from './Modal.vue';
-import Entity from '../../../engine/src/components/entity';
 import Constants from '../../../engine/src/constants';
 import { State } from 'vuex-class';
-import EngineMaterialComponent from '../../../engine/src/components/material/MaterialComponent';
-import EntityManager from '../../../engine/src/components/EntityManager';
-import BaseComponent from '../../../engine/src/components/Component';
+import EngineMaterialComponent from '../../../engine/src/components/MaterialComponent';
+import BaseComponent from '../../../engine/src/components/component';
 import Scene from '../../../engine/src/models/scene';
+import Entity from '../../../engine/src/models/entity';
+import EntityManager from '../../../engine/src/entity-manager';
 
 @Component({
 	components: {

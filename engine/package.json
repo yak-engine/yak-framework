@@ -1,8 +1,9 @@
 {
-  "name": "engine",
-  "version": "1.0.0",
+  "name": "yak-engine",
+  "version": "0.0.4",
+  "main": "dist/engine.js",
+  "types": "dist/application.d.ts",
   "description": "",
-  "main": "webpack.config.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "watch": "webpack --watch"

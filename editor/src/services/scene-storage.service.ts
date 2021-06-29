@@ -1,4 +1,4 @@
-import EntityManager from '../../../engine/src/components/EntityManager';
+import EntityManager from '../../../engine/src/entity-manager';
 import Layer from '../../../engine/src/graphics/layer';
 import Scene from '../../../engine/src/models/scene';
 

@@ -1,4 +1,4 @@
-import Entity from "../../components/entity";
+import Entity from "../../models/entity";
 import Point from "../../primitives/Point";
 import Transform from "../../primitives/transform";
 

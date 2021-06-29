@@ -5,30 +5,17 @@ export default abstract class BaseRenderer {
     /**
      * The canvas to render the current scene to.
      */
-    engineCanvas: HTMLCanvasElement;
+    public abstract engineCanvas: HTMLCanvasElement;
 
     /**
      * The current scene to render.
      */
-    scene: Scene;
+    public abstract scene: Scene;
 
     /**
      * The tilesets to use for the current scene.
      */
-    tilesets: Tileset[] = [];
-
-    constructor(scene: Scene, tilesets: Tileset[]) {
-        this.scene = scene;
-        this.tilesets = tilesets;
-
-        if (!this.scene) {
-            throw "You cannot initialize the renderer without a scene.";
-        }
-
-        if (!this.tilesets || this.tilesets.length === 0) {
-            throw "You cannot initialize the renderer without any tilesets.";
-        }
-    }
+    public abstract tilesets: Tileset[] = [];
 
     /**
      * Called when the application loads.

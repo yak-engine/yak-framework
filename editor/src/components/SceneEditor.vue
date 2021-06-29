@@ -48,30 +48,29 @@ import TilemapPalette from './TilemapPalette.vue';
 import SceneService from '../services/scene.service';
 import SceneStorageService from '../services/scene-storage.service';
 
-import EntityManager from '../../../engine/src/components/EntityManager';
-import Entity from '../../../engine/src/components/entity';
-
 // Vuex.
 import { Action, State } from 'vuex-class';
-import ManagerFactory from '../../../engine/src/components/ManagerFactory';
-import CameraComponent from '../../../engine/src/components/camera/CameraComponent';
-import ColliderComponent from '../../../engine/src/components/collider/ColliderComponent';
-import ImageComponent from '../../../engine/src/components/image/ImageComponent';
-import ScriptComponent from '../../../engine/src/components/script/ScriptComponent';
-import ScriptComponentManager from '../../../engine/src/components/script/ScriptComponentManager';
-import ImageComponentManager from '../../../engine/src/components/image/ImageComponentManager';
-import ColliderComponentManager from '../../../engine/src/components/collider/ColliderComponentManager';
-import SpriteRendererComponentManager from '../../../engine/src/components/sprite-renderer/SpriteRendererComponentManager';
-import MaterialComponentManager from '../../../engine/src/components/material/MaterialComponentManager';
-import CameraComponentManager from '../../../engine/src/components/camera/CameraComponentManager';
-import TransformComponentManager from '../../../engine/src/components/transform/TransformComponentManager';
-import TagComponentManager from '../../../engine/src/components/tag/TagComponentManager';
-import TagComponent from '../../../engine/src/components/tag/TagComponent';
-import TransformComponent from '../../../engine/src/components/transform/TransformComponent';
-import MaterialComponent from '../../../engine/src/components/material/MaterialComponent';
-import SpriteRendererComponent from '../../../engine/src/components/sprite-renderer/SpriteRendererComponent';
+import ManagerFactory from '../../../engine/src/manager-factory';
+import CameraComponent from '../../../engine/src/components/CameraComponent';
+import ColliderComponent from '../../../engine/src/components/ColliderComponent';
+import ImageComponent from '../../../engine/src/components/ImageComponent';
+import ScriptComponent from '../../../engine/src/components/ScriptComponent';
+import ScriptComponentManager from '../../../engine/src/components/managers/ScriptComponentManager';
+import ImageComponentManager from '../../../engine/src/components/managers/ImageComponentManager';
+import ColliderComponentManager from '../../../engine/src/components/managers/ColliderComponentManager';
+import SpriteRendererComponentManager from '../../../engine/src/components/managers/SpriteRendererComponentManager';
+import MaterialComponentManager from '../../../engine/src/components/managers/MaterialComponentManager';
+import CameraComponentManager from '../../../engine/src/components/managers/CameraComponentManager';
+import TransformComponentManager from '../../../engine/src/components/managers/TransformComponentManager';
+import TagComponentManager from '../../../engine/src/components/managers/TagComponentManager';
+import TagComponent from '../../../engine/src/components/TagComponent';
+import TransformComponent from '../../../engine/src/components/TransformComponent';
+import MaterialComponent from '../../../engine/src/components/MaterialComponent';
+import SpriteRendererComponent from '../../../engine/src/components/SpriteRendererComponent';
 import SceneManager from '../../../engine/src/scene-manager';
-import LoadSceneReturn from '../../../engine/src/models/load-scene-return';
+import LoadSceneReturn from '../../../engine/src/models/returns/load-scene-return';
+import EntityManager from '../../../engine/src/entity-manager';
+import Entity from '../../../engine/src/models/entity';
 
 @Component({
 	components: {
@@ -115,29 +114,25 @@ export default class SceneEditor extends Vue {
         ManagerFactory.register(ImageComponent, ImageComponentManager);
         ManagerFactory.register(ScriptComponent, ScriptComponentManager);
 
-		// Configuration.RegisterManagers();
 		this.loadEditorScene(this.project.engineConfig.scenes[0]);
 	}
 
 	public async loadEditorScene(sceneName: string): Promise<void> {
 		let loadSceneRtn: LoadSceneReturn = await SceneManager.load(sceneName, this.project.path);
 
+		console.log(loadSceneRtn);
+
 		this.setEntity(EntityManager.getInstance().entities[1]);
 		this.setScene(loadSceneRtn.scene);
 
 		this.editorRenderer = new EditorRenderer();
 
-		this.editorRenderer.scene = this.scene;
+		this.editorRenderer.scene = loadSceneRtn.scene;
+		this.editorRenderer.tilesets = loadSceneRtn.tilesets;
 		this.editorRenderer.setSelectedEntity(this.entity);
 		this.editorRenderer.init();
 
 		window.requestAnimationFrame((time: number) => this.mainLoop(time));
-	}
-
-	updateScene(): void {
-		// EditorGlobal.sceneService.updateScene(EditorGlobal.scene).then((response) => {
-		//   console.log(response);
-		// })
 	}
 
 	onEntitySelected(entity: Entity): void {
@@ -147,11 +142,6 @@ export default class SceneEditor extends Vue {
 
 	mainLoop(time: number) {
 		window.requestAnimationFrame((time: number) => this.mainLoop(time));
-
-		// Time.calculateDeltaTime(time);
-		// Mouse.update(this.editorRenderer.mousePosition);
-
-		this.editorRenderer.update();
 		this.editorRenderer.draw();
 	}
 }

@@ -1,0 +1,1 @@
+{"version":3,"file":"MaterialComponent.d.ts","sourceRoot":"","sources":["../../src/components/MaterialComponent.ts"],"names":[],"mappings":"AAAA,OAAO,SAAS,MAAM,aAAa,CAAC;AAEpC,MAAM,CAAC,OAAO,OAAO,iBAAkB,SAAQ,SAAS;IACpD,SAAS,EAAE,MAAM,CAAC;IAClB,KAAK,EAAE,MAAM,CAAK;gBAEN,SAAS,CAAC,EAAE,MAAM,EAAE,KAAK,CAAC,EAAE,MAAM;CAMjD"}
