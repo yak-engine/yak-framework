@@ -1,0 +1,10 @@
+{
+  "name": "Project import test",
+  "scenes": [
+     "Scene1",
+     "Scene2",
+     "Scene3",
+     "Scene4",
+     "Scene5"
+  ]
+}

@@ -9,7 +9,7 @@ export default class SceneManager {
 	public static async load(sceneName: string, baseUrl: string = ''): Promise<LoadSceneReturn> {
 		Logger.info('Started loading scene.', SceneManager.name);
 
-		let scenePath: string = `scenes\\${sceneName}.json`;
+		let scenePath: string = `${sceneName}.json`;
 
 		if (baseUrl) {
 			scenePath = `${baseUrl}\\${scenePath}`;

@@ -9,13 +9,15 @@ export default class ManagerFactory {
     }
 
     // TODO: Add type contraints.
-    public static register(componentType: typeof Component, componentManagerInstance: any): void {
-        if (!ManagerFactory.managers.has(componentType)) {
-            ManagerFactory.managers.set(componentType, componentManagerInstance);
+    public static register(componentName: string, componentManagerInstance: any): void {
+        if (!ManagerFactory.managers.has(componentName)) {
+            ManagerFactory.managers.set(componentName, componentManagerInstance);
         }
     }
 
     public static get<TComponentManager>(componentName: string): TComponentManager {
+        console.log(componentName);
+
         if (ManagerFactory.managers.has(componentName)) {
             return ManagerFactory.managers.get(componentName);
         }
