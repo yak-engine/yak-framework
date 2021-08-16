@@ -1,4 +1,5 @@
 import ComponentManager from "../../component-manager";
-export default class TransformComponentManager extends ComponentManager {
+import TransformComponent from "../TransformComponent";
+export default class TransformComponentManager extends ComponentManager<TransformComponent> {
 }
 //# sourceMappingURL=TransformComponentManager.d.ts.map

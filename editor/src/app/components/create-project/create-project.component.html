@@ -1,0 +1,18 @@
+<div class="form-section">
+    <div class="form-label">Project name</div>
+    <!-- <input type="text" name="name" [(ngModel)]="project.name" placeholder="Enter a project name" /> -->
+</div>
+
+<div class="form-section">
+    <div class="form-label">Project path</div>
+
+    <!-- @on-directory-selected="project.path = $event" -->
+    <div app-directory-dialog></div>
+</div>
+
+<div class="button-group">
+    <button type="button" class="button fill-green-darken-1 text-white" (click)="saveProject()">Save project</button>
+
+    <!-- (click)="$emit('on-new-project-cancelled')" -->
+    <button type="button" class="button fill-red-darken-1 text-white">Cancel</button>
+</div>

@@ -1,0 +1,41 @@
+<div class="settings-component" *ngIf="editorSettings && isOpen">
+    <div class="modal-overlay" [class]="{'open': isOpen}" style="z-index: 999">
+      <div class="modal">
+        <div class="modal-header flex flex-r justify-content-between">
+          <span class="modal-title">Settings</span>
+          <div class="modal-actions">
+            <div role="button" tabindex="0">
+                <i class="fa fa-close fa-lg text-red"></i>
+            </div>
+          </div>
+        </div>
+        <div class="modal-content">
+          <div class="form-section">
+            <div class="form-label">Default project path</div>
+            <span>{{editorSettings.defaultProjectPath || 'N/A'}}</span>
+            <!-- @on-directory-selected="editorSettings.defaultProjectPath = $event" -->
+            <div app-directory-dialog></div>
+          </div>
+          <div class="form-section">
+            <div class="form-label">Last project path</div>
+            <span>{{editorSettings.lastProjectPath || 'N/A'}}</span>
+          </div>
+          <div class="form-section">
+            <div class="form-label">Window state</div>
+            <input type="text" name="windowState" [(ngModel)]="editorSettings.windowState" />
+          </div>
+          <div class="form-section">
+            <div class="form-label">Window height</div>
+            <input type="number" name="windowHeight" [(ngModel)]="editorSettings.windowHeight" />
+          </div>
+          <div class="form-section">
+            <div class="form-label">Window width</div>
+            <input type="number" name="windowWidth" [(ngModel)]="editorSettings.windowWidth" />
+          </div>
+          <div class="button-group">
+            <button type="button" class="button fill-green-darken-1 text-white" (click)="save()">Save settings</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>

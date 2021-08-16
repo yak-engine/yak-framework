@@ -1,5 +1,4 @@
-import Component from "./component";
-export default class ImageComponent extends Component {
+export default class ImageComponent {
     source: string;
     constructor(source?: string);
 }

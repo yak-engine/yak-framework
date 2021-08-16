@@ -1,14 +1,13 @@
 import Entity from "./models/entity";
-import Component from "./components/component";
 interface EntityComponentMap {
     [entityId: string]: number;
 }
-export default class ComponentManager {
+export default class ComponentManager<TComponent> {
     /**
      * The component instance for the specific manager that inherits the component manager. For example
      * if the TagComponentManager is the inherting then this will contain all of the tag component instances.
      */
-    instances: Component[];
+    instances: TComponent[];
     /**
      * The component instance for the specific manager that inherits the component manager. For example
      * if the TagComponentManager is the inherting then this will contain all of the tag component instances.
@@ -24,8 +23,8 @@ export default class ComponentManager {
      * @param entity The entity to associated the component instance with.
      * @param componentInstance The component instance to associate with the entity.
      */
-    addComponentInstance(entity: Entity, componentInstance: Component): void;
-    getInstance(entity: Entity): Component;
+    addComponentInstance(entity: Entity, componentInstance: TComponent): void;
+    getInstance(entity: Entity): TComponent;
     /**
      * Dispose of the entity reference and any related data. Called when an entity is destroyed.
      * @param entity The entity to dispose of the references for.

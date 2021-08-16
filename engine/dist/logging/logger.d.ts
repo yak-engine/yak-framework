@@ -1,17 +1,18 @@
 declare enum LogThreshold {
     NONE = 0,
-    DEBUG = 1,
-    INFO = 2,
-    ERROR = 3,
-    CRITICAL = 4
+    DATA = 1,
+    DEBUG = 2,
+    INFO = 3,
+    ERROR = 4,
+    CRITICAL = 5
 }
 declare class Logger {
-    static threshold: LogThreshold;
+    static thresholds: LogThreshold[];
     static debug(msg: string): void;
-    static info(msg: string): void;
+    static info(msg: string, source: string): void;
     static error(msg: string): void;
     static critical(msg: string): void;
-    static data(data: any): void;
+    static data(msg: string, data: any): void;
 }
-export { Logger };
+export { Logger, LogThreshold };
 //# sourceMappingURL=logger.d.ts.map

@@ -1,0 +1,28 @@
+<div class="component scene-editor-component">
+    <div class="main">
+        <div class="editor-panel left">
+            <div app-scene-hierarchy *ngIf="scene"></div>
+            <div app-project-hierarchy *ngIf="scene"></div>
+        </div>
+        <div style="flex: 1; display: flex; flex-direction: column; overflow: hidden">
+            <!-- @on-scene-selected="loadEditorScene($event)" -->
+            <div app-scene-listing *ngIf="scene"></div>
+
+            <div app-scene-toolbar *ngIf="scene"></div>
+
+            <div class="canvas-container" style="min-width: 512px; overflow: auto">
+                <canvas id="editor-canvas" tabindex="-1" width="512" height="512"></canvas>
+            </div>
+
+            <div app-tilemap-palette *ngIf="scene"></div>
+        </div>
+        <div class="editor-panel right">
+            <div app-inspector *ngIf="scene"></div>
+
+            <!-- @on-layer-modified="sceneStorageService.updateLayer" -->
+            <div app-scene-layers *ngIf="scene"></div>
+        </div>
+    </div>
+
+    <div app-play *ngIf="isPlayMode"></div>
+</div>

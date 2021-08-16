@@ -1,5 +1,4 @@
-import Component from "./component";
-export default class TagComponent extends Component {
+export default class TagComponent {
     name?: string;
     constructor(name?: string);
 }

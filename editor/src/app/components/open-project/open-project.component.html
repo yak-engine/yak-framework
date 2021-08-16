@@ -1,0 +1,40 @@
+<div class="project-listing-component">
+    <div class="modal-overlay" [class]="{'open': isOpen}" style="z-index: 999">
+      <div class="modal">
+        <div class="modal-header flex flex-r justify-content-between">
+          <span class="modal-title">My Projects</span>
+          <div class="modal-actions">
+            <!-- (click)="$emit('on-new-project-clicked')" -->
+            <button type="button" class="button fill-transparent text-white text-accent-hover">
+              <i class="fa fa-plus"></i>&nbsp;New project
+            </button>
+            <button type="button" class="button fill-transparent text-white text-accent-hover" (click)="importProject()">
+              <i class="fa fa-upload"></i>&nbsp;Import
+            </button>
+
+            <!-- (click)="$emit('on-project-open-closed')" -->
+            <div role="button" tabindex="0">
+                <i class="fa fa-close fa-lg text-red"></i>
+            </div>
+          </div>
+        </div>
+        <div class="modal-content">
+          <ng-container *ngIf="projects && projects.length > 0; then loop; else empty"></ng-container>
+
+          <ng-template #loop>
+            <ul>
+              <li *ngFor="let project of projects" (click)="openProject(project.path)">
+                  <div class="project-name">{{project.name}}</div>
+                  <div class="project-path">{{project.path}}</div>
+              </li>
+          </ul>
+          </ng-template>
+          <ng-template #empty>
+            <div style="padding: 15px;">
+              <span>You have no projects</span>
+            </div>
+          </ng-template>
+        </div>
+      </div>
+    </div>
+  </div>

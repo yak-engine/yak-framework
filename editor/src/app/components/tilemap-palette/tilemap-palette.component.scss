@@ -1,0 +1,27 @@
+.tilemap-palette-component {
+	flex-basis: 300px;
+	background-color: #181818;
+	max-height: 300px;
+}
+
+ul {
+	display: grid;
+	grid-template-columns: repeat(12, 1fr);
+
+	li {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding: 5px;
+		cursor: pointer;
+	}
+}
+
+.scene-editor-panel-header {
+	padding: 0;
+	height: 47px;
+
+	.title {
+		padding: 8px 15px;
+	}
+}

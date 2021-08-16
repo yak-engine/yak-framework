@@ -1,9 +1,8 @@
-import Component from "./components/component";
 export default class Constants {
     /**
      * The types of all of the available components.
      */
-    static componentTypes: typeof Component[];
+    static componentTypes: any[];
     /**
      * Valid characters.
      */

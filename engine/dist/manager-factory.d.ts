@@ -1,10 +1,9 @@
-import Component from "./components/component";
-import ComponentManager from "./component-manager";
+import Component from "./components/Component";
 export default class ManagerFactory {
-    static managers: Map<string, ComponentManager>;
+    static managers: Map<any, any>;
     constructor();
-    static register(componentType: typeof Component, manager: typeof ComponentManager): void;
-    static get(componentName: string): ComponentManager;
+    static register(componentType: typeof Component, componentManagerInstance: any): void;
+    static get<TComponentManager>(componentName: string): TComponentManager;
     static log(): void;
 }
 //# sourceMappingURL=manager-factory.d.ts.map

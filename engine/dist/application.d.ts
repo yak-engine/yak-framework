@@ -1,6 +1,7 @@
 import Input from './graphics/input';
 import BaseRenderer from './graphics/renderer/base-renderer';
 export default abstract class Application {
+    static setType(type: any): void;
     /**
      * Contains the rendering functionality from the main loop.
      */

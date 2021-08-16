@@ -1,13 +1,17 @@
+import ComponentManager from "./component-manager";
+import Component from "./components/Component";
+
 export default class ManagerFactory {
-    public static managers: Map<string, any> = new Map();
+    public static managers: Map<any, any> = new Map();
 
     constructor() {
 
     }
 
-    public static register<TComponentManager>(componentType: string, managerInstance: TComponentManager): void {
+    // TODO: Add type contraints.
+    public static register(componentType: typeof Component, componentManagerInstance: any): void {
         if (!ManagerFactory.managers.has(componentType)) {
-            ManagerFactory.managers.set(componentType, managerInstance);
+            ManagerFactory.managers.set(componentType, componentManagerInstance);
         }
     }
 

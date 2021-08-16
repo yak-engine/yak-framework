@@ -1,0 +1,33 @@
+.play-overlay {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .play-header {
+    background: #007ACC;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    padding: 0 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .play-header .title {
+    font-size: 18px;
+  }
+  
+  .play-body {
+    flex: 1;
+  }
+  
+  iframe {
+      width: 100%;
+      height: 100%;
+  }
+  
+  .modal {
+    width: auto !important;
+    border-bottom-left-radius: 0px;
+    border-bottom-right-radius: 0px;
+  }

@@ -1,4 +1,5 @@
 import ComponentManager from "../../component-manager";
-export default class MaterialComponentManager extends ComponentManager {
+import MaterialComponent from "../MaterialComponent";
+export default class MaterialComponentManager extends ComponentManager<MaterialComponent> {
 }
 //# sourceMappingURL=MaterialComponentManager.d.ts.map

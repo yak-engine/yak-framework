@@ -1,0 +1,56 @@
+<div class="component default-component">
+  <router-outlet></router-outlet>
+  <div style="height: 100%; display: flex; flex-direction: column;" *ngIf="isLoaded">
+    <!-- @on-new-project-clicked="isAddingProject = true"
+    @on-new-scene-clicked="isAddingScene = true"
+    @on-open-project="isOpeningProject = true"
+    @on-open-settings="isOpeningSettings = true"
+    @on-open-scene-config="isOpeningSceneConfig = true" -->
+    <div app-main-menu>
+    </div>
+
+    <div app-scene-editor></div>
+
+    <div class="footer">
+      <div class="indicator" *ngIf="isExecutingSave">
+        <i class="fa fa-spinner fa-pulse"></i>
+        <span>Saving scene&hellip;</span>
+      </div>
+      <div class="version">Version 0.0.1</div>
+    </div>
+
+    <!-- Modals -->
+    <!-- <project-selection 
+      :is-open="isOpeningProject" 
+      @on-project-opened="project = $event; isOpeningProject = false;" 
+      @on-open-project-cancelled="isOpeningProject = false"
+      @on-project-open-closed="isOpeningProject = false"
+      @on-new-project-clicked="isOpeningProject = false; isAddingProject = true;">
+    </project-selection>
+
+    <settings 
+      :is-open="isOpeningSettings" 
+      @on-settings-closed="isOpeningSettings = false">
+    </settings>
+    
+    <new-project 
+      :is-open="isAddingProject" 
+      @on-new-project-saved="isAddingProject = false" 
+      @on-new-project-cancelled="isAddingProject = false">
+    </new-project>
+
+    <new-scene 
+      :is-open="isAddingScene" 
+      @on-new-scene-saved="isAddingScene = false" 
+      @on-new-scene-cancelled="isAddingScene = false">
+    </new-scene>
+
+    <modal 
+      :title="'Scene Configuration'" 
+      :is-open="isOpeningSceneConfig" 
+      @on-modal-saved="sceneInformation.setScene(sceneInformation.sceneCopy); isOpeningSceneConfig = false;" 
+      @on-modal-closed="isOpeningSceneConfig = false">
+      <scene-information ref="sceneInformation"></scene-information>
+    </modal> -->
+  </div>
+</div>

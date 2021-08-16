@@ -1,0 +1,20 @@
+<div class="transform-component" v-if="inspectorComponentData">
+    <div class="transform-values">
+      <div class="transform-value flex flex-r align-items-center">
+        <div class="form-label text-small">X</div>
+        <input type="text" name="transform-x" [(ngModel)]="inspectorComponentData.transform.x" />
+      </div>
+      <div class="transform-value flex flex-r align-items-center">
+        <div class="form-label text-small">Y</div>
+        <input type="text" name="transform-y" [(ngModel)]="inspectorComponentData.transform.y" />
+      </div>
+      <div class="transform-value flex flex-r align-items-center">
+        <div class="form-label text-small">W</div>
+        <input type="text" name="transform-width" [(ngModel)]="inspectorComponentData.transform.width" />
+      </div>
+      <div class="transform-value flex flex-r align-items-center">
+        <div class="form-label text-small">H</div>
+        <input type="text" name="transform-height" [(ngModel)]="inspectorComponentData.transform.height" />
+      </div>
+    </div>
+  </div>

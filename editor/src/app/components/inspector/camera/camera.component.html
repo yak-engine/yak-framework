@@ -1,0 +1,44 @@
+<div class="camera-component">
+    <div class="form-section">
+        <div class="component-header">Viewport</div>
+        <div class="viewport-values">
+            <div class="viewport-value flex flex-r align-items-center">
+                <div class="form-label text-small">X</div>
+                <input type="text" name="viewport-x" [(ngModel)]="inspectorComponentData.camera.viewport.x" />
+            </div>
+            <div class="viewport-value flex flex-r align-items-center">
+                <div class="form-label text-small">Y</div>
+                <input type="text" name="viewport-y" [(ngModel)]="inspectorComponentData.camera.viewport.y" />
+            </div>
+            <div class="viewport-value flex flex-r align-items-center">
+                <div class="form-label text-small">W</div>
+                <input type="text" name="viewport-width" [(ngModel)]="inspectorComponentData.camera.viewport.width" />
+            </div>
+            <div class="viewport-value flex flex-r align-items-center">
+                <div class="form-label text-small">H</div>
+                <input type="text" name="viewport-height" [(ngModel)]="inspectorComponentData.camera.viewport.height" />
+            </div>
+        </div>
+    </div>
+    <div class="form-section">
+        <div class="component-header">Max</div>
+        <div class="viewport-values">
+            <div class="viewport-value flex flex-r align-items-center">
+                <div class="form-label text-small">X</div>
+                <input type="text" name="max-x" [(ngModel)]="inspectorComponentData.camera.max.x" />
+            </div>
+            <div class="viewport-value flex flex-r align-items-center">
+                <div class="form-label text-small">Y</div>
+                <input type="text" name="max-y" [(ngModel)]="inspectorComponentData.camera.max.y" />
+            </div>
+            <div class="viewport-value flex flex-r align-items-center">
+                <div class="form-label text-small">W</div>
+                <input type="text" name="max-width" [(ngModel)]="inspectorComponentData.camera.max.width" />
+            </div>
+            <div class="viewport-value flex flex-r align-items-center">
+                <div class="form-label text-small">H</div>
+                <input type="text" name="max-height" [(ngModel)]="inspectorComponentData.camera.max.height" />
+            </div>
+        </div>
+    </div>
+</div>

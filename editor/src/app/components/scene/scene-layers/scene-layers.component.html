@@ -1,0 +1,48 @@
+<div class="scene-layers-component tree-component" *ngIf="scene.layers">
+    <div class="scene-editor-panel-header is-shadowed">
+        <span class="title">Manage Scene Layers</span>
+        <div class="actions">
+            <button type="button" (click)="toggleEditMode()">
+                <i class="fa fa-gear"></i>
+            </button>
+            <button type="button" (click)="toggleAddMode()">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <ul>
+        <li *ngFor="let layer of scene.layers; let i = index;" (click)="selectLayer(i)" [class]="{ selected: selectedIndex === i }">
+            <span (click)="toggleLayerProperty('enabled', i)" role="button" class="btn-layer-action btn-toggle-layer" aria-label="Toggle layer visibility">
+                <i class="fa" [class]="{ 'fa-eye': layer.enabled, 'fa-eye-slash': !layer.enabled }"></i>
+            </span>
+            <span (click)="toggleLayerProperty('locked', i)" role="button" class="btn-layer-action btn-lock-layer" aria-label="Lock layer for editing"> <i class="fa" [class]="{ 'fa-lock': layer.locked, 'fa-unlock': !layer.locked }"></i> </span>&nbsp;
+            <span>{{ layer.name }}</span>
+        </li>
+    </ul>
+    <div class="modal-overlay" [class]="{ open: layer }" style="z-index: 999" *ngIf="layer && isManagingLayer">
+        <div class="modal">
+            <div class="modal-header flex flex-r justify-content-between">
+                <span class="modal-title">Layer Configuration</span>
+                <div class="modal-actions">
+                    <div role="button" tabindex="0">
+                        <i class="fa fa-close fa-lg text-red"></i>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-content">
+                <div class="form-section">
+                    <div class="form-label">Layer name</div>
+                    <input type="text" [(ngModel)]="layer.name" placeholder="Enter a layer name" />
+                </div>
+                <div class="form-section">
+                    <div class="form-label">Layer order</div>
+                    <input type="text" [(ngModel)]="layer.order" placeholder="Enter the layer order" />
+                </div>
+            </div>
+            <div class="modal-footer flex justify-content-between">
+                <button type="button" class="button fill-green-darken-1 text-white" (click)="save()">Save</button>
+                <button *ngIf="layer.name" type="button" class="button fill-transparent text-red dangerous-action" (click)="remove()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>

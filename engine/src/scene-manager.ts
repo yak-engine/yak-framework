@@ -6,7 +6,7 @@ import LoadSceneReturn from './models/returns/load-scene-return';
 import { Logger } from './logging/logger';
 
 export default class SceneManager {
-	public static async load(sceneName: string, baseUrl: string = null): Promise<LoadSceneReturn> {
+	public static async load(sceneName: string, baseUrl: string = ''): Promise<LoadSceneReturn> {
 		Logger.info('Started loading scene.', SceneManager.name);
 
 		let scenePath: string = `scenes\\${sceneName}.json`;

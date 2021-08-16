@@ -1,0 +1,11 @@
+<div>
+    <ul>
+        <li *ngFor="let item of items" [class]="{'expanded': isExpanded}">
+            <div>
+                <i class="fa" [class]="{'fa-folder-o': !isExpanded, 'fa-folder-open-o': isExpanded}" (click)="isExpanded = !isExpanded"></i>&nbsp;
+                <span>{{item.title}}</span>
+            </div>
+            <div app-tree [items]="item.children" *ngIf="item.children && isExpanded"></div>
+        </li>
+    </ul>
+  </div>

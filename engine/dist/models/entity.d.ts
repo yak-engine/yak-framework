@@ -1,4 +1,3 @@
-import Component from "../components/component";
 import ScriptComponent from "../components/ScriptComponent";
 /**
  * Base object class used for sprites, colliders, primitives, etc. Contains
@@ -20,8 +19,8 @@ export default class Entity {
      * Determines if the entity should be rendered.
      */
     enabled: boolean;
-    addComponent(componentInstance: Component): void;
-    getComponent<TComponent>(componenType: any): TComponent;
+    addComponent<TComponent>(componentInstance: TComponent): void;
+    getComponent<TComponent>(componentType: any): TComponent;
     getScriptInstances(): ScriptComponent[];
     getComponentName: any;
 }

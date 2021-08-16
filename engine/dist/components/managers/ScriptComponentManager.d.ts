@@ -1,4 +1,5 @@
 import ComponentManager from "../../component-manager";
-export default class ScriptComponentManager extends ComponentManager {
+import ScriptComponent from "../ScriptComponent";
+export default class ScriptComponentManager extends ComponentManager<ScriptComponent> {
 }
 //# sourceMappingURL=ScriptComponentManager.d.ts.map

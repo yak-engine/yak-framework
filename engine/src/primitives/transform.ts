@@ -32,6 +32,8 @@ export default class Transform {
             this.x = max;
             return true;
         }
+
+        return false;
     }
 
     clampY(min: number, max: number): boolean {
@@ -44,6 +46,8 @@ export default class Transform {
             this.y = max;
             return true;
         }
+
+        return false;
     }
 
     offsetX(): number {

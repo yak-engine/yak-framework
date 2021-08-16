@@ -1,0 +1,8 @@
+<div class="scene-listing scene-listing-component fill-dark text-white is-shadowed" style="border-bottom: 1px solid black;">
+    <div *ngFor="let existingScene of scenes; let i = index;" class="scene" [class]="{'selected': existingScene === scene}">
+      <span role="button" aria-label="Load scene" (click)="selectScene(existingScene, i)">{{scene}}</span>
+      <button type="button" aria-label="Delete scene" (click)="deleteScene(existingScene, i)" style="background-color: transparent; cursor: pointer; padding: 0; padding-left: 5px;">
+        <span class="text-red" aria-hidden="true" style="font-size: 18px;">×</span>
+      </button>
+    </div>
+  </div>

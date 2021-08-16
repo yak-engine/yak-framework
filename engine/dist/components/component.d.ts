@@ -1,3 +1,3 @@
 export default class Component {
 }
-//# sourceMappingURL=component.d.ts.map
+//# sourceMappingURL=Component.d.ts.map

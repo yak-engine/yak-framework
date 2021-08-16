@@ -1,0 +1,1 @@
+{"version":3,"file":"TilemapComponentManager.d.ts","sourceRoot":"","sources":["../../../src/components/managers/TilemapComponentManager.ts"],"names":[],"mappings":"AAAA,OAAO,gBAAgB,MAAM,yBAAyB,CAAC;AACvD,OAAO,gBAAgB,MAAM,qBAAqB,CAAC;AAEnD,MAAM,CAAC,OAAO,OAAO,uBAAwB,SAAQ,gBAAgB,CAAC,gBAAgB,CAAC;IACnF,IAAI,EAAE,MAAM,CAA6B;CAC5C"}

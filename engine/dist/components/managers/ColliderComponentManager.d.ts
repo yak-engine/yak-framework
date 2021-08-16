@@ -1,4 +1,5 @@
 import ComponentManager from "../../component-manager";
-export default class ColliderComponentManager extends ComponentManager {
+import ColliderComponent from "../ColliderComponent";
+export default class ColliderComponentManager extends ComponentManager<ColliderComponent> {
 }
 //# sourceMappingURL=ColliderComponentManager.d.ts.map

@@ -1,0 +1,19 @@
+<div class="play-component">
+    <div class="modal-overlay" [class]="{ 'open': isPlayMode }">
+      <div class="modal">
+        <div class="modal-header flex flex-r justify-content-between">
+          <span class="modal-title">Play Preview</span>
+          <div class="modal-actions">
+            <button type="button" class="fill-transparent cursor-pointer" (click)="setIsPlayMode(false)">
+                <i class="fa fa-close fa-lg text-red"></i>
+            </button>
+          </div>
+        </div>
+        <div #playPreviewContainer style="width: 640px; height: 360px;">
+          <!-- C:\Users\Nick\Documents\Programming\game-engine\yak-framework\editor\public\preview\bundle\play.html -->
+          <iframe [src]="previewUrl" frameborder="0"></iframe>
+          <canvas id="engine-canvas"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>

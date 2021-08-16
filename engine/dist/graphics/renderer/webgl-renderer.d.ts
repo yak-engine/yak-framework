@@ -1,6 +1,9 @@
 import BaseRenderer from "./base-renderer";
 import Tileset from "../tileset";
+import Scene from "../../models/scene";
 export default class WebGLRenderer extends BaseRenderer {
+    scene: Scene;
+    engineCanvas: HTMLCanvasElement;
     tilesets: Tileset[];
     /**
      * The 2D rendering context for the default canvas.
@@ -25,6 +28,7 @@ export default class WebGLRenderer extends BaseRenderer {
     private _testScaleAmount;
     private _testTranslateSpeed;
     private _colorBuffer;
+    constructor(scene: Scene, tilesets: Tileset[]);
     init(): Promise<void>;
     private _createDrawable;
     private _convertAngleUnitCircleCoordinates;

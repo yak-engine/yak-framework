@@ -1,1 +1,1 @@
-{"version":3,"file":"ColliderComponentManager.d.ts","sourceRoot":"","sources":["../../../src/components/managers/ColliderComponentManager.ts"],"names":[],"mappings":"AAAA,OAAO,gBAAgB,MAAM,yBAAyB,CAAC;AAGvD,MAAM,CAAC,OAAO,OAAO,wBAAyB,SAAQ,gBAAgB;CAErE"}
+{"version":3,"file":"ColliderComponentManager.d.ts","sourceRoot":"","sources":["../../../src/components/managers/ColliderComponentManager.ts"],"names":[],"mappings":"AAAA,OAAO,gBAAgB,MAAM,yBAAyB,CAAC;AACvD,OAAO,iBAAiB,MAAM,sBAAsB,CAAC;AAErD,MAAM,CAAC,OAAO,OAAO,wBAAyB,SAAQ,gBAAgB,CAAC,iBAAiB,CAAC;CAExF"}

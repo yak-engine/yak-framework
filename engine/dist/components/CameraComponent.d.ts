@@ -1,6 +1,5 @@
 import Camera from "../graphics/camera";
-import Component from "./component";
-export default class CameraComponent extends Component {
+export default class CameraComponent {
     camera?: Camera;
     constructor(camera?: Camera);
 }

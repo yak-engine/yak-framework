@@ -1,0 +1,16 @@
+<div class="scene-information-component" v-if="scene">
+    <div class="form-section">
+        <div class="form-label text-small">Tile size</div>
+        <input class="tag-name" type="text" v-model.number="sceneCopy.tileSize" />
+    </div>
+
+    <div class="form-section">
+        <div class="form-label text-small">Rows</div>
+        <input class="tag-name" type="text" v-model.number="sceneCopy.rows" />
+    </div>
+
+    <div class="form-section">
+        <div class="form-label text-small">Columns</div>
+        <input class="tag-name" type="text" v-model.number="sceneCopy.columns" />
+    </div>
+</div>

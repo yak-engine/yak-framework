@@ -1,8 +1,6 @@
 import Layer from '../../engine/src/graphics/layer';
 import Sprite from '../../engine/src/graphics/sprite';
 import Tileset from '../../engine/src/graphics/tileset';
-import Point from '../../engine/src/primitives/point';
-import { PaletteMode } from './enums/PaletteMode';
 import Entity from '../../engine/src/models/entity';
 import Configuration from '../../engine/src/configuration';
 import Transform from '../../engine/src/primitives/transform';
@@ -10,6 +8,8 @@ import isTransformEmpty from '../../engine/src/helpers/is-transform-empty';
 import pointWorldPosition from '../../engine/src/helpers/current-viewport-grid-square';
 import Mouse from '../../engine/src/graphics/mouse';
 import Scene from '../../engine/src/models/scene';
+import { PaletteMode } from './app/enums/palette-mode';
+import Point from '../../engine/src/primitives/Point';
 
 export default class EditorRenderer {
 	/**
@@ -35,17 +35,17 @@ export default class EditorRenderer {
 	/**
 	 * The context menu DOM element.
 	 */
-	public currentContextMenu: HTMLDivElement;
+	public currentContextMenu: HTMLDivElement | null = null;
 
-	public currentLayer: Layer;
+	public currentLayer: Layer | null = null;
 
 	public highlightCurrentLayer: boolean = false;
 
 	public selectedSprites: Array<Sprite> = new Array();
 
-	public hoveredSprite: Sprite;
+	public hoveredSprite: Sprite | null = null;
 
-	public scene: Scene = null;
+	public scene: Scene;
 
 	public mousePosition: Point = new Point(0, 0);
 
@@ -59,9 +59,12 @@ export default class EditorRenderer {
 
 	public mouse: Mouse = new Mouse();
 
-	private selectedEntity: Entity = null;
+	private selectedEntity: Entity | null = null;
 
-	constructor() {
+	constructor(scene: Scene, tilsets: Tileset[]) {
+		this.scene = scene;
+		this.tilesets = tilsets;
+
 		this.engineCanvas = <HTMLCanvasElement>document.querySelector('#editor-canvas');
 		this.context = <CanvasRenderingContext2D>this.engineCanvas.getContext('2d');
 
@@ -108,7 +111,7 @@ export default class EditorRenderer {
 		// SystemManager.get('gizmo-system').data.push(new ColliderGizmo(this.selectedEntity, this.context));
 	}
 
-	public getSelectedEntity(): Entity {
+	public getSelectedEntity(): Entity | null {
 		return this.selectedEntity;
 	}
 

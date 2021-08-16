@@ -1,6 +1,5 @@
 import Transform from "../primitives/transform";
-import Component from "./component";
-export default class ColliderComponent extends Component {
+export default class ColliderComponent {
     transform?: Transform;
     isTrigger?: boolean;
     private points;

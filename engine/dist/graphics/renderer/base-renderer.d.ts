@@ -4,16 +4,15 @@ export default abstract class BaseRenderer {
     /**
      * The canvas to render the current scene to.
      */
-    engineCanvas: HTMLCanvasElement;
+    abstract engineCanvas: HTMLCanvasElement;
     /**
      * The current scene to render.
      */
-    scene: Scene;
+    abstract scene: Scene;
     /**
      * The tilesets to use for the current scene.
      */
-    tilesets: Tileset[];
-    constructor(scene: Scene, tilesets: Tileset[]);
+    abstract tilesets: Tileset[];
     /**
      * Called when the application loads.
      */

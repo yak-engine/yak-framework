@@ -1,0 +1,24 @@
+<div class="inspector-component">
+    <div class="scene-editor-panel-header">
+        <span class="title"><i class="fa fa-cube fa-lg"></i> Inspector</span>
+        <div class="actions">
+            <button type="button" (click)="isAddingComponent = true">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="inspector-body">
+        <ng-container *ngFor="let componentInstance of componentInstances">
+            <!-- <div app-component-template [instance]="componentInstance"></div> -->
+        </ng-container>
+    </div>
+    <!-- <modal v-if="isAddingComponent" :is-open="isAddingComponent" :title="'Add new component'" :modal-size="'modal-sm'" @on-modal-saved="save()" @on-modal-closed="isAddingComponent = false">
+        <div class="entity-form">
+            <select>
+                <option *ngFor="let componentName in componentNames">
+                    {{ componentName.split('Component')[0].split(/(?=[A-Z])/).join(' ') }}
+                </option>
+            </select>
+        </div>
+    </modal> -->
+</div>

@@ -1,4 +1,5 @@
 import ComponentManager from "../../component-manager";
-export default class ImageComponentManager extends ComponentManager {
+import ImageComponent from "../ImageComponent";
+export default class ImageComponentManager extends ComponentManager<ImageComponent> {
 }
 //# sourceMappingURL=ImageComponentManager.d.ts.map

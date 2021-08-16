@@ -1,5 +1,4 @@
-import Component from "./component";
-export default class SpriteRendererComponent extends Component {
+export default class SpriteRendererComponent {
     layer: number;
     tilesetIndex: number;
     row?: number;

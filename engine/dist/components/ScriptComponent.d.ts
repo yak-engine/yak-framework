@@ -1,8 +1,7 @@
 import ScriptableEntity from "../systems/script/ScriptableEntity";
-import Component from "./component";
-export default class ScriptComponent extends Component {
+export default class ScriptComponent {
     scritableEntity?: typeof ScriptableEntity;
-    instance: ScriptableEntity;
     constructor(scritableEntity?: typeof ScriptableEntity);
+    instance: ScriptableEntity;
 }
 //# sourceMappingURL=ScriptComponent.d.ts.map

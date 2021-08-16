@@ -1,0 +1,34 @@
+<div class="scene-hierarchy-component" *ngIf="entities && entity">
+    <div class="scene-editor-panel-header is-shadowed">
+        <span class="title">Scene Hierarchy</span>
+        <div class="actions">
+            <button type="button" (click)="toggleAddMode()">
+                <i class="fa fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    <div class="tree-component" *ngIf="entities">
+        <ul>
+            <li *ngFor="let existingEntity of entities" (click)="selectEntity(existingEntity)" [class]="{ selected: entity.id === existingEntity.id }">
+                <i class="fa fa-cube"></i>&nbsp;
+                <!-- <span>{{ getName(existingEntity) }}</span> -->
+                <span>RE-ADD NAME HERE</span>
+                <!-- <tree v-if="existingEntity.children" :entities="existingEntity.children"></tree> -->
+            </li>
+        </ul>
+    </div>
+    <!-- <modal v-if="isAddingEntity" :is-open="isAddingEntity" :title="'New Entity'" :modal-size="'modal-sm'" @on-modal-saved="save()" @on-modal-closed="isAddingEntity = false">
+        <div class="entity-form">
+            <div class="form-section">
+                <div class="form-label">Entity Name</div>
+                <input type="text" v-model="pendingEntity.name" placeholder="Enter an entity name" />
+            </div>
+            <div>
+                <div class="checkbox">
+                    <input type="checkbox" id="is-entity-enabled" name="is-entity-enabled" v-model="pendingEntity.enabled" />
+                    <label for="is-entity-enabled">Enabled</label>
+                </div>
+            </div>
+        </div>
+    </modal> -->
+</div>

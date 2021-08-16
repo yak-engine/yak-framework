@@ -1,5 +1,4 @@
-import Component from "./component";
-export default class MaterialComponent extends Component {
+export default class MaterialComponent {
     fillStyle: string;
     alpha: number;
     constructor(fillStyle?: string, alpha?: number);

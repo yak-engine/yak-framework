@@ -1,0 +1,73 @@
+<div class="main-menu-component" ref="mainMenu">
+    <div class="mb-0 fill-dark text-light is-shadowed" style="z-index: 1000; border-bottom: 1px solid black;">
+        <div class="">
+            <ul class="nav nav-menu">
+                <div class="nav-left">
+                    <ul class="nav-item">
+                        <li class="menu-item item-has-children">
+                            <div role="button" tabindex="0" class="dropdown-toggle" (click)="toggleDropdown($event)">File</div>
+                            <ul class="sub-menu">
+                                <li>
+                                    <!-- (click)="$emit('on-new-project-clicked')" -->
+                                    <div role="button" tabindex="0">New project</div>
+                                </li>
+                                <li>
+                                    <!-- (click)="$emit('on-open-project')" -->
+                                    <div role="button" tabindex="0">Open project</div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="menu-item item-has-children">
+                            <div role="button" tabindex="0" class="dropdown-toggle" (click)="toggleDropdown($event)">Project</div>
+                            <ul class="sub-menu">
+                                <li>
+                                    <!-- (click)="$emit('on-new-project-clicked')" -->
+                                    <div role="button" tabindex="0">Scene configuration</div>
+                                </li>
+                                <li class="divider"></li>
+                                <li>
+                                    <!-- (click)="$emit('on-open-settings')" -->
+                                    <div role="button" tabindex="0">Settings</div>
+                                </li>
+                            </ul>
+                        </li>
+                        <!-- <li class="menu-item item-has-children">
+                            <div role="button" tabindex="0" class="dropdown-toggle" (click)="toggleDropdown($event)">View</div>
+                            <ul class="sub-menu">
+                                <li>
+                                    <div>
+                                        <input type="checkbox" id="toggle-layer-highlighting" name="toggle-layer-highlighting" class="chk-highlight-current-layer" />
+                                        <label for="toggle-layer-highlighting">Toggle layer highlighting</label>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="menu-item">
+                            <div role="button" tabindex="0" y-ref="/options">Options</div>
+                        </li> -->
+                    </ul>
+                </div>
+                <!-- <div class="nav-center" v-if="project && project.engineConfig">{{ project.engineConfig.name }} <span>/</span> Yak Engine</div> -->
+                <div class="nav-right">
+                    <ul class="nav-item">
+                        <li class="menu-item">
+                            <div role="button" tabindex="0" (click)="minimize()">
+                                <i class="fa fa-window-minimize"></i>
+                            </div>
+                        </li>
+                        <li class="menu-item">
+                            <div role="button" tabindex="0" (click)="toggleWindowState()">
+                                <i class="fa fa-window-restore"></i>
+                            </div>
+                        </li>
+                        <li class="menu-item">
+                            <div role="button" tabindex="0" (click)="close()">
+                                <i class="fa fa-close fa-lg text-red"></i>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </ul>
+        </div>
+    </div>
+</div>

@@ -1,1 +1,1 @@
-{"version":3,"file":"TransformComponent.d.ts","sourceRoot":"","sources":["../../src/components/TransformComponent.ts"],"names":[],"mappings":"AAAA,OAAO,SAAS,MAAM,yBAAyB,CAAC;AAChD,OAAO,SAAS,MAAM,aAAa,CAAC;AAEpC,MAAM,CAAC,OAAO,OAAO,kBAAmB,SAAQ,SAAS;IACrD,SAAS,EAAE,SAAS,CAAC;gBAET,SAAS,CAAC,EAAE,SAAS;CAIpC"}
+{"version":3,"file":"TransformComponent.d.ts","sourceRoot":"","sources":["../../src/components/TransformComponent.ts"],"names":[],"mappings":"AAAA,OAAO,SAAS,MAAM,yBAAyB,CAAC;AAEhD,MAAM,CAAC,OAAO,OAAO,kBAAkB;IACnC,SAAS,EAAE,SAAS,CAAC;gBAET,SAAS,CAAC,EAAE,SAAS;CAGpC"}

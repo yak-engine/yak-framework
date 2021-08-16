@@ -1,4 +1,5 @@
 import ComponentManager from "../../component-manager";
-export default class CameraComponentManager extends ComponentManager {
+import CameraComponent from "../CameraComponent";
+export default class CameraComponentManager extends ComponentManager<CameraComponent> {
 }
 //# sourceMappingURL=CameraComponentManager.d.ts.map

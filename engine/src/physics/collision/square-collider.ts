@@ -25,10 +25,10 @@ export default class SquareCollider extends Collider {
     }
 
     public onCollisionEnter(): void {
-        Logger.info('Square collider trigger enter');
+        Logger.info('Square collider trigger enter', this.toString());
     }
 
     public onCollisionLeave(): void {
-        Logger.info('Square collider trigger leave');
+        Logger.info('Square collider trigger leave', this.toString());
     }
 }

@@ -1,0 +1,9 @@
+<div class="project-hierarchy-component" *ngIf="project">
+    <div class="scene-editor-panel-header is-shadowed">
+        <span class="title">Project Hierarchy</span>
+        <div class="actions"></div>
+    </div>
+    <div class="tree-component">
+        <div app-tree [items]="project.tree"></div>
+    </div>
+</div>

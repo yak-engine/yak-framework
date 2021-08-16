@@ -1,6 +1,5 @@
 import Transform from "../primitives/transform";
-import Component from "./component";
-export default class TransformComponent extends Component {
+export default class TransformComponent {
     transform: Transform;
     constructor(transform?: Transform);
 }

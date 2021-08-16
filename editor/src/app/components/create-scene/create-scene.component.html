@@ -1,0 +1,28 @@
+<div>
+    <div class="form-section">
+        <div class="form-label">Scene name</div>
+        <input type="text" name="name" [(ngModel)]="scene.name" placeholder="Enter a scene name" />
+      </div>
+
+      <div class="form-section">
+        <div class="form-label">Tile size</div>
+        <input type="number" name="tileSize" [(ngModel)].number="scene.tileSize" placeholder="Enter a tile size" />
+      </div>
+
+      <div class="form-section">
+        <div class="form-label">Rows</div>
+        <input type="number" name="rows" [(ngModel)].number="scene.rows" placeholder="Enter how large the scene is on the y-axis" />
+      </div>
+
+      <div class="form-section">
+        <div class="form-label">Columns</div>
+        <input type="number" name="columns" [(ngModel)].number="scene.columns" placeholder="Enter how large the scene is on the x-axis" />
+      </div>
+
+      <div class="button-group">
+        <button type="button" class="button fill-green-darken-1 text-white" (click)="addScene()">Save scene</button>
+
+        <!-- @click="$emit('on-new-scene-cancelled')" -->
+        <button type="button" class="button fill-red-darken-1 text-white">Cancel</button>
+      </div>
+</div>

@@ -1,0 +1,13 @@
+.tree-component ul li {
+    padding: 0;
+}
+
+li {
+    > div:first-child {
+        padding: 10px 15px;
+    }
+
+    > div {
+        padding-left: 15px;
+    }
+}

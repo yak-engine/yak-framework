@@ -1,0 +1,19 @@
+.scene-listing {
+    display: flex;
+    flex-direction: row;
+  
+    .scene {
+      flex-grow: 0;
+      padding: 8px 15px;
+      border-right: 1.5px solid black;
+      cursor: pointer;
+      
+      &:last-child {
+        border-right: none;
+      }
+  
+      &.selected {
+  
+      }
+    }
+  }

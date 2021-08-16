@@ -1,4 +1,4 @@
-import Component from "../../components/component";
+import Component from "../../components/Component";
 import Entity from "../../models/entity";
 /**
  * User inherits this on the script classes.
