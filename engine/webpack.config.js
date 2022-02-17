@@ -1,6 +1,7 @@
 const path = require('path');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const CopyPlugin = require('copy-webpack-plugin');
+const npm_package = require('./package.json')
 
 module.exports = {
 	mode: 'production',
@@ -17,9 +18,9 @@ module.exports = {
 		umdNamedDefine: true
 	},
 	resolve: {
-		alias: {
-			src: '/src'
-		},
+        alias: {
+            lib: 'mt'
+        },
 		extensions: ['.tsx', '.ts', '.js']
 	},
 	optimization: {

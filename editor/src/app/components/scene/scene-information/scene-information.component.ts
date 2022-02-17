@@ -5,10 +5,10 @@ import { Component } from '@angular/core';
 import { StateService } from 'services/state.service';
 
 // Engine imports.
-import { Scene } from '@yak-engine/models/scene';
+import { Scene } from '@yak/engine';
 
 @Component({
-  selector: 'app-scene-information',
+  selector: '[app-scene-information]',
   templateUrl: './scene-information.component.html',
   styleUrls: ['./scene-information.component.scss']
 })

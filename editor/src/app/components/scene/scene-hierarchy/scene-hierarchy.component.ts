@@ -5,10 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import { StateService } from 'services/state.service';
 
 // Engine imports.
-import { TagComponent } from '@yak-engine/lib/components/TagComponent';
-import EntityManager from '@yak-engine/entity-manager';
-import { Entity } from '@yak-engine/models/entity';
-import { Scene } from '@yak-engine/models/scene';
+import { TagComponent, EntityManager, Entity, Scene } from '@yak/engine';
 
 @Component({
   selector: '[app-scene-hierarchy]',

@@ -5,7 +5,7 @@ import { Component, OnInit } from '@angular/core';
 import SceneService from 'services/scene.service';
 
 // Engine imports.
-import { Scene } from '@yak-engine/models/scene';
+import { Scene } from '@yak/engine';
 
 @Component({
   selector: '[app-scene-listing]',

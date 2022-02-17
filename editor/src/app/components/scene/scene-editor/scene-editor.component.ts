@@ -9,12 +9,7 @@ import { StateService } from 'services/state.service';
 import EditorRenderer from '../../../../editor-renderer';
 
 // Engine imports.
-import { Scene } from '@yak-engine/models/scene';
-import LoadSceneReturn from '@yak-engine/models/returns/load-scene-return';
-import EntityManager from '@yak-engine/entity-manager';
-import SceneManager from '@yak-engine/scene-manager';
-import { Entity } from '@yak-engine/models/entity';
-import ManagerFactory from '@yak-engine/manager-factory';
+import { Scene, LoadSceneReturn, EntityManager, SceneManager, Entity, ManagerFactory } from '@yak/engine';
 
 @Component({
   selector: '[app-scene-editor]',

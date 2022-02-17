@@ -8,8 +8,7 @@ import { TransformMode } from "enums/transform-mode";
 import { Project } from "models/project";
 
 // Engine imports.
-import { Scene } from "@yak-engine/models/scene";
-import { Entity } from "@yak-engine/models/entity";
+import { Scene, Entity } from "@yak/engine";
 
 @Injectable({
     providedIn: 'root'

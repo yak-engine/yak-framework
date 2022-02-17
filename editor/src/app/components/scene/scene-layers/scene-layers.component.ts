@@ -5,8 +5,7 @@ import { Component } from '@angular/core';
 import { StateService } from 'services/state.service';
 
 // Engine imports.
-import { Layer } from '@yak-engine/graphics/layer';
-import { Scene } from '@yak-engine/models/scene';
+import { Layer, Scene } from '@yak/engine';
 
 @Component({
   selector: '[app-scene-layers]',
@@ -23,7 +22,7 @@ export class SceneLayersComponent {
   	public isManagingLayer: boolean = false;
 
 	constructor(private _stateService: StateService) {
-		this._stateService.scene$.subscribe((scene: Scene | null) => {
+    this._stateService.scene$.subscribe((scene: Scene | null) => {
             if (scene) {
                 this.scene = scene;
             }

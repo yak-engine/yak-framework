@@ -1,19 +1,10 @@
 
 import { PaletteMode } from './app/enums/palette-mode';
 
-import { Layer } from '@yak-engine/graphics/layer';
-import Sprite from '@yak-engine/graphics/sprite';
-import { Tileset } from '@yak-engine/graphics/tileset';
-import { Entity } from '@yak-engine/models/entity';
-import Configuration from '@yak-engine/configuration';
-import { Transform } from '@yak-engine/primitives/transform';
-import isTransformEmpty from '@yak-engine/helpers/is-transform-empty';
-import pointWorldPosition from '@yak-engine/helpers/current-viewport-grid-square';
-import Mouse from '@yak-engine/graphics/mouse';
-import { Scene } from '@yak-engine/models/scene';
-import { Point } from '@yak-engine/primitives/point';
+import { Layer, Tileset, Entity, Configuration, Sprite, Transform, Scene, Point, Mouse } from '@yak/engine';
 
-import test from '@yak-engine/'
+import { isTransformEmpty } from '@yak/engine';
+import { pointWorldPosition } from '@yak/engine';
 
 export default class EditorRenderer {
     /**
