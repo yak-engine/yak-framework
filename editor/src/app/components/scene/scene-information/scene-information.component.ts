@@ -1,6 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { StateService } from 'src/app/services/state.service';
-import Scene from '../../../../../../engine/src/models/scene';
+// Third party imports.
+import { Component } from '@angular/core';
+
+// Local imports.
+import { StateService } from 'services/state.service';
+
+// Engine imports.
+import { Scene } from '@yak-engine/models/scene';
 
 @Component({
   selector: 'app-scene-information',
@@ -18,7 +23,6 @@ export class SceneInformationComponent {
     })
   }
 
-  // @Watch('scene')
   onSceneChanged(newValue: Scene, oldValue: Scene): void {
     if(newValue) {
       this.sceneCopy = Object.assign({}, this.scene);

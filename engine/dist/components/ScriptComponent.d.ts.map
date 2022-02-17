@@ -1,1 +1,0 @@
-{"version":3,"file":"ScriptComponent.d.ts","sourceRoot":"","sources":["../../src/components/ScriptComponent.ts"],"names":[],"mappings":"AAAA,OAAO,gBAAgB,MAAM,oCAAoC,CAAC;AAElE,MAAM,CAAC,OAAO,OAAO,eAAe;IACb,eAAe,CAAC,EAAE,OAAO,gBAAgB;gBAAzC,eAAe,CAAC,EAAE,OAAO,gBAAgB;IAIrD,QAAQ,EAAE,gBAAgB,CAAC;CACrC"}

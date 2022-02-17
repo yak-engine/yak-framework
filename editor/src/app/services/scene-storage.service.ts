@@ -2,8 +2,8 @@
 // import Layer from '../../../engine/src/graphics/layer';
 // import Scene from '../../../engine/src/models/scene';
 
-import Layer from "../../../../engine/src/graphics/layer";
-import Scene from "../../../../engine/src/models/scene";
+import { Layer } from "@yak-engine/graphics/layer";
+import { Scene } from "@yak-engine/models/scene";
 
 export default class SceneStorageService {
     fileName: string = 'projects';

@@ -1,1 +1,0 @@
-{"version":3,"file":"is-transform-empty.js","sourceRoot":"","sources":["../../src/helpers/is-transform-empty.ts"],"names":[],"mappings":"AAEA;;;;;;;;GAQG;AACH,MAAM,CAAC,OAAO,UAAU,gBAAgB,CAAC,SAAoB;IACzD,OAAO,SAAS,CAAC,CAAC,KAAK,CAAC,IAAI,SAAS,CAAC,CAAC,KAAK,CAAC,IAAI,SAAS,CAAC,KAAK,KAAK,CAAC,IAAI,SAAS,CAAC,MAAM,KAAK,CAAC,CAAA;AACpG,CAAC"}

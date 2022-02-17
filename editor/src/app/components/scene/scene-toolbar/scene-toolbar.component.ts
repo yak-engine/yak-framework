@@ -1,17 +1,20 @@
+// Third party imports.
 import { Component, OnInit } from '@angular/core';
-import { TransformMode } from 'src/app/enums/transform-mode';
-import { StateService } from 'src/app/services/state.service';
+
+// Local imports.
+import { TransformMode } from 'enums/transform-mode';
+import { StateService } from 'services/state.service';
 
 @Component({
-  selector: '[app-scene-toolbar]',
-  templateUrl: './scene-toolbar.component.html',
-  styleUrls: ['./scene-toolbar.component.scss']
+    selector: '[app-scene-toolbar]',
+    templateUrl: './scene-toolbar.component.html',
+    styleUrls: ['./scene-toolbar.component.scss']
 })
 export class SceneToolbarComponent implements OnInit {
     public transformMode: TransformMode = TransformMode.MOVE;
 
-constructor(private _stateService: StateService) {
-        
+    constructor(private _stateService: StateService) {
+
     }
 
     public ngOnInit(): void {

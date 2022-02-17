@@ -1,7 +1,12 @@
-import { Component, OnInit } from '@angular/core';
-import { StateService } from 'src/app/services/state.service';
-import Layer from '../../../../../../engine/src/graphics/layer';
-import Scene from '../../../../../../engine/src/models/scene';
+// Third party imports.
+import { Component } from '@angular/core';
+
+// Local imports.
+import { StateService } from 'services/state.service';
+
+// Engine imports.
+import { Layer } from '@yak-engine/graphics/layer';
+import { Scene } from '@yak-engine/models/scene';
 
 @Component({
   selector: '[app-scene-layers]',

@@ -1,10 +1,15 @@
+// Third party imports.
 import { Injectable } from "@angular/core";
-import { BehaviorSubject, Subject } from "rxjs";
-import Entity from "../../../../engine/src/models/entity";
-import Scene from "../../../../engine/src/models/scene";
-import { PaletteMode } from "../enums/palette-mode";
-import { TransformMode } from "../enums/transform-mode";
-import { Project } from "../models/project";
+import { BehaviorSubject } from "rxjs";
+
+// Local imports.
+import { PaletteMode } from "enums/palette-mode";
+import { TransformMode } from "enums/transform-mode";
+import { Project } from "models/project";
+
+// Engine imports.
+import { Scene } from "@yak-engine/models/scene";
+import { Entity } from "@yak-engine/models/entity";
 
 @Injectable({
     providedIn: 'root'

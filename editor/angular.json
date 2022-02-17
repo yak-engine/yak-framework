@@ -29,12 +29,7 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/assets/projects/project-import-test/scenes/scene1.json",
-              {
-                "input": "src/assets/projects",
-                "glob": "**",
-                "output": "."
-              }
+              "src/assets/projects/project-import-test/**/*"
             ],
             "styles": [
               "src/styles.scss"

@@ -1,1 +1,0 @@
-{"version":3,"file":"ScriptSystem.d.ts","sourceRoot":"","sources":["ScriptSystem.ts"],"names":[],"mappings":"AAGA,OAAO,MAAM,MAAM,qBAAqB,CAAC;AACzC,OAAO,MAAM,MAAM,WAAW,CAAC;AAE/B,MAAM,CAAC,OAAO,OAAO,YAAa,SAAQ,MAAM;IACrC,IAAI,EAAE,MAAM,CAAY;IAExB,MAAM,IAAI,IAAI;IAerB,OAAO,CAAC,MAAM,EAAE,MAAM,GAAG,IAAI;CAGhC"}

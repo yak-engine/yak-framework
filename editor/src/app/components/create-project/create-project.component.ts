@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { Project } from 'src/app/models/project';
+// Third party imports.
+import { Component } from '@angular/core';
+
+// Local imports.
+import { Project } from 'models/project';
 
 @Component({
-  selector: 'app-create-project',
+  selector: '[app-create-project]',
   templateUrl: './create-project.component.html',
   styleUrls: ['./create-project.component.scss']
 })

@@ -6,7 +6,8 @@
         flex-direction: row;
         justify-content: space-between;
         margin: 0;
-        padding: 0;
+        padding: 0 15px;
+        height: 45px;
 
         .nav-toggle {
             @media only screen and (max-width: 768px) {
@@ -59,23 +60,27 @@
             list-style-type: none;
             
             > li {
-                a {
-                    color: $color-dark;
-                }
+                height: 45px;
+                display: flex;
 
                 div[role="button"] {
                     // TODO: Add specific Sass variable for this color.
-                    color: $color-white;
-                    padding: 8px 15px;
+                    color: $color-dark;
+                    padding: 0 12px;
+                    display: flex;
+                    align-items: center;
+                    margin: 5px 8px;
+                    
+                    &:hover {
+                        border-radius: 5px;
+                        background-color: #007ACC;
+                        color: white;
+                        cursor: pointer;
+                    }
                 }
 
                 .nav-menu.fill-dark & {
                     background-color: #212121;
-                }
-    
-                &:hover {
-                    background-color: darken($color: #262626, $amount: 5);
-                    cursor: pointer;
                 }
 
                 .sub-menu {
@@ -125,7 +130,7 @@
             .nav-item {
                 > li {
                     &:hover {
-                        background-color: darken($color: $color-dark, $amount: 5);
+                        // background-color: darken($color: $color-dark, $amount: 5);
                     }
                 }
             }
@@ -135,7 +140,7 @@
             .nav-item {
                 > li {
                     &:hover {
-                        background-color: darken($color: $color-success, $amount: 5);
+                        // background-color: darken($color: $color-success, $amount: 5);
                     }
                 }
             }
@@ -145,7 +150,7 @@
             .nav-item {
                 > li {
                     &:hover {
-                        background-color: darken($color: $color-danger, $amount: 5);
+                        // background-color: darken($color: $color-danger, $amount: 5);
                     }
                 }
             }
@@ -155,7 +160,7 @@
             .nav-item {
                 > li {
                     &:hover {
-                        background-color: darken($color: $color-warning, $amount: 5);
+                        // background-color: darken($color: $color-warning, $amount: 5);
                     }
                 }
             }
@@ -165,7 +170,7 @@
             .nav-item {
                 > li {
                     &:hover {
-                        background-color: darken($color: $color-link, $amount: 5);
+                        // background-color: darken($color: $color-link, $amount: 5);
                     }
                 }
             }

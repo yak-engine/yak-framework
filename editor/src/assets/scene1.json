@@ -4124,8 +4124,10 @@
       "order": 2
     }
   ],
-  "entities": [
+  "entityManifests": [
     {
+      "id": 1,
+      "enabled": true,
       "tagComponent": {
         "name": "player"
       },

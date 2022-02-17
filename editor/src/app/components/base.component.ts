@@ -1,4 +1,4 @@
-import Scene from "../../../../engine/src/models/scene";
+import { Scene } from "@yak-engine/models/scene";
 
 export class BaseComponent {
     // @State private project: Project;

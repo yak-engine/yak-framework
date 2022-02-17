@@ -1,0 +1,1 @@
+{"version":3,"file":"ColliderComponent.d.ts","sourceRoot":"","sources":["../../../src/lib/components/ColliderComponent.ts"],"names":[],"mappings":"AAEA,OAAO,EAAE,SAAS,EAAE,MAAM,8BAA8B,CAAC;AAEzD;;GAEG;AACH,qBAAa,iBAAiB;IASf,SAAS,EAAE,SAAS;IACpB,SAAS,CAAC;IATrB,OAAO,CAAC,OAAO,CAA6B;IAE5C;;;;OAIG;gBAEQ,SAAS,EAAE,SAAS,EACpB,SAAS,CAAC,qBAAS;CAcjC"}

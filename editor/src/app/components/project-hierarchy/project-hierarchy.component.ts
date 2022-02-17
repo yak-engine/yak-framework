@@ -1,17 +1,20 @@
+// Third party imports.
 import { Component, OnInit } from '@angular/core';
-import { Project } from 'src/app/models/project';
+
+// Local imports.
+import { Project } from 'models/project';
 
 @Component({
-  selector: '[app-project-hierarchy]',
-  templateUrl: './project-hierarchy.component.html',
-  styleUrls: ['./project-hierarchy.component.scss']
+    selector: '[app-project-hierarchy]',
+    templateUrl: './project-hierarchy.component.html',
+    styleUrls: ['./project-hierarchy.component.scss']
 })
 export class ProjectHierarchyComponent implements OnInit {
-  public project?: Project;
+    public project?: Project;
 
-  constructor() { }
+    constructor() { }
 
-  ngOnInit(): void {
-  }
+    public ngOnInit(): void {
 
+    }
 }

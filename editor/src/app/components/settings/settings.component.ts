@@ -1,8 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { EditorSettings } from 'src/app/models/editor-settings';
+// Third party imports.
+import { Component, Input } from '@angular/core';
+
+// Local imports.
+import { EditorSettings } from 'models/editor-settings';
 
 @Component({
-  selector: 'app-settings',
+  selector: '[app-settings]',
   templateUrl: './settings.component.html',
   styleUrls: ['./settings.component.scss']
 })

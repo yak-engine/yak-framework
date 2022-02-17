@@ -1,9 +1,15 @@
 <div class="main-menu-component" ref="mainMenu">
-    <div class="mb-0 fill-dark text-light is-shadowed" style="z-index: 1000; border-bottom: 1px solid black;">
+    <div class="mb-0 is-shadowed" style="z-index: 1000; border-bottom: 1px solid black; height: 45px;">
         <div class="">
             <ul class="nav nav-menu">
                 <div class="nav-left">
                     <ul class="nav-item">
+                        <li class="menu-item">
+                            <div style="display: flex; align-items: center;">
+                                <i class="fas fa-paw fa-2x"></i>
+                                <span style="font-size: 20px; font-weight: 300;">Yak Editor</span>
+                                </div>
+                        </li>
                         <li class="menu-item item-has-children">
                             <div role="button" tabindex="0" class="dropdown-toggle" (click)="toggleDropdown($event)">File</div>
                             <ul class="sub-menu">
@@ -14,6 +20,10 @@
                                 <li>
                                     <!-- (click)="$emit('on-open-project')" -->
                                     <div role="button" tabindex="0">Open project</div>
+                                </li>
+                                <li>
+                                    <!-- (click)="$emit('on-open-project')" -->
+                                    <div role="button" tabindex="0" class="button">Export</div>
                                 </li>
                             </ul>
                         </li>

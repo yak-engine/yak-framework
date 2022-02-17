@@ -1,25 +1,46 @@
+// Third party imports.
 import { Component, OnInit } from '@angular/core';
-import { StateService } from 'src/app/services/state.service';
-import TagComponent from '../../../../../../engine/src/components/TagComponent';
-import EntityManager from '../../../../../../engine/src/entity-manager';
-import Entity from '../../../../../../engine/src/models/entity';
-import Scene from '../../../../../../engine/src/models/scene';
+
+// Local imports.
+import { StateService } from 'services/state.service';
+
+// Engine imports.
+import { TagComponent } from '@yak-engine/lib/components/TagComponent';
+import EntityManager from '@yak-engine/entity-manager';
+import { Entity } from '@yak-engine/models/entity';
+import { Scene } from '@yak-engine/models/scene';
 
 @Component({
   selector: '[app-scene-hierarchy]',
   templateUrl: './scene-hierarchy.component.html',
   styleUrls: ['./scene-hierarchy.component.scss']
 })
-export class SceneHierarchyComponent {
-  // Store state.
-	public scene!: Scene;
-	public entity!: Entity;
+export class SceneHierarchyComponent implements OnInit {
+	/**
+	 * The currently loaded scene.
+	 */
+	public scene: Scene;
+	
+	/**
+	 * The currently selected entity. This entity will be highlighed within the editor renderer.
+	 */
+	public selectedEntity: Entity;
 
 	private isAddingEntity: boolean = false;
 	public entities: Entity[] = [];
 	private pendingEntity: Entity = new Entity();
 
+	public entityNameMap = {};
+
 	constructor(private _stateService: StateService) {
+
+	}
+
+	public ngOnInit(): void {
+		this._stateService.scene$.subscribe((scene: Scene) => this.scene = scene);
+
+		this.entities = EntityManager.getInstance().entities;
+		this.entities.forEach((entity) => this.entityNameMap[entity.id] = entity.getComponent<TagComponent>(TagComponent).name)
 	}
 
 	toggleAddMode(): void {
@@ -41,7 +62,7 @@ export class SceneHierarchyComponent {
 		let tagComponent: TagComponent = entity.getComponent<TagComponent>(TagComponent);
 		
 		if (tagComponent) {
-			// return tagComponent.name.charAt(0).toUpperCase() + tagComponent.name.slice(1);
+			return tagComponent.name.charAt(0).toUpperCase() + tagComponent.name.slice(1);
 		}
 
 		return 'Entity';

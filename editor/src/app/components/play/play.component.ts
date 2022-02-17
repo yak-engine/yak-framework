@@ -1,7 +1,9 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { Project } from 'src/app/models/project';
-import { StateService } from 'src/app/services/state.service';
-import Configuration from '../../../../../engine/src/configuration';
+// Third party imports.
+import { Component, OnInit } from '@angular/core';
+
+// Local imports.
+import { Project } from 'models/project';
+import { StateService } from 'services/state.service';
 
 @Component({
   selector: '[app-play]',

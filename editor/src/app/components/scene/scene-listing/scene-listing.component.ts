@@ -1,6 +1,11 @@
-import { Component, Input, OnInit } from '@angular/core';
-import SceneService from 'src/app/services/scene.service';
-import Scene from '../../../../../../engine/src/models/scene';
+// Third party imports.
+import { Component, OnInit } from '@angular/core';
+
+// Local imports.
+import SceneService from 'services/scene.service';
+
+// Engine imports.
+import { Scene } from '@yak-engine/models/scene';
 
 @Component({
   selector: '[app-scene-listing]',

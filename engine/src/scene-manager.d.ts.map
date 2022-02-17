@@ -1,1 +1,0 @@
-{"version":3,"file":"scene-manager.d.ts","sourceRoot":"","sources":["scene-manager.ts"],"names":[],"mappings":"AAIA,OAAO,eAAe,MAAM,oCAAoC,CAAC;AAEjE,MAAM,CAAC,OAAO,OAAO,YAAY;WACZ,IAAI,CAAC,SAAS,EAAE,MAAM,EAAE,OAAO,GAAE,MAAa,GAAG,OAAO,CAAC,eAAe,CAAC;CAkD7F"}

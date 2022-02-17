@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import MaterialComponent from '../../../../../engine/src/components/MaterialComponent';
-import Entity from '../../../../../engine/src/models/entity';
 import { BaseComponent } from '../base.component';
 
 @Component({

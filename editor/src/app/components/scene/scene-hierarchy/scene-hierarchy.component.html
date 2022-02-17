@@ -1,4 +1,4 @@
-<div class="scene-hierarchy-component" *ngIf="entities && entity">
+<div class="scene-hierarchy-component">
     <div class="scene-editor-panel-header is-shadowed">
         <span class="title">Scene Hierarchy</span>
         <div class="actions">
@@ -9,10 +9,9 @@
     </div>
     <div class="tree-component" *ngIf="entities">
         <ul>
-            <li *ngFor="let existingEntity of entities" (click)="selectEntity(existingEntity)" [class]="{ selected: entity.id === existingEntity.id }">
-                <i class="fa fa-cube"></i>&nbsp;
-                <!-- <span>{{ getName(existingEntity) }}</span> -->
-                <span>RE-ADD NAME HERE</span>
+            <li *ngFor="let existingEntity of entities" (click)="selectEntity(existingEntity)" [class]="{ selected: selectedEntity?.id === existingEntity.id }">
+                <i class="fa fa-cube fa-lg"></i>&nbsp;
+                <span>{{entityNameMap[existingEntity.id]}}</span>
                 <!-- <tree v-if="existingEntity.children" :entities="existingEntity.children"></tree> -->
             </li>
         </ul>
