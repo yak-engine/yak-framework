@@ -1,4 +1,5 @@
-import { Mouse } from '@yak/engine';
+import { Application } from '@yak/engine/core';
+import { Mouse } from '@yak/engine/graphics';
 
 export class Test {
     constructor() {

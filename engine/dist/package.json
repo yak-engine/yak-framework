@@ -2,7 +2,7 @@
   "name": "@yak/engine",
   "version": "0.0.1",
   "description": "Core yak engine",
-  "main": "public-api.d.ts",
+  "main": "bundles/yak-engine.js",
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "watch": "webpack --watch"

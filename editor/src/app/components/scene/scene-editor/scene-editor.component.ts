@@ -9,7 +9,7 @@ import { StateService } from 'services/state.service';
 import EditorRenderer from '../../../../editor-renderer';
 
 // Engine imports.
-import { Scene, LoadSceneReturn, EntityManager, SceneManager, Entity, ManagerFactory } from '@yak/engine';
+import { Scene, LoadSceneReturn, EntityManager, SceneManager, Entity, ManagerFactory, Mouse } from '@yak/engine';
 
 @Component({
   selector: '[app-scene-editor]',
@@ -54,6 +54,10 @@ export class SceneEditorComponent implements OnInit {
 	}
 
 	public async loadEditorScene(sceneName: string): Promise<void> {
+        let mouse: Mouse = new Mouse();
+
+        console.log(mouse);
+
 		let loadSceneRtn: LoadSceneReturn = await SceneManager.load(sceneName, 'assets');
 
 		console.log(loadSceneRtn);

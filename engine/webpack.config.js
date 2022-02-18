@@ -5,11 +5,14 @@ const npm_package = require('./package.json')
 
 module.exports = {
 	mode: 'production',
-	devtool: 'source-map',
-	entry: {
-		'yak-engine': './src/public-api.ts',
-		'yak-engine.min': './src/public-api.ts'
-	},
+	devtool: 'inline-source-map',
+    entry: {
+        'yak-engine': './src/index.ts'
+    },
+	// entry: {
+	// 	'yak-engine': './src/public-api.ts',
+	// 	'yak-engine.min': './src/public-api.ts'
+	// },
 	output: {
 		path: path.join(__dirname, 'dist/bundles'),
 		filename: '[name].js',
@@ -17,6 +20,11 @@ module.exports = {
 		library: 'yak-engine',
 		umdNamedDefine: true
 	},
+    performance: {
+        hints: false,
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000
+    },
 	resolve: {
 		extensions: ['.tsx', '.ts', '.js']
 	},

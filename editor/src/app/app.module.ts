@@ -30,12 +30,10 @@ import { DirectoryDialogComponent } from './components/directory-dialog/director
 import { PlayComponent } from './components/play/play.component';
 import { InspectorComponent } from './components/inspector/inspector.component';
 import { FormsModule } from '@angular/forms';
-import { MainComponent } from './main.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    MainComponent,
     MainMenuComponent,
     ModalComponent,
     CreateProjectComponent,
@@ -69,6 +67,6 @@ import { MainComponent } from './main.component';
     AppRoutingModule
   ],
   providers: [],
-  bootstrap: [MainComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

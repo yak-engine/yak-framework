@@ -1,4 +1,4 @@
-<div class="main">
+<div class="main h-100">
     <div class="editor-panel left">
         <div app-scene-hierarchy *ngIf="scene"></div>
         <div app-project-hierarchy *ngIf="scene"></div>
@@ -9,9 +9,9 @@
 
         <div app-scene-toolbar *ngIf="scene"></div>
 
-        <!-- <div class="canvas-container" style="min-width: 512px; overflow: auto">
+        <div class="canvas-container" style="min-width: 512px; overflow: auto">
             <canvas id="editor-canvas" tabindex="-1" width="512" height="512"></canvas>
-        </div> -->
+        </div>
 
         <div app-tilemap-palette *ngIf="scene"></div>
     </div>

@@ -1,4 +1,4 @@
-<div class="component default-component">
+<div class="component default-component h-100">
   <div style="height: 100%; display: flex; flex-direction: column;" *ngIf="true">
     <!-- @on-new-project-clicked="isAddingProject = true"
     @on-new-scene-clicked="isAddingScene = true"
@@ -8,7 +8,7 @@
     <div app-main-menu>
     </div>
 
-    <div app-scene-editor style="height: 500px;"></div>
+    <div app-scene-editor style="flex: 1;"></div>
 
     <div class="footer">
       <div class="indicator" *ngIf="isExecutingSave">
