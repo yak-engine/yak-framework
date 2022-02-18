@@ -1,0 +1,1 @@
+{"version":3,"file":"system.d.ts","sourceRoot":"","sources":["../../../src/lib/systems/system.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,iBAAiB,CAAC;AAEzC,8BAAsB,MAAM;IACxB;;OAEG;IACH,QAAQ,CAAC,IAAI,EAAE,MAAM,CAAC;IAEtB;;;OAGG;IACH,QAAQ,CAAC,OAAO,CAAC,MAAM,EAAE,MAAM,GAAG,IAAI;CACzC"}

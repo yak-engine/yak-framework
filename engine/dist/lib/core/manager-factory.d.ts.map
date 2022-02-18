@@ -1,0 +1,1 @@
+{"version":3,"file":"manager-factory.d.ts","sourceRoot":"","sources":["../../../src/lib/core/manager-factory.ts"],"names":[],"mappings":"AAaA,qBAAa,cAAc;IACvB,OAAc,QAAQ,EAAE,GAAG,CAAC,GAAG,EAAE,GAAG,CAAC,CAAa;;WAMpC,SAAS,IAAI,IAAI;WAajB,QAAQ,CAAC,aAAa,EAAE,MAAM,EAAE,wBAAwB,EAAE,GAAG,GAAG,IAAI;WAMpE,GAAG,CAAC,iBAAiB,EAAE,aAAa,EAAE,MAAM,GAAG,iBAAiB;WAUhE,GAAG,IAAI,IAAI;CAG5B"}

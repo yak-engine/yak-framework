@@ -18,9 +18,6 @@ module.exports = {
 		umdNamedDefine: true
 	},
 	resolve: {
-        alias: {
-            lib: 'mt'
-        },
 		extensions: ['.tsx', '.ts', '.js']
 	},
 	optimization: {

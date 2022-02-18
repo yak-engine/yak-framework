@@ -1,0 +1,1 @@
+{"version":3,"file":"input.d.ts","sourceRoot":"","sources":["../../../src/lib/graphics/input.ts"],"names":[],"mappings":"AAEA;;GAEG;AACH,qBAAa,KAAK;IACd,OAAc,KAAK,EAAE,GAAG,CAAC,MAAM,EAAE,OAAO,CAAC,CAAa;;IAOtD,OAAO,CAAC,UAAU;IAIlB,OAAO,CAAC,QAAQ;WAMF,SAAS,CAAC,IAAI,EAAE,MAAM,GAAG,OAAO;WAIhC,UAAU,IAAI,MAAM;WAkBpB,QAAQ,IAAI,MAAM;CAiBnC"}

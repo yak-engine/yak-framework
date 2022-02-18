@@ -1,0 +1,1 @@
+{"version":3,"file":"system-manager.d.ts","sourceRoot":"","sources":["../../../src/lib/core/system-manager.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,MAAM,EAAE,MAAM,mBAAmB,CAAC;AAE3C,qBAAa,aAAa;IACtB,OAAc,OAAO,EAAE,GAAG,EAAE,CAAM;WAEpB,QAAQ,CAAC,MAAM,EAAE,MAAM,GAAG,IAAI;WAM9B,GAAG,CAAC,UAAU,EAAE,MAAM,GAAG,MAAM;CAGhD"}

@@ -1,0 +1,1 @@
+{"version":3,"file":"load-scene-return.d.ts","sourceRoot":"","sources":["../../../../src/lib/models/returns/load-scene-return.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,OAAO,EAAE,MAAM,wBAAwB,CAAC;AACjD,OAAO,EAAE,KAAK,EAAE,MAAM,mBAAmB,CAAC;AAE1C,qBAAa,eAAe;IACjB,KAAK,EAAE,KAAK,CAAC;IACb,QAAQ,EAAE,KAAK,CAAC,OAAO,CAAC,CAAe;gBAElC,KAAK,EAAE,KAAK,EAAE,QAAQ,EAAE,OAAO,EAAE;CAIhD"}
